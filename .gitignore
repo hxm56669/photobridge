@@ -1,0 +1,49 @@
+# Build outputs
+/build/
+/cmake-build-*/
+/out/
+
+# CMake and Ninja generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+CTestTestfile.cmake
+build.ninja
+.ninja_deps
+.ninja_log
+compile_commands.json
+Makefile
+
+# IDE files
+.vscode/
+.idea/
+.vs/
+*.user
+*.suo
+
+# Compiled artifacts
+*.o
+*.obj
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
+*.pdb
+*.lib
+
+# Test and runtime output
+Testing/
+*.log
+
+# Generated vcpkg files (keep the vcpkg submodule itself tracked)
+/third_party/vcpkg/downloads/
+/third_party/vcpkg/buildtrees/
+/third_party/vcpkg/packages/
+/third_party/vcpkg/installed/
+/third_party/vcpkg/.cache/
+/third_party/vcpkg/toolsrc/buildtrees/
+
+# OS files
+.DS_Store
+Thumbs.db

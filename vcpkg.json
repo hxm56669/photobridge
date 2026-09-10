@@ -1,0 +1,30 @@
+{
+  "name": "photobridge",
+  "version-string": "0.1.0",
+  "builtin-baseline": "9e593bb18ea69cc5095e012465dcd675a822ed0d",
+  "dependencies": [
+    {
+      "name": "sqlite3",
+      "default-features": false
+    },
+    "spdlog",
+    "nlohmann-json",
+    {
+      "name": "exiv2",
+      "default-features": false,
+      "features": [
+        "bmff",
+        "xmp"
+      ]
+    },
+    "gtest",
+    "xxhash",
+    "cli11",
+    {
+      "name": "cpp-httplib",
+      "default-features": false
+    },
+    "blake3",
+    "nayuki-qr-code-generator"
+  ]
+}
