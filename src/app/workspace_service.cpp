@@ -1,10 +1,11 @@
 #include "photobridge/app/workspace_service.h"
 
 #include <filesystem>
-#include <fstream>
 #include <string>
 #include <system_error>
 
+#include "photobridge/app/sqlite_connection.h"
+#include "photobridge/app/sqlite_schema.h"
 #include "photobridge/app/workspace_layout.h"
 
 namespace photobridge {
@@ -61,17 +62,16 @@ Status WorkspaceService::Initialize(
                     + layout.database.string());
         }
 
-        return Status::Ok();
     }
 
-    std::ofstream database(
-        layout.database,
-        std::ios::binary | std::ios::out);
-    if (!database) {
-        return Status(
-            StatusCode::kIoError,
-            "cannot create workspace database: "
-                + layout.database.string());
+    auto connection = SqliteConnection::Open(layout.database);
+    if (!connection.ok()) {
+        return connection.status();
+    }
+
+    const Status schema_status = EnsureSchema(connection.value());
+    if (!schema_status.ok()) {
+        return schema_status;
     }
 
     return Status::Ok();

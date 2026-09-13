@@ -25,6 +25,23 @@
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release"
       }
+    },
+    {
+      "name": "bench-release",
+      "inherits": "base",
+      "binaryDir": "${sourceDir}/build/bench-release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "VCPKG_TARGET_TRIPLET": "x64-linux"
+      }
+    },
+    {
+      "name": "sanitized",
+      "inherits": "debug",
+      "binaryDir": "${sourceDir}/build/sanitized",
+      "cacheVariables": {
+        "PHOTOBRIDGE_ENABLE_SANITIZERS": "ON"
+      }
     }
   ],
   "buildPresets": [
@@ -35,12 +52,30 @@
     {
       "name": "release",
       "configurePreset": "release"
+    },
+    {
+      "name": "bench-release",
+      "configurePreset": "bench-release",
+      "targets": [
+        "photobridge_bench"
+      ]
+    },
+    {
+      "name": "sanitized",
+      "configurePreset": "sanitized"
     }
   ],
   "testPresets": [
     {
       "name": "debug",
       "configurePreset": "debug",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "sanitized",
+      "configurePreset": "sanitized",
       "output": {
         "outputOnFailure": true
       }

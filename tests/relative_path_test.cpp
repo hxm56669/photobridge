@@ -43,3 +43,23 @@ TEST(RelativePathTest, EscapesNonPrintableBytesForDisplay)
     ASSERT_TRUE(result.ok());
     EXPECT_EQ(result.value().DisplayString(), "photo\\x01.jpg");
 }
+
+TEST(RelativePathTest, PreservesNonUtf8Bytes)
+{
+    const std::string raw_path = std::string("photo") + '\xFF' + ".jpg";
+    const auto result = photobridge::RelativePath::Parse(raw_path);
+
+    ASSERT_TRUE(result.ok());
+    EXPECT_EQ(result.value().bytes(), raw_path);
+    EXPECT_EQ(result.value().DisplayString(), "photo\\xFF.jpg");
+}
+
+TEST(RelativePathTest, TreatsBackslashAsAByteOnLinux)
+{
+    const auto result = photobridge::RelativePath::Parse(
+        "camera\\photo.jpg");
+
+    ASSERT_TRUE(result.ok());
+    ASSERT_EQ(result.value().components().size(), 1U);
+    EXPECT_EQ(result.value().components()[0], "camera\\photo.jpg");
+}

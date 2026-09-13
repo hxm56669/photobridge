@@ -10,6 +10,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <system_error>
+#include <type_traits>
 #include <unistd.h>
 #include <sys/syscall.h>
 
@@ -41,6 +42,15 @@ StatusOr<std::int64_t> TimespecToNanoseconds(
     const auto seconds = static_cast<std::int64_t>(timestamp.tv_sec);
     const auto nanoseconds = static_cast<std::int64_t>(timestamp.tv_nsec);
 
+    if (nanoseconds < 0 || nanoseconds >= kNanosecondsPerSecond) {
+        return Status(
+            StatusCode::kInternal,
+            std::string("invalid file timestamp: ") + field_name);
+    }
+
+    constexpr std::int64_t kMax =
+        std::numeric_limits<std::int64_t>::max();
+
     if (seconds > std::numeric_limits<std::int64_t>::max()
             / kNanosecondsPerSecond
         || seconds < std::numeric_limits<std::int64_t>::min()
@@ -51,7 +61,49 @@ StatusOr<std::int64_t> TimespecToNanoseconds(
                 + field_name);
     }
 
+    if (seconds == kMax / kNanosecondsPerSecond
+        && nanoseconds > kMax % kNanosecondsPerSecond) {
+        return Status(
+            StatusCode::kInternal,
+            std::string("file timestamp overflows nanoseconds: ")
+                + field_name);
+    }
+
     return seconds * kNanosecondsPerSecond + nanoseconds;
+}
+
+template <typename Integer>
+StatusOr<std::uint64_t> ToUint64(
+    Integer value,
+    const char* field_name)
+{
+    static_assert(std::is_integral_v<Integer>);
+
+    using UnsignedInteger = std::make_unsigned_t<Integer>;
+    if constexpr (std::is_signed_v<Integer>) {
+        if (value < 0) {
+            return Status(
+                StatusCode::kInternal,
+                std::string("negative file identity field: ")
+                    + field_name);
+        }
+    }
+
+    const auto unsigned_value = static_cast<UnsignedInteger>(value);
+    if constexpr (
+        std::numeric_limits<UnsignedInteger>::digits
+        > std::numeric_limits<std::uint64_t>::digits) {
+        if (unsigned_value
+            > static_cast<UnsignedInteger>(
+                std::numeric_limits<std::uint64_t>::max())) {
+            return Status(
+                StatusCode::kInternal,
+                std::string("file identity field overflows uint64: ")
+                    + field_name);
+        }
+    }
+
+    return static_cast<std::uint64_t>(unsigned_value);
 }
 
 }  // namespace
@@ -132,12 +184,6 @@ StatusOr<FileIdentity> LinuxFileOps::StatFd(int fd)
         return StatusFromErrno(error_number, "fstat file descriptor");
     }
 
-    if (info.st_size < 0) {
-        return Status(
-            StatusCode::kInternal,
-            "file size is negative");
-    }
-
     auto mtime_ns = TimespecToNanoseconds(info.st_mtim, "mtime");
     if (!mtime_ns.ok()) {
         return mtime_ns.status();
@@ -148,10 +194,25 @@ StatusOr<FileIdentity> LinuxFileOps::StatFd(int fd)
         return ctime_ns.status();
     }
 
+    auto device = ToUint64(info.st_dev, "device");
+    if (!device.ok()) {
+        return device.status();
+    }
+
+    auto inode = ToUint64(info.st_ino, "inode");
+    if (!inode.ok()) {
+        return inode.status();
+    }
+
+    auto size = ToUint64(info.st_size, "size");
+    if (!size.ok()) {
+        return size.status();
+    }
+
     FileIdentity identity;
-    identity.device = static_cast<std::uint64_t>(info.st_dev);
-    identity.inode = static_cast<std::uint64_t>(info.st_ino);
-    identity.size = static_cast<std::uint64_t>(info.st_size);
+    identity.device = device.value();
+    identity.inode = inode.value();
+    identity.size = size.value();
     identity.mtime_ns = mtime_ns.value();
     identity.ctime_ns = ctime_ns.value();
     return identity;

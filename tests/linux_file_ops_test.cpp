@@ -113,6 +113,74 @@ TEST_F(LinuxFileOpsTest, OpensSourceRelativeToRootFd)
     EXPECT_EQ(std::string(buffer, 10), "photo data");
 }
 
+TEST_F(LinuxFileOpsTest, RejectsSymlinkedFinalSourcePath)
+{
+    std::error_code error;
+    ASSERT_TRUE(std::filesystem::create_directory(root_, error));
+    ASSERT_FALSE(error);
+
+    {
+        std::ofstream file(root_ / "photo.jpg");
+        ASSERT_TRUE(file);
+        file << "photo data";
+    }
+    std::filesystem::create_symlink(
+        root_ / "photo.jpg",
+        root_ / "link.jpg",
+        error);
+    ASSERT_FALSE(error);
+
+    photobridge::LinuxFileOps file_ops;
+    auto root = file_ops.OpenRoot(
+        root_,
+        photobridge::OpenRootMode::kExisting);
+    ASSERT_TRUE(root.ok());
+
+    const auto relative_path = photobridge::RelativePath::Parse(
+        "link.jpg");
+    ASSERT_TRUE(relative_path.ok());
+
+    const auto source = file_ops.OpenSource(
+        root.value().get(),
+        relative_path.value());
+    EXPECT_FALSE(source.ok());
+}
+
+TEST_F(LinuxFileOpsTest, RejectsSymlinkedIntermediateDirectory)
+{
+    std::error_code error;
+    ASSERT_TRUE(std::filesystem::create_directories(
+        root_ / "real_album",
+        error));
+    ASSERT_FALSE(error);
+
+    {
+        std::ofstream file(root_ / "real_album" / "photo.jpg");
+        ASSERT_TRUE(file);
+        file << "photo data";
+    }
+    std::filesystem::create_directory_symlink(
+        root_ / "real_album",
+        root_ / "album",
+        error);
+    ASSERT_FALSE(error);
+
+    photobridge::LinuxFileOps file_ops;
+    auto root = file_ops.OpenRoot(
+        root_,
+        photobridge::OpenRootMode::kExisting);
+    ASSERT_TRUE(root.ok());
+
+    const auto relative_path = photobridge::RelativePath::Parse(
+        "album/photo.jpg");
+    ASSERT_TRUE(relative_path.ok());
+
+    const auto source = file_ops.OpenSource(
+        root.value().get(),
+        relative_path.value());
+    EXPECT_FALSE(source.ok());
+}
+
 TEST_F(LinuxFileOpsTest, StatsOpenedFdIntoFileIdentity)
 {
     std::error_code error;
@@ -158,6 +226,50 @@ TEST_F(LinuxFileOpsTest, StatsOpenedFdIntoFileIdentity)
             * 1'000'000'000
             + static_cast<std::int64_t>(info.st_ctim.tv_nsec));
     EXPECT_FALSE(result.value().mount_id.has_value());
+}
+
+TEST_F(LinuxFileOpsTest, StatsOpenedFdAfterPathIsReplaced)
+{
+    std::error_code error;
+    ASSERT_TRUE(std::filesystem::create_directory(root_, error));
+    ASSERT_FALSE(error);
+
+    {
+        std::ofstream file(root_ / "photo.jpg");
+        ASSERT_TRUE(file);
+        file << "original photo";
+    }
+
+    const int raw_fd = ::open(
+        (root_ / "photo.jpg").c_str(),
+        O_RDONLY | O_CLOEXEC);
+    ASSERT_GE(raw_fd, 0);
+    photobridge::UniqueFd fd(raw_fd);
+
+    photobridge::LinuxFileOps file_ops;
+    const auto original = file_ops.StatFd(fd.get());
+    ASSERT_TRUE(original.ok());
+
+    std::filesystem::rename(
+        root_ / "photo.jpg",
+        root_ / "photo.old",
+        error);
+    ASSERT_FALSE(error);
+
+    {
+        std::ofstream file(root_ / "photo.jpg");
+        ASSERT_TRUE(file);
+        file << "new";
+    }
+
+    const auto still_original = file_ops.StatFd(fd.get());
+    ASSERT_TRUE(still_original.ok());
+    EXPECT_EQ(still_original.value().device, original.value().device);
+    EXPECT_EQ(still_original.value().inode, original.value().inode);
+    EXPECT_EQ(still_original.value().size, original.value().size);
+    EXPECT_EQ(still_original.value().mtime_ns, original.value().mtime_ns);
+    EXPECT_GE(still_original.value().ctime_ns, original.value().ctime_ns);
+    EXPECT_EQ(std::filesystem::file_size(root_ / "photo.jpg"), 3U);
 }
 
 TEST_F(LinuxFileOpsTest, InvalidFdReturnsInternalStatus)
