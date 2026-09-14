@@ -74,6 +74,8 @@ add_library(photobridge_core STATIC
     src/common/digest.cpp
     src/common/logging.cpp
     src/common/posix_error.cpp
+    src/common/test_hooks.cpp
+    src/common/time.cpp
     src/common/unique_fd.cpp
 
     src/model/relative_path.cpp
@@ -85,13 +87,10 @@ add_library(photobridge_core STATIC
     src/model/canonical_plan.cpp
     src/model/plan_artifact.cpp
     src/model/task.cpp
-    src/model/task_graph.cpp
     src/model/asset_classifier.cpp
     src/model/association_edge.cpp
     src/model/association_graph.cpp
     src/model/metadata_candidate.cpp
-    src/model/metadata_verifier.cpp
-    src/model/relation_verifier.cpp
     src/model/diff_engine.cpp
     src/model/audit_report.cpp
     src/model/metadata_rules.cpp
@@ -102,25 +101,24 @@ add_library(photobridge_core STATIC
 
     src/app/workspace_layout.cpp
     src/app/workspace_service.cpp
-    src/app/db_command_queue.cpp
     src/app/byte_permit_pool.cpp
     src/app/fd_permit_pool.cpp
-    src/app/bounded_executor.cpp
     src/app/sqlite_connection.cpp
     src/app/sqlite_schema.cpp
     src/app/task_runtime_repository.cpp
+    src/app/migration_attempt_preparer.cpp
     src/app/manifest_builder.cpp
+    src/app/plan_execution_lock.cpp
     src/filesystem/mutation_guard.cpp
     src/filesystem/copy_and_hash.cpp
-    src/filesystem/temp_commit.cpp
     src/filesystem/reconciler.cpp
     src/filesystem/binary_verifier.cpp
 
     src/cli/cli_app.cpp
     src/cli/dispatcher.cpp
     src/cli/init_command.cpp
-    src/cli/scan_command.cpp
     src/cli/pipeline_command.cpp
+    src/cli/pipeline_services.cpp
     src/cli/serve_command.cpp
     src/cli/takeout_parse_command.cpp
 )
@@ -214,10 +212,8 @@ add_executable(
     tests/canonical_plan_test.cpp
     tests/plan_artifact_test.cpp
     tests/task_test.cpp
-    tests/task_graph_test.cpp
     tests/task_runtime_repository_test.cpp
     tests/copy_and_hash_test.cpp
-    tests/temp_commit_test.cpp
     tests/reconciler_test.cpp
     tests/binary_verifier_test.cpp
         tests/relative_path_test.cpp
@@ -225,10 +221,8 @@ add_executable(
     tests/sqlite_schema_test.cpp
     tests/manifest_builder_test.cpp
     tests/mutation_guard_test.cpp
-    tests/db_command_queue_test.cpp
     tests/byte_permit_pool_test.cpp
     tests/fd_permit_pool_test.cpp
-    tests/bounded_executor_test.cpp
     tests/large_fixture_test.cpp
     tests/takeout_parser_test.cpp
     tests/association_graph_test.cpp
@@ -236,8 +230,6 @@ add_executable(
     tests/raw_jpeg_test.cpp
     tests/photo_ir_test.cpp
     tests/metadata_candidate_test.cpp
-    tests/metadata_verifier_test.cpp
-    tests/relation_verifier_test.cpp
     tests/diff_engine_test.cpp
     tests/audit_report_test.cpp
     tests/lock_recovery_test.cpp
@@ -295,4 +287,6 @@ if(UNIX)
     )
 
     photobridge_enable_warnings(photobridge_bench)
+    photobridge_enable_sanitizers(photobridge_bench)
+    photobridge_enable_sanitizer_link(photobridge_bench)
 endif()

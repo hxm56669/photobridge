@@ -13,7 +13,6 @@
 #include <filesystem>
 #include <fstream>
 #include <functional>
-#include <future>
 #include <iomanip>
 #include <iostream>
 #include <limits>
@@ -26,7 +25,6 @@
 #include <string_view>
 #include <vector>
 
-#include "photobridge/app/db_command_queue.h"
 #include "photobridge/app/manifest_builder.h"
 #include "photobridge/app/sqlite_schema.h"
 #include "photobridge/cli/cli_app.h"
@@ -496,7 +494,7 @@ WorkloadResult RunSqlite(
 {
     static_cast<void>(fixture_root);
     WorkloadResult result{
-        "sqlite_writer_ack",
+        "sqlite_batch_insert",
         "commands/s",
         options.sqlite_commands,
         0,
@@ -519,26 +517,16 @@ WorkloadResult RunSqlite(
                 "CREATE TABLE benchmark_queue(value INTEGER NOT NULL);"),
             "create SQLite benchmark table");
 
-        photobridge::DbCommandQueue queue(
-            connection,
-            options.sqlite_commands + 1);
         result.samples.push_back(Measure([&]() {
-            std::vector<std::future<photobridge::Status>> acknowledgements;
-            acknowledgements.reserve(options.sqlite_commands);
             for (std::size_t index = 0; index < options.sqlite_commands;
                  ++index) {
-                acknowledgements.push_back(queue.Submit(
-                    [](photobridge::SqliteConnection& db) {
-                        return db.Execute(
-                            "INSERT INTO benchmark_queue(value) VALUES(1);");
-                    }));
-            }
-            for (auto& acknowledgement : acknowledgements) {
-                Require(acknowledgement.get(), "SQLite benchmark command");
+                Require(
+                    connection.Execute(
+                        "INSERT INTO benchmark_queue(value) VALUES(1);"),
+                    "SQLite benchmark command");
             }
             return RunValues{options.sqlite_commands, 0};
         }));
-        queue.Stop();
         RemoveDatabaseFiles(database_path);
     }
     return result;
@@ -675,8 +663,6 @@ WorkloadResult RunE2e(
                         "--workspace", workspace.string(),
                         "--plan", plan_path.string()},
                     "e2e migrate");
-            }
-            for (std::size_t index = 0; index < options.e2e_files; ++index) {
                 RunCliCommand(
                     {"photobridge", "resume",
                         "--workspace", workspace.string(),

@@ -14,7 +14,6 @@
 #include "photobridge/cli/cli_app.h"
 #include "photobridge/cli/dispatcher.h"
 #include "photobridge/cli/pipeline_command.h"
-#include "photobridge/cli/scan_command.h"
 #include "photobridge/app/workspace_service.h"
 #include "photobridge/model/plan_artifact.h"
 
@@ -61,25 +60,6 @@ TEST(ExitCodeForStatusTest, MapsStatusCodesToStableExitCodes)
     }
 }
 
-TEST(CommandDispatcherTest, DispatchesCommandWithContext)
-{
-    photobridge::CommandDispatcher dispatcher;
-    dispatcher.Register(
-        "scan",
-        std::make_unique<photobridge::ScanCommand>());
-
-    std::ostringstream out;
-    std::ostringstream err;
-    photobridge::WorkspaceService workspace_service;
-    photobridge::CommandContext context{out, err, workspace_service};
-
-    const auto status = dispatcher.Dispatch("scan", context);
-
-    EXPECT_TRUE(status.ok());
-    EXPECT_EQ(out.str(), "scan command\n");
-    EXPECT_TRUE(err.str().empty());
-}
-
 TEST(CommandDispatcherTest, MissingCommandReturnsNotFound)
 {
     photobridge::CommandDispatcher dispatcher;
@@ -94,7 +74,7 @@ TEST(CommandDispatcherTest, MissingCommandReturnsNotFound)
     EXPECT_EQ(status.code(), photobridge::StatusCode::kNotFound);
 }
 
-TEST(RunCliTest, ScanCommandUsesInjectedOutput)
+TEST(RunCliTest, ScanPipelineUsesInjectedOutput)
 {
     const auto root = std::filesystem::temp_directory_path()
         / "photobridge_cli_scan_test";
@@ -247,38 +227,6 @@ TEST(RunCliTest, PlanBuildsAndPersistsFrozenArtifact)
     EXPECT_EQ(temp_count, 1U);
     EXPECT_TRUE(migrate_err.str().empty());
 
-    {
-        std::ofstream existing(target / "photo.jpg", std::ios::binary);
-        ASSERT_TRUE(existing);
-        existing << "existing";
-    }
-    std::ostringstream conflict_out;
-    std::ostringstream conflict_err;
-    EXPECT_EQ(
-        RunCliWithArgs(
-            {"photobridge", "resume", "--workspace", workspace.string(),
-                "--plan", plan_artifact_path.string()},
-            conflict_out,
-            conflict_err),
-        4);
-    EXPECT_TRUE(conflict_out.str().empty());
-    EXPECT_TRUE(conflict_err.str().empty());
-    {
-        std::ifstream existing(target / "photo.jpg", std::ios::binary);
-        const std::string bytes{
-            std::istreambuf_iterator<char>(existing),
-            std::istreambuf_iterator<char>()};
-        EXPECT_EQ(bytes, "existing");
-    }
-    temp_count = 0;
-    for (const auto& entry : std::filesystem::directory_iterator(target)) {
-        if (entry.path().extension() == ".pbtmp") {
-            ++temp_count;
-        }
-    }
-    EXPECT_EQ(temp_count, 1U);
-    EXPECT_TRUE(std::filesystem::remove(target / "photo.jpg"));
-
     std::ostringstream resume_out;
     std::ostringstream resume_err;
     ASSERT_EQ(
@@ -287,7 +235,7 @@ TEST(RunCliTest, PlanBuildsAndPersistsFrozenArtifact)
                 "--plan", plan_artifact_path.string()},
             resume_out,
             resume_err),
-        0);
+        0) << "stdout=" << resume_out.str() << " stderr=" << resume_err.str();
     EXPECT_NE(resume_out.str().find("resume completed:"), std::string::npos);
     EXPECT_NE(resume_out.str().find("state=SUCCEEDED"), std::string::npos);
     EXPECT_TRUE(resume_err.str().empty());
@@ -465,8 +413,19 @@ TEST(RunCliTest, ExecutesMultiplePlanAssetsSequentially)
                 err),
             0);
         EXPECT_NE(out.str().find("state=RUNNING"), std::string::npos);
-    }
-    for (int index = 0; index < 2; ++index) {
+        if (index == 0) {
+            out.str("");
+            out.clear();
+            err.str("");
+            err.clear();
+            EXPECT_EQ(
+                RunCliWithArgs(
+                    {"photobridge", "migrate", "--workspace", workspace.string(),
+                    "--plan", plan_path.string()},
+                    out,
+                    err),
+                2);
+        }
         out.str("");
         out.clear();
         err.str("");

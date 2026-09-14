@@ -26,6 +26,11 @@ public:
         const TaskId& depends_on);
     Status SetReady(const std::string& plan_id, const TaskId& task_id);
 
+    StatusOr<ExecutionEpoch> AcquireNextExecutionEpoch(
+        const std::string& plan_id);
+    StatusOr<ExecutionEpoch> ReadCurrentEpoch(
+        const std::string& plan_id) const;
+
     StatusOr<ClaimedTask> ClaimNextReady(
         const std::string& plan_id,
         ExecutionEpoch epoch,
@@ -42,6 +47,28 @@ public:
         ExecutionEpoch epoch,
         const std::string& attempt_id,
         const Status& error);
+
+    Status RecoverSucceeded(
+        const std::string& plan_id,
+        const TaskId& task_id,
+        ExecutionEpoch recovery_epoch,
+        ExecutionEpoch expected_old_epoch,
+        const std::string& expected_old_attempt_id,
+        const std::string& reason);
+    Status RecoverRetryable(
+        const std::string& plan_id,
+        const TaskId& task_id,
+        ExecutionEpoch recovery_epoch,
+        ExecutionEpoch expected_old_epoch,
+        const std::string& expected_old_attempt_id,
+        const std::string& reason);
+    Status RecoverInconsistent(
+        const std::string& plan_id,
+        const TaskId& task_id,
+        ExecutionEpoch recovery_epoch,
+        ExecutionEpoch expected_old_epoch,
+        const std::string& expected_old_attempt_id,
+        const std::string& reason);
 
     Status PersistVerifiedReceipt(
         const std::string& plan_id,

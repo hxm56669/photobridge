@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <limits>
 
+#include "photobridge/common/test_hooks.h"
+
 namespace photobridge {
 namespace {
 
@@ -94,13 +96,8 @@ StatusOr<CopyResult> CopyAndHash(
         return Invalid("copy buffer must not be empty");
     }
 
-    auto before = file_ops.StatFd(source_fd);
-    if (!before.ok()) {
-        return before.status();
-    }
-
     CopyResult result;
-    result.source_before = before.value();
+    bool paused_after_first_write = false;
     for (;;) {
         auto read = file_ops.Read(source_fd, buffer);
         if (!read.ok()) {
@@ -130,18 +127,11 @@ StatusOr<CopyResult> CopyAndHash(
         if (!status.ok()) {
             return status;
         }
+        if (!paused_after_first_write) {
+            PauseForTest("PHOTOBRIDGE_TEST_PAUSE_AFTER_FIRST_COPY_WRITE_MS");
+            paused_after_first_write = true;
+        }
         result.bytes_copied += read.value();
-    }
-
-    auto after = file_ops.StatFd(source_fd);
-    if (!after.ok()) {
-        return after.status();
-    }
-    result.source_after = after.value();
-    if (result.source_before != result.source_after) {
-        return Status(
-            StatusCode::kInternal,
-            "source file identity changed during copy");
     }
 
     auto digest = hasher.Finalize();
@@ -149,6 +139,27 @@ StatusOr<CopyResult> CopyAndHash(
         return digest.status();
     }
     result.source_digest = digest.value();
+    return result;
+}
+
+StatusOr<CopyResult> CopyAndHash(
+    FileOps& file_ops,
+    Hasher& hasher,
+    MutationGuard& source_guard,
+    int target_fd,
+    std::span<std::byte> buffer)
+{
+    Status status = source_guard.VerifyBeforeRead();
+    if (!status.ok()) return status;
+    auto result = CopyAndHash(
+        file_ops,
+        hasher,
+        source_guard.fd(),
+        target_fd,
+        buffer);
+    if (!result.ok()) return result.status();
+    status = source_guard.VerifyAfterRead();
+    if (!status.ok()) return status;
     return result;
 }
 

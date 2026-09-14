@@ -5,7 +5,7 @@
 
 - `scanner_manifest`：固定数量文件的 dirfd 扫描、分类、SQLite Manifest 批量写入和冻结。
 - `copy_hash_fdatasync`：真实文件的流式 CopyAndHash、BLAKE3 和目标 `fdatasync`。
-- `sqlite_writer_ack`：单写者 `DbCommandQueue` 的固定批量 SQLite INSERT 与 ACK。
+- `sqlite_batch_insert`：固定批量 SQLite INSERT 与逐条错误确认。
 - `e2e_local_pipeline`：通过现有 CLI 真实执行 `scan → plan → migrate → resume → verify`；多文件计划会按当前单 task CLI 契约逐个 migrate/resume。
 - `e2e_large_local_pipeline`：固定 1 GiB 本地端到端 profile，使用 64 个 16 MiB 文件。
 

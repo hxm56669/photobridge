@@ -32,6 +32,45 @@ photobridge::TaskSpec Task(const char* id)
     };
 }
 
+photobridge::VerifiedReceipt Receipt()
+{
+    photobridge::Digest source_digest;
+    source_digest.bytes[0] = std::byte{0x11};
+    photobridge::Digest target_digest;
+    target_digest.bytes[0] = std::byte{0x22};
+    photobridge::FileIdentity source_identity;
+    source_identity.device = 3;
+    source_identity.inode = 4;
+    source_identity.size = 12;
+    source_identity.mtime_ns = 5;
+    source_identity.ctime_ns = 6;
+    source_identity.mount_id = 7;
+    return photobridge::VerifiedReceipt{
+        "a",
+        "attempt-a",
+        {7},
+        ".photobridge.plan-1.a.attempt-a.pbtmp",
+        "target-a.jpg",
+        12,
+        source_digest,
+        target_digest,
+        source_identity,
+    };
+}
+
+bool AdvanceToEpoch(
+    photobridge::TaskRuntimeRepository& repository,
+    std::uint64_t target)
+{
+    auto current = repository.ReadCurrentEpoch("plan-1");
+    if (!current.ok()) return false;
+    while (current.value().value < target) {
+        current = repository.AcquireNextExecutionEpoch("plan-1");
+        if (!current.ok()) return false;
+    }
+    return current.value().value == target;
+}
+
 class TaskRuntimeRepositoryTest : public ::testing::Test {
 protected:
     void SetUp() override
@@ -77,6 +116,7 @@ TEST_F(TaskRuntimeRepositoryTest, ClaimsInStableOrderAndRequiresDependencies)
     ASSERT_TRUE(repository.AddDependency("plan-1", "b", "a").ok());
     EXPECT_FALSE(repository.SetReady("plan-1", "b").ok());
     ASSERT_TRUE(repository.SetReady("plan-1", "a").ok());
+    ASSERT_TRUE(AdvanceToEpoch(repository, 1));
 
     const auto claimed = repository.ClaimNextReady("plan-1", {1}, "attempt-a");
     ASSERT_TRUE(claimed.ok()) << claimed.status().message();
@@ -89,6 +129,25 @@ TEST_F(TaskRuntimeRepositoryTest, ClaimsInStableOrderAndRequiresDependencies)
         photobridge::StatusCode::kNotFound);
 }
 
+TEST_F(TaskRuntimeRepositoryTest, ExecutionEpochRepositoryIsMonotonic)
+{
+    auto connection = photobridge::SqliteConnection::Open(database_path_);
+    ASSERT_TRUE(connection.ok());
+    ASSERT_TRUE(photobridge::EnsureSchema(connection.value()).ok());
+    CreatePlan(connection.value());
+    photobridge::TaskRuntimeRepository repository(connection.value());
+
+    ASSERT_TRUE(repository.ReadCurrentEpoch("plan-1").ok());
+    EXPECT_EQ(repository.ReadCurrentEpoch("plan-1").value().value, 0U);
+    EXPECT_EQ(repository.AcquireNextExecutionEpoch("plan-1").value().value, 1U);
+    EXPECT_EQ(repository.ReadCurrentEpoch("plan-1").value().value, 1U);
+    EXPECT_EQ(repository.AcquireNextExecutionEpoch("plan-1").value().value, 2U);
+    EXPECT_EQ(repository.ReadCurrentEpoch("plan-1").value().value, 2U);
+    EXPECT_EQ(
+        repository.ReadCurrentEpoch("missing-plan").status().code(),
+        photobridge::StatusCode::kNotFound);
+}
+
 TEST_F(TaskRuntimeRepositoryTest, FencesStaleCompletionAndAllowsRetry)
 {
     auto connection = photobridge::SqliteConnection::Open(database_path_);
@@ -98,6 +157,7 @@ TEST_F(TaskRuntimeRepositoryTest, FencesStaleCompletionAndAllowsRetry)
     photobridge::TaskRuntimeRepository repository(connection.value());
     ASSERT_TRUE(repository.AddTask("plan-1", Task("a")).ok());
     ASSERT_TRUE(repository.SetReady("plan-1", "a").ok());
+    ASSERT_TRUE(AdvanceToEpoch(repository, 4));
     ASSERT_TRUE(repository.ClaimNextReady("plan-1", {4}, "attempt-a").ok());
 
     EXPECT_FALSE(
@@ -111,6 +171,261 @@ TEST_F(TaskRuntimeRepositoryTest, FencesStaleCompletionAndAllowsRetry)
     ASSERT_TRUE(runtime.ok());
     EXPECT_EQ(runtime.value().state, photobridge::TaskState::kRetryable);
     ASSERT_TRUE(repository.SetReady("plan-1", "a").ok());
+}
+
+TEST_F(TaskRuntimeRepositoryTest, ClaimRequiresCurrentEpoch)
+{
+    auto connection = photobridge::SqliteConnection::Open(database_path_);
+    ASSERT_TRUE(connection.ok());
+    ASSERT_TRUE(photobridge::EnsureSchema(connection.value()).ok());
+    CreatePlan(connection.value());
+    photobridge::TaskRuntimeRepository repository(connection.value());
+    ASSERT_TRUE(repository.AddTask("plan-1", Task("a")).ok());
+    ASSERT_TRUE(repository.SetReady("plan-1", "a").ok());
+    ASSERT_TRUE(AdvanceToEpoch(repository, 1));
+
+    EXPECT_EQ(
+        repository.ClaimNextReady("plan-1", {2}, "attempt-a").status().code(),
+        photobridge::StatusCode::kInvalidArgument);
+    ASSERT_TRUE(repository.ClaimNextReady("plan-1", {1}, "attempt-a").ok());
+}
+
+TEST_F(TaskRuntimeRepositoryTest, FinishRequiresCurrentEpoch)
+{
+    auto connection = photobridge::SqliteConnection::Open(database_path_);
+    ASSERT_TRUE(connection.ok());
+    ASSERT_TRUE(photobridge::EnsureSchema(connection.value()).ok());
+    CreatePlan(connection.value());
+    photobridge::TaskRuntimeRepository repository(connection.value());
+    ASSERT_TRUE(repository.AddTask("plan-1", Task("a")).ok());
+    ASSERT_TRUE(repository.SetReady("plan-1", "a").ok());
+    ASSERT_TRUE(AdvanceToEpoch(repository, 1));
+    ASSERT_TRUE(repository.ClaimNextReady("plan-1", {1}, "attempt-a").ok());
+
+    EXPECT_EQ(
+        repository.MarkSucceeded("plan-1", "a", {2}, "attempt-a").code(),
+        photobridge::StatusCode::kInvalidArgument);
+    ASSERT_TRUE(repository.MarkSucceeded("plan-1", "a", {1}, "attempt-a").ok());
+}
+
+TEST_F(TaskRuntimeRepositoryTest, EpochAdvanceFencesOldFinish)
+{
+    auto connection = photobridge::SqliteConnection::Open(database_path_);
+    ASSERT_TRUE(connection.ok());
+    ASSERT_TRUE(photobridge::EnsureSchema(connection.value()).ok());
+    CreatePlan(connection.value());
+    photobridge::TaskRuntimeRepository repository(connection.value());
+    ASSERT_TRUE(repository.AddTask("plan-1", Task("a")).ok());
+    ASSERT_TRUE(repository.SetReady("plan-1", "a").ok());
+    ASSERT_TRUE(AdvanceToEpoch(repository, 1));
+    ASSERT_TRUE(repository.ClaimNextReady("plan-1", {1}, "attempt-a").ok());
+    ASSERT_EQ(repository.AcquireNextExecutionEpoch("plan-1").value().value, 2U);
+
+    EXPECT_EQ(
+        repository.MarkSucceeded("plan-1", "a", {1}, "attempt-a").code(),
+        photobridge::StatusCode::kInvalidArgument);
+}
+
+TEST_F(TaskRuntimeRepositoryTest, StaleEpochCannotPersistReceipt)
+{
+    auto connection = photobridge::SqliteConnection::Open(database_path_);
+    ASSERT_TRUE(connection.ok());
+    ASSERT_TRUE(photobridge::EnsureSchema(connection.value()).ok());
+    CreatePlan(connection.value());
+    photobridge::TaskRuntimeRepository repository(connection.value());
+    ASSERT_TRUE(repository.AddTask("plan-1", Task("a")).ok());
+    ASSERT_TRUE(repository.SetReady("plan-1", "a").ok());
+    ASSERT_TRUE(AdvanceToEpoch(repository, 1));
+    ASSERT_TRUE(repository.ClaimNextReady("plan-1", {1}, "attempt-a").ok());
+
+    auto receipt = Receipt();
+    receipt.owner_epoch = {2};
+    EXPECT_EQ(
+        repository.PersistVerifiedReceipt("plan-1", receipt).code(),
+        photobridge::StatusCode::kInvalidArgument);
+}
+
+TEST_F(TaskRuntimeRepositoryTest, WrongAttemptCannotPersistReceipt)
+{
+    auto connection = photobridge::SqliteConnection::Open(database_path_);
+    ASSERT_TRUE(connection.ok());
+    ASSERT_TRUE(photobridge::EnsureSchema(connection.value()).ok());
+    CreatePlan(connection.value());
+    photobridge::TaskRuntimeRepository repository(connection.value());
+    ASSERT_TRUE(repository.AddTask("plan-1", Task("a")).ok());
+    ASSERT_TRUE(repository.SetReady("plan-1", "a").ok());
+    ASSERT_TRUE(AdvanceToEpoch(repository, 1));
+    ASSERT_TRUE(repository.ClaimNextReady("plan-1", {1}, "attempt-a").ok());
+
+    auto receipt = Receipt();
+    receipt.owner_epoch = {1};
+    receipt.attempt_id = "attempt-wrong";
+    EXPECT_EQ(
+        repository.PersistVerifiedReceipt("plan-1", receipt).code(),
+        photobridge::StatusCode::kInvalidArgument);
+}
+
+TEST_F(TaskRuntimeRepositoryTest, RecoverySuccessClosesOldAttempt)
+{
+    auto connection = photobridge::SqliteConnection::Open(database_path_);
+    ASSERT_TRUE(connection.ok());
+    ASSERT_TRUE(photobridge::EnsureSchema(connection.value()).ok());
+    CreatePlan(connection.value());
+    photobridge::TaskRuntimeRepository repository(connection.value());
+    ASSERT_TRUE(repository.AddTask("plan-1", Task("a")).ok());
+    ASSERT_TRUE(repository.SetReady("plan-1", "a").ok());
+    ASSERT_TRUE(AdvanceToEpoch(repository, 1));
+    ASSERT_TRUE(repository.ClaimNextReady("plan-1", {1}, "attempt-a").ok());
+    ASSERT_EQ(repository.AcquireNextExecutionEpoch("plan-1").value().value, 2U);
+
+    ASSERT_TRUE(repository.RecoverSucceeded(
+        "plan-1", "a", {2}, {1}, "attempt-a", "matching final adopted").ok());
+    const auto runtime = repository.ReadRuntime("plan-1", "a");
+    ASSERT_TRUE(runtime.ok());
+    EXPECT_EQ(runtime.value().state, photobridge::TaskState::kSucceeded);
+    EXPECT_EQ(runtime.value().owner_epoch.value, 0U);
+    EXPECT_FALSE(runtime.value().attempt_id.has_value());
+
+    sqlite3_stmt* statement = nullptr;
+    ASSERT_EQ(sqlite3_prepare_v2(
+        connection.value().native_handle(),
+        "SELECT file_state, finished_at_ns FROM task_attempt "
+        "WHERE attempt_id = 'attempt-a';",
+        -1,
+        &statement,
+        nullptr), SQLITE_OK);
+    ASSERT_EQ(sqlite3_step(statement), SQLITE_ROW);
+    EXPECT_EQ(
+        sqlite3_column_int(statement, 0),
+        static_cast<int>(photobridge::FileAttemptState::kCommitted));
+    EXPECT_GT(sqlite3_column_int64(statement, 1), 0);
+    sqlite3_finalize(statement);
+
+    ASSERT_EQ(sqlite3_prepare_v2(
+        connection.value().native_handle(),
+        "SELECT event_type, owner_epoch, detail FROM task_event "
+        "WHERE event_type = 'RECOVER_SUCCEEDED';",
+        -1,
+        &statement,
+        nullptr), SQLITE_OK);
+    ASSERT_EQ(sqlite3_step(statement), SQLITE_ROW);
+    EXPECT_EQ(sqlite3_column_int64(statement, 1), 2);
+    EXPECT_NE(
+        std::string(reinterpret_cast<const char*>(sqlite3_column_text(statement, 2)))
+            .find("old_epoch=1"),
+        std::string::npos);
+    sqlite3_finalize(statement);
+}
+
+TEST_F(TaskRuntimeRepositoryTest, RecoveryRetryableRecordsReason)
+{
+    auto connection = photobridge::SqliteConnection::Open(database_path_);
+    ASSERT_TRUE(connection.ok());
+    ASSERT_TRUE(photobridge::EnsureSchema(connection.value()).ok());
+    CreatePlan(connection.value());
+    photobridge::TaskRuntimeRepository repository(connection.value());
+    ASSERT_TRUE(repository.AddTask("plan-1", Task("a")).ok());
+    ASSERT_TRUE(repository.SetReady("plan-1", "a").ok());
+    ASSERT_TRUE(AdvanceToEpoch(repository, 1));
+    ASSERT_TRUE(repository.ClaimNextReady("plan-1", {1}, "attempt-a").ok());
+    ASSERT_EQ(repository.AcquireNextExecutionEpoch("plan-1").value().value, 2U);
+
+    ASSERT_TRUE(repository.RecoverRetryable(
+        "plan-1", "a", {2}, {1}, "attempt-a", "source changed").ok());
+    const auto runtime = repository.ReadRuntime("plan-1", "a");
+    ASSERT_TRUE(runtime.ok());
+    EXPECT_EQ(runtime.value().state, photobridge::TaskState::kRetryable);
+    ASSERT_TRUE(runtime.value().last_error.has_value());
+    EXPECT_EQ(runtime.value().last_error->code(), photobridge::StatusCode::kIoError);
+    EXPECT_EQ(runtime.value().last_error->message(), "source changed");
+}
+
+TEST_F(TaskRuntimeRepositoryTest, RecoveryInconsistentRecordsTerminalState)
+{
+    auto connection = photobridge::SqliteConnection::Open(database_path_);
+    ASSERT_TRUE(connection.ok());
+    ASSERT_TRUE(photobridge::EnsureSchema(connection.value()).ok());
+    CreatePlan(connection.value());
+    photobridge::TaskRuntimeRepository repository(connection.value());
+    ASSERT_TRUE(repository.AddTask("plan-1", Task("a")).ok());
+    ASSERT_TRUE(repository.SetReady("plan-1", "a").ok());
+    ASSERT_TRUE(AdvanceToEpoch(repository, 1));
+    ASSERT_TRUE(repository.ClaimNextReady("plan-1", {1}, "attempt-a").ok());
+    ASSERT_EQ(repository.AcquireNextExecutionEpoch("plan-1").value().value, 2U);
+
+    ASSERT_TRUE(repository.RecoverInconsistent(
+        "plan-1", "a", {2}, {1}, "attempt-a", "target conflict").ok());
+    const auto runtime = repository.ReadRuntime("plan-1", "a");
+    ASSERT_TRUE(runtime.ok());
+    EXPECT_EQ(runtime.value().state, photobridge::TaskState::kInconsistent);
+    ASSERT_TRUE(runtime.value().last_error.has_value());
+    EXPECT_EQ(runtime.value().last_error->code(), photobridge::StatusCode::kInternal);
+}
+
+TEST_F(TaskRuntimeRepositoryTest, RecoveryRequiresCurrentEpochAndOldOwnership)
+{
+    auto connection = photobridge::SqliteConnection::Open(database_path_);
+    ASSERT_TRUE(connection.ok());
+    ASSERT_TRUE(photobridge::EnsureSchema(connection.value()).ok());
+    CreatePlan(connection.value());
+    photobridge::TaskRuntimeRepository repository(connection.value());
+    ASSERT_TRUE(repository.AddTask("plan-1", Task("a")).ok());
+    ASSERT_TRUE(repository.SetReady("plan-1", "a").ok());
+    ASSERT_TRUE(AdvanceToEpoch(repository, 1));
+    ASSERT_TRUE(repository.ClaimNextReady("plan-1", {1}, "attempt-a").ok());
+    ASSERT_EQ(repository.AcquireNextExecutionEpoch("plan-1").value().value, 2U);
+
+    EXPECT_EQ(
+        repository.RecoverSucceeded(
+            "plan-1", "a", {1}, {1}, "attempt-a", "stale recovery")
+            .code(),
+        photobridge::StatusCode::kInvalidArgument);
+    EXPECT_EQ(
+        repository.RecoverSucceeded(
+            "plan-1", "a", {2}, {1}, "attempt-wrong", "wrong owner")
+            .code(),
+        photobridge::StatusCode::kInvalidArgument);
+    EXPECT_EQ(
+        repository.ReadRuntime("plan-1", "a").value().state,
+        photobridge::TaskState::kRunning);
+}
+
+TEST_F(TaskRuntimeRepositoryTest, ClaimCreatesRunningAttempt)
+{
+    auto connection = photobridge::SqliteConnection::Open(database_path_);
+    ASSERT_TRUE(connection.ok());
+    ASSERT_TRUE(photobridge::EnsureSchema(connection.value()).ok());
+    CreatePlan(connection.value());
+    photobridge::TaskRuntimeRepository repository(connection.value());
+    ASSERT_TRUE(repository.AddTask("plan-1", Task("a")).ok());
+    ASSERT_TRUE(repository.SetReady("plan-1", "a").ok());
+    ASSERT_TRUE(AdvanceToEpoch(repository, 1));
+    ASSERT_TRUE(repository.ClaimNextReady("plan-1", {1}, "attempt-a").ok());
+
+    sqlite3_stmt* statement = nullptr;
+    ASSERT_EQ(sqlite3_prepare_v2(
+        connection.value().native_handle(),
+        "SELECT file_state, started_at_ns FROM task_attempt "
+        "WHERE attempt_id = 'attempt-a';",
+        -1,
+        &statement,
+        nullptr), SQLITE_OK);
+    ASSERT_EQ(sqlite3_step(statement), SQLITE_ROW);
+    EXPECT_EQ(
+        sqlite3_column_int(statement, 0),
+        static_cast<int>(photobridge::FileAttemptState::kRunning));
+    EXPECT_GT(sqlite3_column_int64(statement, 1), 0);
+    sqlite3_finalize(statement);
+
+    ASSERT_EQ(sqlite3_prepare_v2(
+        connection.value().native_handle(),
+        "SELECT created_at_ns FROM task_event WHERE event_type = 'RUNNING';",
+        -1,
+        &statement,
+        nullptr), SQLITE_OK);
+    ASSERT_EQ(sqlite3_step(statement), SQLITE_ROW);
+    EXPECT_GT(sqlite3_column_int64(statement, 0), 0);
+    sqlite3_finalize(statement);
 }
 
 TEST_F(TaskRuntimeRepositoryTest, RejectsDuplicateTaskKeyAndUnknownDependency)
@@ -194,6 +509,7 @@ TEST_F(TaskRuntimeRepositoryTest, DurableEventsTrackClaimAndCompletion)
     photobridge::TaskRuntimeRepository repository(connection.value());
     ASSERT_TRUE(repository.AddTask("plan-1", Task("a")).ok());
     ASSERT_TRUE(repository.SetReady("plan-1", "a").ok());
+    ASSERT_TRUE(AdvanceToEpoch(repository, 1));
     ASSERT_TRUE(repository.ClaimNextReady("plan-1", {1}, "attempt-a").ok());
     ASSERT_TRUE(repository.MarkSucceeded("plan-1", "a", {1}, "attempt-a").ok());
 
@@ -224,30 +540,10 @@ TEST_F(TaskRuntimeRepositoryTest, PersistsVerifiedReceiptBeforeCompletion)
     photobridge::TaskRuntimeRepository repository(connection.value());
     ASSERT_TRUE(repository.AddTask("plan-1", Task("a")).ok());
     ASSERT_TRUE(repository.SetReady("plan-1", "a").ok());
+    ASSERT_TRUE(AdvanceToEpoch(repository, 7));
     ASSERT_TRUE(repository.ClaimNextReady("plan-1", {7}, "attempt-a").ok());
 
-    photobridge::Digest source_digest;
-    source_digest.bytes[0] = std::byte{0x11};
-    photobridge::Digest target_digest;
-    target_digest.bytes[0] = std::byte{0x22};
-    photobridge::FileIdentity source_identity;
-    source_identity.device = 3;
-    source_identity.inode = 4;
-    source_identity.size = 12;
-    source_identity.mtime_ns = 5;
-    source_identity.ctime_ns = 6;
-    source_identity.mount_id = 7;
-    const photobridge::VerifiedReceipt receipt{
-        "a",
-        "attempt-a",
-        {7},
-        ".photobridge.plan-1.a.attempt-a.pbtmp",
-        "target-a.jpg",
-        12,
-        source_digest,
-        target_digest,
-        source_identity,
-    };
+    const photobridge::VerifiedReceipt receipt = Receipt();
     ASSERT_TRUE(repository.PersistVerifiedReceipt("plan-1", receipt).ok());
 
     const auto loaded = repository.ReadVerifiedReceipt(
@@ -262,7 +558,7 @@ TEST_F(TaskRuntimeRepositoryTest, PersistsVerifiedReceiptBeforeCompletion)
     EXPECT_EQ(loaded.value().source_digest, receipt.source_digest);
     EXPECT_EQ(loaded.value().target_digest, receipt.target_digest);
     ASSERT_TRUE(loaded.value().source_identity.has_value());
-    EXPECT_EQ(loaded.value().source_identity.value(), source_identity);
+    EXPECT_EQ(loaded.value().source_identity.value(), receipt.source_identity.value());
 
     sqlite3_stmt* statement = nullptr;
     ASSERT_EQ(
@@ -282,6 +578,206 @@ TEST_F(TaskRuntimeRepositoryTest, PersistsVerifiedReceiptBeforeCompletion)
     sqlite3_finalize(statement);
 }
 
+TEST_F(TaskRuntimeRepositoryTest, VerifiedReceiptMarksAttemptVerifiedDurable)
+{
+    auto connection = photobridge::SqliteConnection::Open(database_path_);
+    ASSERT_TRUE(connection.ok());
+    ASSERT_TRUE(photobridge::EnsureSchema(connection.value()).ok());
+    CreatePlan(connection.value());
+    photobridge::TaskRuntimeRepository repository(connection.value());
+    ASSERT_TRUE(repository.AddTask("plan-1", Task("a")).ok());
+    ASSERT_TRUE(repository.SetReady("plan-1", "a").ok());
+    ASSERT_TRUE(AdvanceToEpoch(repository, 7));
+    ASSERT_TRUE(repository.ClaimNextReady("plan-1", {7}, "attempt-a").ok());
+    ASSERT_TRUE(repository.PersistVerifiedReceipt("plan-1", Receipt()).ok());
+
+    sqlite3_stmt* statement = nullptr;
+    ASSERT_EQ(sqlite3_prepare_v2(
+        connection.value().native_handle(),
+        "SELECT file_state, finished_at_ns FROM task_attempt "
+        "WHERE attempt_id = 'attempt-a';",
+        -1,
+        &statement,
+        nullptr), SQLITE_OK);
+    ASSERT_EQ(sqlite3_step(statement), SQLITE_ROW);
+    EXPECT_EQ(
+        sqlite3_column_int(statement, 0),
+        static_cast<int>(photobridge::FileAttemptState::kVerifiedDurable));
+    EXPECT_EQ(sqlite3_column_type(statement, 1), SQLITE_NULL);
+    sqlite3_finalize(statement);
+}
+
+TEST_F(TaskRuntimeRepositoryTest, RetryMarksAttemptRetryable)
+{
+    auto connection = photobridge::SqliteConnection::Open(database_path_);
+    ASSERT_TRUE(connection.ok());
+    ASSERT_TRUE(photobridge::EnsureSchema(connection.value()).ok());
+    CreatePlan(connection.value());
+    photobridge::TaskRuntimeRepository repository(connection.value());
+    ASSERT_TRUE(repository.AddTask("plan-1", Task("a")).ok());
+    ASSERT_TRUE(repository.SetReady("plan-1", "a").ok());
+    ASSERT_TRUE(AdvanceToEpoch(repository, 7));
+    ASSERT_TRUE(repository.ClaimNextReady("plan-1", {7}, "attempt-a").ok());
+    const photobridge::Status error(
+        photobridge::StatusCode::kIoError, "temporary failure");
+    ASSERT_TRUE(repository.MarkRetryable(
+        "plan-1", "a", {7}, "attempt-a", error).ok());
+
+    sqlite3_stmt* statement = nullptr;
+    ASSERT_EQ(sqlite3_prepare_v2(
+        connection.value().native_handle(),
+        "SELECT file_state, finished_at_ns, error_code, error_message "
+        "FROM task_attempt WHERE attempt_id = 'attempt-a';",
+        -1,
+        &statement,
+        nullptr), SQLITE_OK);
+    ASSERT_EQ(sqlite3_step(statement), SQLITE_ROW);
+    EXPECT_EQ(
+        sqlite3_column_int(statement, 0),
+        static_cast<int>(photobridge::FileAttemptState::kRetryable));
+    EXPECT_GT(sqlite3_column_int64(statement, 1), 0);
+    EXPECT_EQ(
+        sqlite3_column_int(statement, 2),
+        static_cast<int>(photobridge::StatusCode::kIoError));
+    EXPECT_STREQ(
+        reinterpret_cast<const char*>(sqlite3_column_text(statement, 3)),
+        "temporary failure");
+    sqlite3_finalize(statement);
+}
+
+TEST_F(TaskRuntimeRepositoryTest, SameReceiptReplayIsIdempotent)
+{
+    auto connection = photobridge::SqliteConnection::Open(database_path_);
+    ASSERT_TRUE(connection.ok());
+    ASSERT_TRUE(photobridge::EnsureSchema(connection.value()).ok());
+    CreatePlan(connection.value());
+    photobridge::TaskRuntimeRepository repository(connection.value());
+    ASSERT_TRUE(repository.AddTask("plan-1", Task("a")).ok());
+    ASSERT_TRUE(repository.SetReady("plan-1", "a").ok());
+    ASSERT_TRUE(AdvanceToEpoch(repository, 7));
+    ASSERT_TRUE(repository.ClaimNextReady("plan-1", {7}, "attempt-a").ok());
+
+    const auto receipt = Receipt();
+    ASSERT_TRUE(repository.PersistVerifiedReceipt("plan-1", receipt).ok());
+    ASSERT_TRUE(repository.PersistVerifiedReceipt("plan-1", receipt).ok());
+
+    sqlite3_stmt* statement = nullptr;
+    ASSERT_EQ(sqlite3_prepare_v2(
+        connection.value().native_handle(),
+        "SELECT COUNT(*) FROM task_event WHERE plan_id = 'plan-1' "
+        "AND event_type = 'VERIFIED_DURABLE';",
+        -1,
+        &statement,
+        nullptr), SQLITE_OK);
+    ASSERT_EQ(sqlite3_step(statement), SQLITE_ROW);
+    EXPECT_EQ(sqlite3_column_int(statement, 0), 1);
+    sqlite3_finalize(statement);
+}
+
+TEST_F(TaskRuntimeRepositoryTest, ConflictingReceiptDigestFails)
+{
+    auto connection = photobridge::SqliteConnection::Open(database_path_);
+    ASSERT_TRUE(connection.ok());
+    ASSERT_TRUE(photobridge::EnsureSchema(connection.value()).ok());
+    CreatePlan(connection.value());
+    photobridge::TaskRuntimeRepository repository(connection.value());
+    ASSERT_TRUE(repository.AddTask("plan-1", Task("a")).ok());
+    ASSERT_TRUE(repository.SetReady("plan-1", "a").ok());
+    ASSERT_TRUE(AdvanceToEpoch(repository, 7));
+    ASSERT_TRUE(repository.ClaimNextReady("plan-1", {7}, "attempt-a").ok());
+
+    const auto receipt = Receipt();
+    ASSERT_TRUE(repository.PersistVerifiedReceipt("plan-1", receipt).ok());
+    auto conflicting = receipt;
+    conflicting.target_digest.bytes[0] = std::byte{0x33};
+    EXPECT_EQ(
+        repository.PersistVerifiedReceipt("plan-1", conflicting).code(),
+        photobridge::StatusCode::kInternal);
+}
+
+TEST_F(TaskRuntimeRepositoryTest, ConflictingReceiptPathFails)
+{
+    auto connection = photobridge::SqliteConnection::Open(database_path_);
+    ASSERT_TRUE(connection.ok());
+    ASSERT_TRUE(photobridge::EnsureSchema(connection.value()).ok());
+    CreatePlan(connection.value());
+    photobridge::TaskRuntimeRepository repository(connection.value());
+    ASSERT_TRUE(repository.AddTask("plan-1", Task("a")).ok());
+    ASSERT_TRUE(repository.SetReady("plan-1", "a").ok());
+    ASSERT_TRUE(AdvanceToEpoch(repository, 7));
+    ASSERT_TRUE(repository.ClaimNextReady("plan-1", {7}, "attempt-a").ok());
+
+    const auto receipt = Receipt();
+    ASSERT_TRUE(repository.PersistVerifiedReceipt("plan-1", receipt).ok());
+    auto conflicting = receipt;
+    conflicting.final_path = "other-target.jpg";
+    EXPECT_EQ(
+        repository.PersistVerifiedReceipt("plan-1", conflicting).code(),
+        photobridge::StatusCode::kInternal);
+}
+
+TEST_F(TaskRuntimeRepositoryTest, ConflictingReceiptIdentityFails)
+{
+    auto connection = photobridge::SqliteConnection::Open(database_path_);
+    ASSERT_TRUE(connection.ok());
+    ASSERT_TRUE(photobridge::EnsureSchema(connection.value()).ok());
+    CreatePlan(connection.value());
+    photobridge::TaskRuntimeRepository repository(connection.value());
+    ASSERT_TRUE(repository.AddTask("plan-1", Task("a")).ok());
+    ASSERT_TRUE(repository.SetReady("plan-1", "a").ok());
+    ASSERT_TRUE(AdvanceToEpoch(repository, 7));
+    ASSERT_TRUE(repository.ClaimNextReady("plan-1", {7}, "attempt-a").ok());
+
+    const auto receipt = Receipt();
+    ASSERT_TRUE(repository.PersistVerifiedReceipt("plan-1", receipt).ok());
+    auto conflicting = receipt;
+    conflicting.source_identity->inode = 99;
+    EXPECT_EQ(
+        repository.PersistVerifiedReceipt("plan-1", conflicting).code(),
+        photobridge::StatusCode::kInternal);
+}
+
+TEST_F(TaskRuntimeRepositoryTest, ReceiptReadRejectsNegativeEpoch)
+{
+    auto connection = photobridge::SqliteConnection::Open(database_path_);
+    ASSERT_TRUE(connection.ok());
+    ASSERT_TRUE(photobridge::EnsureSchema(connection.value()).ok());
+    CreatePlan(connection.value());
+    photobridge::TaskRuntimeRepository repository(connection.value());
+    ASSERT_TRUE(repository.AddTask("plan-1", Task("a")).ok());
+    ASSERT_TRUE(repository.SetReady("plan-1", "a").ok());
+    ASSERT_TRUE(AdvanceToEpoch(repository, 7));
+    ASSERT_TRUE(repository.ClaimNextReady("plan-1", {7}, "attempt-a").ok());
+    ASSERT_TRUE(repository.PersistVerifiedReceipt("plan-1", Receipt()).ok());
+    ASSERT_TRUE(connection.value().Execute(
+        "UPDATE verified_receipt SET owner_epoch = -1;").ok());
+
+    EXPECT_EQ(
+        repository.ReadVerifiedReceipt("plan-1", "a", "attempt-a").status().code(),
+        photobridge::StatusCode::kInternal);
+}
+
+TEST_F(TaskRuntimeRepositoryTest, ReceiptReadRejectsNegativeSize)
+{
+    auto connection = photobridge::SqliteConnection::Open(database_path_);
+    ASSERT_TRUE(connection.ok());
+    ASSERT_TRUE(photobridge::EnsureSchema(connection.value()).ok());
+    CreatePlan(connection.value());
+    photobridge::TaskRuntimeRepository repository(connection.value());
+    ASSERT_TRUE(repository.AddTask("plan-1", Task("a")).ok());
+    ASSERT_TRUE(repository.SetReady("plan-1", "a").ok());
+    ASSERT_TRUE(AdvanceToEpoch(repository, 7));
+    ASSERT_TRUE(repository.ClaimNextReady("plan-1", {7}, "attempt-a").ok());
+    ASSERT_TRUE(repository.PersistVerifiedReceipt("plan-1", Receipt()).ok());
+    ASSERT_TRUE(connection.value().Execute(
+        "PRAGMA ignore_check_constraints = ON;"
+        "UPDATE verified_receipt SET content_size = -1;").ok());
+
+    EXPECT_EQ(
+        repository.ReadVerifiedReceipt("plan-1", "a", "attempt-a").status().code(),
+        photobridge::StatusCode::kInternal);
+}
+
 TEST_F(TaskRuntimeRepositoryTest, MultipleConnectionsCannotClaimSameReadyTask)
 {
     auto connection = photobridge::SqliteConnection::Open(database_path_);
@@ -291,13 +787,14 @@ TEST_F(TaskRuntimeRepositoryTest, MultipleConnectionsCannotClaimSameReadyTask)
     photobridge::TaskRuntimeRepository first(connection.value());
     ASSERT_TRUE(first.AddTask("plan-1", Task("a")).ok());
     ASSERT_TRUE(first.SetReady("plan-1", "a").ok());
-
+    ASSERT_TRUE(AdvanceToEpoch(first, 1));
+    
     auto second_connection = photobridge::SqliteConnection::Open(database_path_);
     ASSERT_TRUE(second_connection.ok());
     photobridge::TaskRuntimeRepository second(second_connection.value());
     ASSERT_TRUE(first.ClaimNextReady("plan-1", {1}, "attempt-a").ok());
     EXPECT_EQ(
-        second.ClaimNextReady("plan-1", {2}, "attempt-b").status().code(),
+        second.ClaimNextReady("plan-1", {1}, "attempt-b").status().code(),
         photobridge::StatusCode::kNotFound);
 }
 

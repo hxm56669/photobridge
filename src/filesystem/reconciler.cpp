@@ -97,7 +97,7 @@ StatusOr<ReconcileDecision> Decide(
         return Decision(
             ReconcileAction::kRetryTask,
             observed.temp_exists
-                ? "intent has no receipt; redo and clean this task temp"
+                ? "intent has no receipt; retry without cleaning unproven temp"
                 : "intent has no receipt; create a new attempt");
     }
 
@@ -127,10 +127,10 @@ StatusOr<ReconcileDecision> Decide(
                   ReconcileAction::kInconsistent,
                   "committed task final is missing or unverifiable");
     }
-    if (final_matches && observed.temp_exists) {
+    if (final_matches && temp_matches) {
         return Decision(
             ReconcileAction::kAdoptFinalAndCleanupTemp,
-            "matching final is durable evidence; clean owned temp after commit");
+            "matching final and temp are durable evidence; clean owned temp after commit");
     }
     if (final_matches) {
         return Decision(

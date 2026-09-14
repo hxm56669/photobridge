@@ -95,6 +95,22 @@ TEST(ReconcilerTest, RedoesIntentWithoutReceiptAndRejectsUnprovenFinal)
         retry.value().action,
         photobridge::ReconcileAction::kRetryTask);
 
+    photobridge::ObservedFileState unproven_temp;
+    unproven_temp.temp_exists = true;
+    auto retry_with_temp = photobridge::Decide(
+        spec,
+        runtime,
+        intent,
+        std::nullopt,
+        unproven_temp);
+    ASSERT_TRUE(retry_with_temp.ok());
+    EXPECT_EQ(
+        retry_with_temp.value().action,
+        photobridge::ReconcileAction::kRetryTask);
+    EXPECT_NE(
+        retry_with_temp.value().reason.find("without cleaning"),
+        std::string::npos);
+
     photobridge::ObservedFileState final_only;
     final_only.final_exists = true;
     auto conflict = photobridge::Decide(
@@ -152,6 +168,19 @@ TEST(ReconcilerTest, ResumesMatchingTempOrAdoptsMatchingFinal)
     EXPECT_EQ(
         adopt_and_clean.value().action,
         photobridge::ReconcileAction::kAdoptFinalAndCleanupTemp);
+
+    auto mismatched_temp = MatchingFinal(true);
+    mismatched_temp.temp_digest = std::nullopt;
+    auto adopt_only = photobridge::Decide(
+        spec,
+        runtime,
+        intent,
+        receipt,
+        mismatched_temp);
+    ASSERT_TRUE(adopt_only.ok());
+    EXPECT_EQ(
+        adopt_only.value().action,
+        photobridge::ReconcileAction::kAdoptFinal);
 }
 
 TEST(ReconcilerTest, DistinguishesCommittedMismatchAndUnavailableSource)

@@ -1,16 +1,70 @@
 #include "photobridge/cli/takeout_parse_command.h"
 
+#include <array>
 #include <filesystem>
 #include <fstream>
+#include <algorithm>
 
 #include <nlohmann/json.hpp>
 
 #include "photobridge/model/association_edge.h"
 #include "photobridge/model/association_graph.h"
+#include "photobridge/model/metadata_resolver.h"
 #include "photobridge/model/photo_ir.h"
+#include "photobridge/model/provenance.h"
 #include "photobridge/source/takeout_parser.h"
 
 namespace photobridge {
+namespace {
+
+struct MetadataSummary {
+    std::size_t resolutions = 0;
+    std::size_t provenance_records = 0;
+    std::size_t conflicts = 0;
+};
+
+StatusOr<MetadataSummary> ResolveParsedMetadata(
+    const std::vector<LogicalAsset>& logical_assets,
+    const std::vector<MetadataCandidate>& candidates)
+{
+    constexpr std::array<MetadataField, 4> kFields{
+        MetadataField::kTitle,
+        MetadataField::kDescription,
+        MetadataField::kFavorite,
+        MetadataField::kTakenTime,
+    };
+    const auto& ruleset = GoogleTakeoutMetadataRuleset();
+    MetadataResolver resolver;
+    MetadataSummary summary;
+    for (const LogicalAsset& logical_asset : logical_assets) {
+        for (const MetadataField field : kFields) {
+            std::vector<MetadataCandidate> group;
+            for (const MetadataCandidate& candidate : candidates) {
+                if (candidate.field != field
+                    || std::find(
+                           logical_asset.members.begin(),
+                           logical_asset.members.end(),
+                           candidate.asset_id)
+                        == logical_asset.members.end()) {
+                    continue;
+                }
+                group.push_back(candidate);
+            }
+            if (group.empty()) continue;
+
+            auto resolution = resolver.Resolve(field, group, ruleset);
+            if (!resolution.ok()) return resolution.status();
+            auto provenance = BuildProvenance(resolution.value());
+            if (!provenance.ok()) return provenance.status();
+            ++summary.resolutions;
+            summary.provenance_records += provenance.value().size();
+            summary.conflicts += resolution.value().conflict ? 1U : 0U;
+        }
+    }
+    return summary;
+}
+
+}  // namespace
 
 TakeoutParseCommand::TakeoutParseCommand(
     std::string root_path,
@@ -84,6 +138,11 @@ Status TakeoutParseCommand::Execute(CommandContext& context)
     auto logical_assets = graph.BuildLogicalAssets();
     if (!logical_assets.ok()) return logical_assets.status();
 
+    auto metadata = ResolveParsedMetadata(
+        logical_assets.value(),
+        parsed.value().candidates);
+    if (!metadata.ok()) return metadata.status();
+
     std::vector<CanonicalPhoto> photos;
     photos.reserve(logical_assets.value().size());
     for (const LogicalAsset& logical_asset : logical_assets.value()) {
@@ -102,7 +161,12 @@ Status TakeoutParseCommand::Execute(CommandContext& context)
                 << " edges=" << parsed.value().relations.size()
                 << " logical_assets=" << logical_assets.value().size()
                 << " errors=" << parsed.value().errors.size()
-                << " photo_ir=" << photos.size() << "\n";
+                << " photo_ir=" << photos.size()
+                << " metadata_resolutions=" << metadata.value().resolutions
+                << " metadata_provenance="
+                << metadata.value().provenance_records
+                << " metadata_conflicts=" << metadata.value().conflicts
+                << "\n";
     if (!error_report_path_.empty()) {
         context.out << "parser error report: " << error_report_path_ << "\n";
     }

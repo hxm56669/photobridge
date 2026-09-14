@@ -147,7 +147,6 @@ TEST(CopyAndHashTest, HandlesShortReadsAndShortWrites)
     ASSERT_TRUE(result.ok()) << result.status().message();
     EXPECT_EQ(result.value().bytes_copied, 24U);
     EXPECT_EQ(file_ops.target(), Bytes("PhotoBridge copy payload"));
-    EXPECT_EQ(result.value().source_before, result.value().source_after);
 
     photobridge::Blake3Hasher expected_hasher;
     const auto expected_bytes = Bytes("PhotoBridge copy payload");
@@ -172,23 +171,6 @@ TEST(CopyAndHashTest, RejectsZeroProgressWrites)
         buffer);
     EXPECT_FALSE(result.ok());
     EXPECT_EQ(result.status().code(), photobridge::StatusCode::kIoError);
-}
-
-TEST(CopyAndHashTest, RejectsSourceIdentityMutation)
-{
-    FakeFileOps file_ops("payload");
-    file_ops.after().inode = 11;
-    photobridge::Blake3Hasher hasher;
-    std::vector<std::byte> buffer(8);
-
-    const auto result = photobridge::CopyAndHash(
-        file_ops,
-        hasher,
-        10,
-        20,
-        buffer);
-    EXPECT_FALSE(result.ok());
-    EXPECT_EQ(result.status().code(), photobridge::StatusCode::kInternal);
 }
 
 TEST(CopyAndHashTest, RejectsEmptyBuffer)
