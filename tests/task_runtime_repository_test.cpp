@@ -428,6 +428,61 @@ TEST_F(TaskRuntimeRepositoryTest, ClaimCreatesRunningAttempt)
     sqlite3_finalize(statement);
 }
 
+TEST_F(TaskRuntimeRepositoryTest, RecordsAttemptCommitLifecycle)
+{
+    auto connection = photobridge::SqliteConnection::Open(database_path_);
+    ASSERT_TRUE(connection.ok());
+    ASSERT_TRUE(photobridge::EnsureSchema(connection.value()).ok());
+    CreatePlan(connection.value());
+    photobridge::TaskRuntimeRepository repository(connection.value());
+    ASSERT_TRUE(repository.AddTask("plan-1", Task("a")).ok());
+    ASSERT_TRUE(repository.SetReady("plan-1", "a").ok());
+    ASSERT_TRUE(AdvanceToEpoch(repository, 1));
+    ASSERT_TRUE(repository.ClaimNextReady("plan-1", {1}, "attempt-a").ok());
+
+    ASSERT_TRUE(repository.MarkCommitIntent(
+        "plan-1", "a", {1}, "attempt-a").ok());
+    ASSERT_TRUE(repository.MarkTempWritten(
+        "plan-1", "a", {1}, "attempt-a").ok());
+
+    sqlite3_stmt* statement = nullptr;
+    ASSERT_EQ(sqlite3_prepare_v2(
+        connection.value().native_handle(),
+        "SELECT file_state, finished_at_ns FROM task_attempt "
+        "WHERE attempt_id = 'attempt-a';",
+        -1,
+        &statement,
+        nullptr), SQLITE_OK);
+    ASSERT_EQ(sqlite3_step(statement), SQLITE_ROW);
+    EXPECT_EQ(
+        sqlite3_column_int(statement, 0),
+        static_cast<int>(photobridge::FileAttemptState::kTempWritten));
+    EXPECT_EQ(sqlite3_column_type(statement, 1), SQLITE_NULL);
+    sqlite3_finalize(statement);
+
+    ASSERT_EQ(sqlite3_prepare_v2(
+        connection.value().native_handle(),
+        "SELECT event_type FROM task_event WHERE attempt_id = 'attempt-a' "
+        "ORDER BY event_id;",
+        -1,
+        &statement,
+        nullptr), SQLITE_OK);
+    ASSERT_EQ(sqlite3_step(statement), SQLITE_ROW);
+    EXPECT_STREQ(
+        reinterpret_cast<const char*>(sqlite3_column_text(statement, 0)),
+        "RUNNING");
+    ASSERT_EQ(sqlite3_step(statement), SQLITE_ROW);
+    EXPECT_STREQ(
+        reinterpret_cast<const char*>(sqlite3_column_text(statement, 0)),
+        "COMMIT_INTENT");
+    ASSERT_EQ(sqlite3_step(statement), SQLITE_ROW);
+    EXPECT_STREQ(
+        reinterpret_cast<const char*>(sqlite3_column_text(statement, 0)),
+        "TEMP_WRITTEN");
+    EXPECT_EQ(sqlite3_step(statement), SQLITE_DONE);
+    sqlite3_finalize(statement);
+}
+
 TEST_F(TaskRuntimeRepositoryTest, RejectsDuplicateTaskKeyAndUnknownDependency)
 {
     auto connection = photobridge::SqliteConnection::Open(database_path_);

@@ -94,6 +94,11 @@ StatusOr<ReconcileDecision> Decide(
                 ReconcileAction::kTargetConflict,
                 "final exists without a durable verified receipt");
         }
+        if (observed.source_changed) {
+            return Decision(
+                ReconcileAction::kInconsistent,
+                "source identity changed from the frozen plan");
+        }
         return Decision(
             ReconcileAction::kRetryTask,
             observed.temp_exists
@@ -143,6 +148,11 @@ StatusOr<ReconcileDecision> Decide(
             "matching temp can be re-synced and published under a new epoch");
     }
     if (!observed.temp_exists && !observed.final_exists) {
+        if (observed.source_changed) {
+            return Decision(
+                ReconcileAction::kInconsistent,
+                "SOURCE_CHANGED: source identity differs from the frozen plan");
+        }
         return observed.source_available
             ? Decision(
                   ReconcileAction::kRetryTask,

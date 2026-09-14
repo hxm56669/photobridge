@@ -583,6 +583,92 @@ Status RecoverTask(
     return status;
 }
 
+Status CheckTaskOwnership(
+    sqlite3* database,
+    std::string_view plan_id,
+    std::string_view task_id,
+    ExecutionEpoch epoch,
+    std::string_view attempt_id);
+
+Status AdvanceAttempt(
+    SqliteConnection& connection,
+    std::string_view plan_id,
+    std::string_view task_id,
+    ExecutionEpoch epoch,
+    std::string_view attempt_id,
+    FileAttemptState next_state,
+    std::string_view event_type)
+{
+    Status status = connection.Execute("BEGIN IMMEDIATE;");
+    if (!status.ok()) return status;
+    const auto current = ReadCurrentEpochForPlan(
+        connection.native_handle(), plan_id);
+    if (!current.ok()) return Rollback(connection, current.status());
+    if (current.value() != epoch) {
+        return Rollback(connection, Invalid(
+            "stale executor epoch cannot advance an attempt"));
+    }
+    status = CheckTaskOwnership(
+        connection.native_handle(), plan_id, task_id, epoch, attempt_id);
+    if (!status.ok()) return Rollback(connection, status);
+
+    Statement select(
+        connection.native_handle(),
+        "SELECT file_state FROM task_attempt "
+        "WHERE plan_id = ?1 AND task_id = ?2 AND attempt_id = ?3 "
+        "AND owner_epoch = ?4;");
+    if (select.result() != SQLITE_OK) {
+        return Rollback(connection, SqliteError(
+            connection.native_handle(), "prepare attempt state query"));
+    }
+    status = BindText(select.get(), 1, plan_id);
+    if (!status.ok()) return Rollback(connection, status);
+    status = BindText(select.get(), 2, task_id);
+    if (!status.ok()) return Rollback(connection, status);
+    status = BindText(select.get(), 3, attempt_id);
+    if (!status.ok()) return Rollback(connection, status);
+    status = BindEpoch(select.get(), 4, epoch);
+    if (!status.ok()) return Rollback(connection, status);
+    const int step = sqlite3_step(select.get());
+    if (step == SQLITE_DONE) {
+        return Rollback(connection, Status(
+            StatusCode::kNotFound, "task attempt was not found"));
+    }
+    if (step != SQLITE_ROW) {
+        return Rollback(connection, SqliteError(
+            connection.native_handle(), "read attempt state"));
+    }
+    if (sqlite3_column_type(select.get(), 0) != SQLITE_INTEGER) {
+        return Rollback(connection, Status(
+            StatusCode::kInternal, "persisted attempt state is not an integer"));
+    }
+    const int persisted = sqlite3_column_int(select.get(), 0);
+    if (persisted < static_cast<int>(FileAttemptState::kPlanned)
+        || persisted > static_cast<int>(FileAttemptState::kSkipped)) {
+        return Rollback(connection, Status(
+            StatusCode::kInternal, "unknown persisted attempt state"));
+    }
+    const auto previous = static_cast<FileAttemptState>(persisted);
+    if (previous == next_state) {
+        status = connection.Execute("COMMIT;");
+        if (!status.ok()) connection.Execute("ROLLBACK;");
+        return status;
+    }
+    if (!IsValidTransition(previous, next_state)) {
+        return Rollback(connection, Invalid(
+            "invalid task attempt lifecycle transition"));
+    }
+    status = UpdateAttemptState(
+        connection, plan_id, task_id, attempt_id, epoch, next_state, nullptr, false);
+    if (!status.ok()) return Rollback(connection, status);
+    status = AppendTaskEvent(
+        connection, plan_id, task_id, event_type, epoch, attempt_id, "attempt lifecycle");
+    if (!status.ok()) return Rollback(connection, status);
+    status = connection.Execute("COMMIT;");
+    if (!status.ok()) connection.Execute("ROLLBACK;");
+    return status;
+}
+
 StatusOr<ExecutionEpoch> ReadCurrentEpochForPlan(
     sqlite3* database,
     std::string_view plan_id)
@@ -1048,6 +1134,46 @@ StatusOr<ClaimedTask> TaskRuntimeRepository::ClaimNextReady(
         return status;
     }
     return ClaimedTask{task_id, std::move(runtime.value())};
+}
+
+Status TaskRuntimeRepository::MarkCommitIntent(
+    const std::string& plan_id,
+    const TaskId& task_id,
+    ExecutionEpoch epoch,
+    const std::string& attempt_id)
+{
+    Status status = CheckIds(plan_id, task_id);
+    if (!status.ok()) return status;
+    status = CheckEpochAttempt(epoch, attempt_id);
+    if (!status.ok()) return status;
+    return AdvanceAttempt(
+        *connection_,
+        plan_id,
+        task_id,
+        epoch,
+        attempt_id,
+        FileAttemptState::kCommitIntent,
+        "COMMIT_INTENT");
+}
+
+Status TaskRuntimeRepository::MarkTempWritten(
+    const std::string& plan_id,
+    const TaskId& task_id,
+    ExecutionEpoch epoch,
+    const std::string& attempt_id)
+{
+    Status status = CheckIds(plan_id, task_id);
+    if (!status.ok()) return status;
+    status = CheckEpochAttempt(epoch, attempt_id);
+    if (!status.ok()) return status;
+    return AdvanceAttempt(
+        *connection_,
+        plan_id,
+        task_id,
+        epoch,
+        attempt_id,
+        FileAttemptState::kTempWritten,
+        "TEMP_WRITTEN");
 }
 
 Status TaskRuntimeRepository::MarkSucceeded(

@@ -16,8 +16,6 @@
 #include <blake3.h>
 #include <linux/fs.h>
 
-#include "photobridge/app/byte_permit_pool.h"
-#include "photobridge/app/fd_permit_pool.h"
 #include "photobridge/lan/upload_page.h"
 
 namespace photobridge {
@@ -60,29 +58,11 @@ bool PublishNoReplace(
     return result == 0;
 }
 
-class FdPermitGuard final {
-public:
-    explicit FdPermitGuard(FdPermitPool& pool) noexcept
-        : pool_(&pool) {}
-
-    FdPermitGuard(const FdPermitGuard&) = delete;
-    FdPermitGuard& operator=(const FdPermitGuard&) = delete;
-
-    ~FdPermitGuard()
-    {
-        pool_->Release();
-    }
-
-private:
-    FdPermitPool* pool_;
-};
-
 StatusOr<Digest> ReceiveBody(
     const httplib::ContentReader& reader,
     const std::filesystem::path& temporary,
     std::uint64_t expected_size,
-    bool& size_overflow,
-    BytePermitPool& byte_budget)
+    bool& size_overflow)
 {
     std::error_code error;
     std::filesystem::remove(temporary, error);
@@ -104,17 +84,11 @@ StatusOr<Digest> ReceiveBody(
             size_overflow = true;
             return false;
         }
-        const Status permit_status = byte_budget.Acquire(size);
-        if (!permit_status.ok()) {
-            return false;
-        }
         if (!WriteAll(fd, data, size)) {
-            byte_budget.Release(size);
             return false;
         }
         blake3_hasher_update(&hasher, data, size);
         received += static_cast<std::uint64_t>(size);
-        byte_budget.Release(size);
         return true;
     });
 
@@ -159,9 +133,6 @@ Status RunUploadHttpServer(
     server.set_keep_alive_max_count(32);
     server.set_payload_max_length(
         2ULL * 1024ULL * 1024ULL * 1024ULL);
-    FdPermitPool active_uploads(3);
-    BytePermitPool byte_budget(16ULL * 1024ULL * 1024ULL);
-
     const auto unauthorized = [](httplib::Response& response) {
         response.status = 401;
         response.set_header("Cache-Control", "no-store");
@@ -366,21 +337,13 @@ Status RunUploadHttpServer(
                 return;
             }
 
-            const Status permit_status = active_uploads.Acquire();
-            if (!permit_status.ok()) {
-                SetText(response, 503, "upload capacity is temporarily full\n");
-                return;
-            }
-            FdPermitGuard permit_guard(active_uploads);
-
             bool size_overflow = false;
             const auto temporary = store.TempPath(session_id, file_id);
             auto digest = ReceiveBody(
                 reader,
                 temporary,
                 file.value().expected_size,
-                size_overflow,
-                byte_budget);
+                size_overflow);
             if (!digest.ok()) {
                 store.MarkUploadFailed(session_id, file_id);
                 SetText(

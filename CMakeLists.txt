@@ -101,8 +101,6 @@ add_library(photobridge_core STATIC
 
     src/app/workspace_layout.cpp
     src/app/workspace_service.cpp
-    src/app/byte_permit_pool.cpp
-    src/app/fd_permit_pool.cpp
     src/app/sqlite_connection.cpp
     src/app/sqlite_schema.cpp
     src/app/task_runtime_repository.cpp
@@ -118,7 +116,14 @@ add_library(photobridge_core STATIC
     src/cli/dispatcher.cpp
     src/cli/init_command.cpp
     src/cli/pipeline_command.cpp
-    src/cli/pipeline_services.cpp
+    src/pipeline/pipeline_router.cpp
+    src/pipeline/pipeline_support.cpp
+    src/pipeline/scan_service.cpp
+    src/pipeline/plan_service.cpp
+    src/pipeline/migration_service.cpp
+    src/pipeline/recovery_service.cpp
+    src/pipeline/verify_service.cpp
+    src/pipeline/status_service.cpp
     src/cli/serve_command.cpp
     src/cli/takeout_parse_command.cpp
 )
@@ -221,8 +226,6 @@ add_executable(
     tests/sqlite_schema_test.cpp
     tests/manifest_builder_test.cpp
     tests/mutation_guard_test.cpp
-    tests/byte_permit_pool_test.cpp
-    tests/fd_permit_pool_test.cpp
     tests/large_fixture_test.cpp
     tests/takeout_parser_test.cpp
     tests/association_graph_test.cpp

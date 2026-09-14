@@ -39,6 +39,10 @@ StatusOr<VerifiedReceipt> MigrationAttemptPreparer::Prepare(
             "single-thread temp preparation requires a single target path component");
     }
 
+    Status status = repository.MarkCommitIntent(
+        plan_id, task_id, execution_epoch, attempt_id);
+    if (!status.ok()) return status;
+
     auto temp_fd = file_ops.CreateTempNoReplace(target_root_fd, temp_name, 0600);
     if (!temp_fd.ok()) return temp_fd.status();
 
@@ -51,7 +55,10 @@ StatusOr<VerifiedReceipt> MigrationAttemptPreparer::Prepare(
         buffer);
     if (!copy.ok()) return copy.status();
 
-    Status status = file_ops.Fdatasync(temp_fd.value().get());
+    status = file_ops.Fdatasync(temp_fd.value().get());
+    if (!status.ok()) return status;
+    status = repository.MarkTempWritten(
+        plan_id, task_id, execution_epoch, attempt_id);
     if (!status.ok()) return status;
     PauseForTest("PHOTOBRIDGE_TEST_PAUSE_BEFORE_RECEIPT_MS");
 

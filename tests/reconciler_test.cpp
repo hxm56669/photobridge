@@ -213,6 +213,23 @@ TEST(ReconcilerTest, DistinguishesCommittedMismatchAndUnavailableSource)
         photobridge::ReconcileAction::kInconsistent);
 }
 
+TEST(ReconcilerTest, SourceReplacementIsNotRetryable)
+{
+    auto observed = photobridge::ObservedFileState{};
+    observed.source_changed = true;
+    auto result = photobridge::Decide(
+        Spec(),
+        Runtime(photobridge::TaskState::kRunning),
+        Intent(),
+        Receipt(),
+        observed);
+    ASSERT_TRUE(result.ok());
+    EXPECT_EQ(
+        result.value().action,
+        photobridge::ReconcileAction::kInconsistent);
+    EXPECT_NE(result.value().reason.find("SOURCE_CHANGED"), std::string::npos);
+}
+
 TEST(ReconcilerTest, RejectsIntentBindingMismatch)
 {
     auto intent = Intent();

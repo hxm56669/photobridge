@@ -33,6 +33,7 @@ struct VerifiedReceipt {
 
 struct ObservedFileState {
     bool source_available = false;
+    bool source_changed = false;
     bool temp_exists = false;
     bool final_exists = false;
     std::optional<FileIdentity> source_identity;

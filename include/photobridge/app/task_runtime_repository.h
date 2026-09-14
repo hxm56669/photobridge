@@ -36,6 +36,17 @@ public:
         ExecutionEpoch epoch,
         const std::string& attempt_id);
 
+    Status MarkCommitIntent(
+        const std::string& plan_id,
+        const TaskId& task_id,
+        ExecutionEpoch epoch,
+        const std::string& attempt_id);
+    Status MarkTempWritten(
+        const std::string& plan_id,
+        const TaskId& task_id,
+        ExecutionEpoch epoch,
+        const std::string& attempt_id);
+
     Status MarkSucceeded(
         const std::string& plan_id,
         const TaskId& task_id,
