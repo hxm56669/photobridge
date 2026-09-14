@@ -2,6 +2,35 @@
 
 namespace photobridge::pipeline {
 
+namespace {
+
+std::string TaskStateName(TaskState state)
+{
+    switch (state) {
+    case TaskState::kPlanned:
+        return "PLANNED";
+    case TaskState::kReady:
+        return "READY";
+    case TaskState::kRunning:
+        return "RUNNING";
+    case TaskState::kSucceeded:
+        return "SUCCEEDED";
+    case TaskState::kRetryable:
+        return "RETRYABLE";
+    case TaskState::kFailed:
+        return "FAILED";
+    case TaskState::kNeedsReview:
+        return "NEEDS_REVIEW";
+    case TaskState::kInconsistent:
+        return "INCONSISTENT";
+    case TaskState::kSkipped:
+        return "SKIPPED";
+    }
+    return "UNKNOWN";
+}
+
+}  // namespace
+
 class StatusService final {
 public:
     static Status Execute(

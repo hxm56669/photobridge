@@ -239,13 +239,14 @@ Status UpdateAttemptState(
     std::string_view attempt_id,
     ExecutionEpoch owner_epoch,
     FileAttemptState state,
+    const TaskState* result,
     const Status* error,
     bool finish)
 {
     Statement statement(
         connection.native_handle(),
         "UPDATE task_attempt SET file_state = ?5, finished_at_ns = ?6, "
-        "error_code = ?7, error_message = ?8 "
+        "result = ?7, error_code = ?8, error_message = ?9 "
         "WHERE plan_id = ?1 AND task_id = ?2 AND attempt_id = ?3 "
         "AND owner_epoch = ?4;");
     if (statement.result() != SQLITE_OK) {
@@ -276,21 +277,33 @@ Status UpdateAttemptState(
             StatusCode::kInternal,
             "SQLite failed to clear attempt finish timestamp");
     }
+    if (result == nullptr) {
+        if (sqlite3_bind_null(statement.get(), 7) != SQLITE_OK) {
+            return Status(
+                StatusCode::kInternal,
+                "SQLite failed to clear attempt result");
+        }
+    } else if (sqlite3_bind_int(
+                   statement.get(), 7, static_cast<int>(*result)) != SQLITE_OK) {
+        return Status(
+            StatusCode::kInternal,
+            "SQLite failed to bind attempt result");
+    }
     if (error == nullptr) {
-        if (sqlite3_bind_null(statement.get(), 7) != SQLITE_OK
-            || sqlite3_bind_null(statement.get(), 8) != SQLITE_OK) {
+        if (sqlite3_bind_null(statement.get(), 8) != SQLITE_OK
+            || sqlite3_bind_null(statement.get(), 9) != SQLITE_OK) {
             return Status(
                 StatusCode::kInternal,
                 "SQLite failed to clear attempt error");
         }
     } else {
         if (sqlite3_bind_int(
-                statement.get(), 7, static_cast<int>(error->code())) != SQLITE_OK) {
+                statement.get(), 8, static_cast<int>(error->code())) != SQLITE_OK) {
             return Status(
                 StatusCode::kInternal,
                 "SQLite failed to bind attempt error code");
         }
-        status = BindText(statement.get(), 8, error->message());
+        status = BindText(statement.get(), 9, error->message());
         if (!status.ok()) return status;
     }
     if (sqlite3_step(statement.get()) != SQLITE_DONE) {
@@ -452,18 +465,20 @@ Status FinishTask(
         return Rollback(connection, Invalid(
             "task completion claim is stale or has an unexpected state"));
     }
-    if (next_state == TaskState::kRetryable) {
-        status = UpdateAttemptState(
-            connection,
-            plan_id,
-            task_id,
-            attempt_id,
-            epoch,
-            FileAttemptState::kRetryable,
-            error,
-            true);
-        if (!status.ok()) return Rollback(connection, status);
-    }
+    const FileAttemptState attempt_state = next_state == TaskState::kSucceeded
+        ? FileAttemptState::kCommitted
+        : FileAttemptState::kRetryable;
+    status = UpdateAttemptState(
+        connection,
+        plan_id,
+        task_id,
+        attempt_id,
+        epoch,
+        attempt_state,
+        &next_state,
+        error,
+        true);
+    if (!status.ok()) return Rollback(connection, status);
     status = AppendTaskEvent(
         connection,
         plan_id,
@@ -561,6 +576,7 @@ Status RecoverTask(
         expected_old_attempt_id,
         expected_old_epoch,
         attempt_state,
+        &next_state,
         error,
         true);
     if (!status.ok()) return Rollback(connection, status);
@@ -659,7 +675,15 @@ Status AdvanceAttempt(
             "invalid task attempt lifecycle transition"));
     }
     status = UpdateAttemptState(
-        connection, plan_id, task_id, attempt_id, epoch, next_state, nullptr, false);
+        connection,
+        plan_id,
+        task_id,
+        attempt_id,
+        epoch,
+        next_state,
+        nullptr,
+        nullptr,
+        false);
     if (!status.ok()) return Rollback(connection, status);
     status = AppendTaskEvent(
         connection, plan_id, task_id, event_type, epoch, attempt_id, "attempt lifecycle");
@@ -1420,6 +1444,7 @@ Status TaskRuntimeRepository::PersistVerifiedReceipt(
         receipt.attempt_id,
         receipt.owner_epoch,
         FileAttemptState::kVerifiedDurable,
+        nullptr,
         nullptr,
         false);
     if (!status.ok()) return Rollback(*connection_, status);

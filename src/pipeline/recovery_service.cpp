@@ -2,6 +2,71 @@
 
 namespace photobridge::pipeline {
 
+namespace {
+
+const char* ReconcileActionName(ReconcileAction action)
+{
+    switch (action) {
+    case ReconcileAction::kRetryTask: return "retry_task";
+    case ReconcileAction::kResumeCommitFromTemp: return "resume_commit";
+    case ReconcileAction::kAdoptFinal: return "adopt_final";
+    case ReconcileAction::kAdoptFinalAndCleanupTemp:
+        return "adopt_final_cleanup_temp";
+    case ReconcileAction::kReverifyCommitted: return "reverify_committed";
+    case ReconcileAction::kTargetConflict: return "target_conflict";
+    case ReconcileAction::kInconsistent: return "inconsistent";
+    }
+    return "unknown";
+}
+
+AuditReport RecoveryAudit(
+    std::string_view plan_id,
+    std::string_view task_id,
+    const CommitIntent& intent,
+    const std::optional<VerifiedReceipt>& receipt,
+    const ObservedFileState& observed,
+    const ReconcileDecision& decision)
+{
+    std::vector<DiffFileState> expected;
+    std::vector<DiffFileState> actual;
+    if (receipt.has_value()) {
+        expected.push_back({
+            receipt->temp_path,
+            receipt->content_size,
+            receipt->target_digest,
+        });
+        expected.push_back({
+            receipt->final_path,
+            receipt->content_size,
+            receipt->target_digest,
+        });
+    }
+    if (observed.temp_exists) {
+        actual.push_back({
+            receipt.has_value() ? receipt->temp_path : intent.temp_path,
+            observed.temp_size,
+            observed.temp_digest,
+        });
+    }
+    if (observed.final_exists) {
+        actual.push_back({
+            intent.final_path,
+            observed.final_size,
+            observed.final_digest,
+        });
+    }
+    return AuditReport{
+        std::string(plan_id),
+        std::string(task_id),
+        ReconcileActionName(decision.action),
+        decision.reason,
+        DiffFileStates(expected, actual),
+        {},
+    };
+}
+
+}  // namespace
+
 class RecoveryService final {
 public:
     static Status Execute(

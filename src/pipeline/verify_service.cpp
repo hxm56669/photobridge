@@ -2,6 +2,91 @@
 
 namespace photobridge::pipeline {
 
+namespace {
+
+struct VerificationSummary {
+    std::uint64_t bytes = 0;
+    DiffFileState expected;
+    DiffFileState observed;
+};
+
+StatusOr<VerificationSummary> VerifyPlanAsset(
+    FileOps& file_ops,
+    int source_root_fd,
+    int target_root_fd,
+    const MinimalPlanAsset& plan_asset,
+    std::span<std::byte> buffer)
+{
+    if (plan_asset.target_path.components().size() != 1) {
+        return Status(
+            StatusCode::kInvalidArgument,
+            "single-thread verification requires a single target path component");
+    }
+
+    const PhysicalAsset source_asset{
+        plan_asset.source_path,
+        plan_asset.source_identity,
+        AssetKind::kUnknown,
+        {},
+    };
+    auto source_guard = MutationGuard::Open(
+        file_ops,
+        source_root_fd,
+        source_asset);
+    if (!source_guard.ok()) return source_guard.status();
+    Status status = source_guard.value().VerifyBeforeRead();
+    if (!status.ok()) return status;
+
+    Blake3Hasher source_hasher;
+    auto source_verification = VerifyBinary(
+        file_ops,
+        source_hasher,
+        source_guard.value().fd(),
+        plan_asset.source_identity.size,
+        std::nullopt,
+        buffer);
+    if (!source_verification.ok()) return source_verification.status();
+    status = source_guard.value().VerifyAfterRead();
+    if (!status.ok()) return status;
+    if (source_verification.value().target_before
+            != source_guard.value().manifest_identity()
+        || source_verification.value().target_after
+            != source_guard.value().manifest_identity()
+        || source_verification.value().bytes_read
+            != plan_asset.source_identity.size) {
+        return Status(
+            StatusCode::kInternal,
+            "source changed during independent verification");
+    }
+
+    auto target_fd = file_ops.OpenSource(target_root_fd, plan_asset.target_path);
+    if (!target_fd.ok()) return target_fd.status();
+    Blake3Hasher target_hasher;
+    auto target_verification = VerifyBinary(
+        file_ops,
+        target_hasher,
+        target_fd.value().get(),
+        plan_asset.source_identity.size,
+        std::optional<Digest>(source_verification.value().target_digest),
+        buffer);
+    if (!target_verification.ok()) return target_verification.status();
+    return VerificationSummary{
+        target_verification.value().bytes_read,
+        DiffFileState{
+            std::string(plan_asset.target_path.bytes()),
+            source_verification.value().bytes_read,
+            source_verification.value().target_digest,
+        },
+        DiffFileState{
+            std::string(plan_asset.target_path.bytes()),
+            target_verification.value().bytes_read,
+            target_verification.value().target_digest,
+        },
+    };
+}
+
+}  // namespace
+
 class VerifyService final {
 public:
     static Status Execute(

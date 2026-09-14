@@ -228,6 +228,21 @@ TEST(ReconcilerTest, SourceReplacementIsNotRetryable)
         result.value().action,
         photobridge::ReconcileAction::kInconsistent);
     EXPECT_NE(result.value().reason.find("SOURCE_CHANGED"), std::string::npos);
+
+    observed.final_exists = true;
+    observed.final_size = Receipt().content_size;
+    observed.final_digest = Receipt().target_digest;
+    result = photobridge::Decide(
+        Spec(),
+        Runtime(photobridge::TaskState::kRunning),
+        Intent(),
+        Receipt(),
+        observed);
+    ASSERT_TRUE(result.ok());
+    EXPECT_EQ(
+        result.value().action,
+        photobridge::ReconcileAction::kInconsistent);
+    EXPECT_NE(result.value().reason.find("SOURCE_CHANGED"), std::string::npos);
 }
 
 TEST(ReconcilerTest, RejectsIntentBindingMismatch)

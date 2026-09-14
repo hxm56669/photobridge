@@ -2,6 +2,15 @@
 
 namespace photobridge {
 
+namespace {
+
+bool RequiresInput(PipelineStage)
+{
+    return true;
+}
+
+}  // namespace
+
 Status RunPipelineStage(
     PipelineStage stage,
     std::string workspace_path,
@@ -15,7 +24,7 @@ Status RunPipelineStage(
         return layout.status();
     }
 
-    if (pipeline::RequiresInput(stage) && input_path.empty()) {
+    if (RequiresInput(stage) && input_path.empty()) {
         return Status(
             StatusCode::kInvalidArgument,
             "pipeline stage requires an input path");

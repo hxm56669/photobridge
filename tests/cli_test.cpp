@@ -458,7 +458,7 @@ TEST(RunCliTest, ExecutesMultiplePlanAssetsSequentially)
     std::filesystem::remove_all(target, cleanup_error);
 }
 
-TEST(PipelineCommandTest, RejectsMissingStageInput)
+TEST(PipelineCommandRoutingTest, DelegatesToPipelineStageValidation)
 {
     photobridge::PipelineCommand command(
         photobridge::PipelineStage::kPlan,

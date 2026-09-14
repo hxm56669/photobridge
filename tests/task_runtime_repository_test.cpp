@@ -586,6 +586,40 @@ TEST_F(TaskRuntimeRepositoryTest, DurableEventsTrackClaimAndCompletion)
     sqlite3_finalize(statement);
 }
 
+TEST_F(TaskRuntimeRepositoryTest, SuccessClosesAttemptAsCommitted)
+{
+    auto connection = photobridge::SqliteConnection::Open(database_path_);
+    ASSERT_TRUE(connection.ok());
+    ASSERT_TRUE(photobridge::EnsureSchema(connection.value()).ok());
+    CreatePlan(connection.value());
+    photobridge::TaskRuntimeRepository repository(connection.value());
+    ASSERT_TRUE(repository.AddTask("plan-1", Task("a")).ok());
+    ASSERT_TRUE(repository.SetReady("plan-1", "a").ok());
+    ASSERT_TRUE(AdvanceToEpoch(repository, 1));
+    ASSERT_TRUE(repository.ClaimNextReady("plan-1", {1}, "attempt-a").ok());
+    ASSERT_TRUE(repository.MarkSucceeded("plan-1", "a", {1}, "attempt-a").ok());
+
+    sqlite3_stmt* statement = nullptr;
+    ASSERT_EQ(sqlite3_prepare_v2(
+        connection.value().native_handle(),
+        "SELECT file_state, finished_at_ns, result, error_code, error_message "
+        "FROM task_attempt WHERE attempt_id = 'attempt-a';",
+        -1,
+        &statement,
+        nullptr), SQLITE_OK);
+    ASSERT_EQ(sqlite3_step(statement), SQLITE_ROW);
+    EXPECT_EQ(
+        sqlite3_column_int(statement, 0),
+        static_cast<int>(photobridge::FileAttemptState::kCommitted));
+    EXPECT_GT(sqlite3_column_int64(statement, 1), 0);
+    EXPECT_EQ(
+        sqlite3_column_int(statement, 2),
+        static_cast<int>(photobridge::TaskState::kSucceeded));
+    EXPECT_EQ(sqlite3_column_type(statement, 3), SQLITE_NULL);
+    EXPECT_EQ(sqlite3_column_type(statement, 4), SQLITE_NULL);
+    sqlite3_finalize(statement);
+}
+
 TEST_F(TaskRuntimeRepositoryTest, PersistsVerifiedReceiptBeforeCompletion)
 {
     auto connection = photobridge::SqliteConnection::Open(database_path_);
@@ -681,7 +715,7 @@ TEST_F(TaskRuntimeRepositoryTest, RetryMarksAttemptRetryable)
     sqlite3_stmt* statement = nullptr;
     ASSERT_EQ(sqlite3_prepare_v2(
         connection.value().native_handle(),
-        "SELECT file_state, finished_at_ns, error_code, error_message "
+        "SELECT file_state, finished_at_ns, result, error_code, error_message "
         "FROM task_attempt WHERE attempt_id = 'attempt-a';",
         -1,
         &statement,
@@ -693,9 +727,12 @@ TEST_F(TaskRuntimeRepositoryTest, RetryMarksAttemptRetryable)
     EXPECT_GT(sqlite3_column_int64(statement, 1), 0);
     EXPECT_EQ(
         sqlite3_column_int(statement, 2),
+        static_cast<int>(photobridge::TaskState::kRetryable));
+    EXPECT_EQ(
+        sqlite3_column_int(statement, 3),
         static_cast<int>(photobridge::StatusCode::kIoError));
     EXPECT_STREQ(
-        reinterpret_cast<const char*>(sqlite3_column_text(statement, 3)),
+        reinterpret_cast<const char*>(sqlite3_column_text(statement, 4)),
         "temporary failure");
     sqlite3_finalize(statement);
 }

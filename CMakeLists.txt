@@ -117,7 +117,7 @@ add_library(photobridge_core STATIC
     src/cli/init_command.cpp
     src/cli/pipeline_command.cpp
     src/pipeline/pipeline_router.cpp
-    src/pipeline/pipeline_support.cpp
+    src/pipeline/pipeline_shared.cpp
     src/pipeline/scan_service.cpp
     src/pipeline/plan_service.cpp
     src/pipeline/migration_service.cpp

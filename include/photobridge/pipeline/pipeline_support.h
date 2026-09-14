@@ -42,7 +42,6 @@
 
 namespace photobridge::pipeline {
 
-bool RequiresInput(PipelineStage stage);
 Status SqliteReadError(
     sqlite3* database,
     std::string_view operation);
@@ -77,12 +76,6 @@ private:
     int result_ = SQLITE_ERROR;
 };
 
-StatusOr<std::vector<PhysicalAsset>> ReadManifestAssets(
-    SqliteConnection& connection,
-    std::string_view manifest_id);
-Status WritePlanFile(
-    const std::filesystem::path& path,
-    std::string_view bytes);
 StatusOr<std::string> ReadPlanFile(const std::filesystem::path& path);
 StatusOr<std::array<std::uint64_t, 9>> ReadTaskStateCounts(
     SqliteConnection& connection,
@@ -114,15 +107,6 @@ StatusOr<bool> ObserveRecoveryFile(
     bool temp,
     ObservedFileState& observed,
     std::span<std::byte> buffer);
-std::string TaskStateName(TaskState state);
-const char* ReconcileActionName(ReconcileAction action);
-AuditReport RecoveryAudit(
-    std::string_view plan_id,
-    std::string_view task_id,
-    const CommitIntent& intent,
-    const std::optional<VerifiedReceipt>& receipt,
-    const ObservedFileState& observed,
-    const ReconcileDecision& decision);
 StatusOr<bool> CheckMaterializedPlan(
     SqliteConnection& connection,
     const FrozenPlanFile& artifact);
@@ -131,19 +115,6 @@ Status MaterializePlan(
     const FrozenPlanFile& artifact,
     const std::filesystem::path& artifact_path,
     std::size_t& task_count);
-
-struct VerificationSummary {
-    std::uint64_t bytes = 0;
-    DiffFileState expected;
-    DiffFileState observed;
-};
-
-StatusOr<VerificationSummary> VerifyPlanAsset(
-    FileOps& file_ops,
-    int source_root_fd,
-    int target_root_fd,
-    const MinimalPlanAsset& plan_asset,
-    std::span<std::byte> buffer);
 
 Status RunScanService(
     const StatusOr<WorkspaceLayout>& layout,

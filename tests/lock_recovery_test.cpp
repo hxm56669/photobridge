@@ -21,6 +21,7 @@
 
 #include "photobridge/app/plan_execution_lock.h"
 #include "photobridge/app/sqlite_connection.h"
+#include "photobridge/model/task.h"
 
 namespace {
 
@@ -94,6 +95,28 @@ bool HasVerifiedReceipt(const std::filesystem::path& workspace)
     const int step = sqlite3_step(statement);
     const bool result = step == SQLITE_ROW
         && sqlite3_column_int64(statement, 0) > 0;
+    sqlite3_finalize(statement);
+    return result;
+}
+
+int ReadTaskState(const std::filesystem::path& workspace)
+{
+    auto connection = photobridge::SqliteConnection::Open(
+        workspace / "photobridge.db");
+    if (!connection.ok()) return -1;
+    sqlite3_stmt* statement = nullptr;
+    if (sqlite3_prepare_v2(
+            connection.value().native_handle(),
+            "SELECT state FROM plan_task LIMIT 1;",
+            -1,
+            &statement,
+            nullptr)
+        != SQLITE_OK) {
+        return -1;
+    }
+    const int result = sqlite3_step(statement) == SQLITE_ROW
+        ? sqlite3_column_int(statement, 0)
+        : -1;
     sqlite3_finalize(statement);
     return result;
 }
@@ -426,6 +449,104 @@ TEST(ProcessCrashE2ETest, SigkillResumeVerifyCoversAllCommitWindows)
         KillAndReap(child);
         ::unsetenv("PHOTOBRIDGE_TEST_PAUSE_BEFORE_RECOVERY_MS");
         FinishWithResumeAndVerify(executable, scenario, "final durable/before recovery");
+        std::error_code error;
+        std::filesystem::remove_all(scenario.root, error);
+    }
+
+    {
+        CrashScenario scenario{};
+        PrepareCrashScenario(executable, 5, scenario);
+        ASSERT_FALSE(scenario.plan.empty());
+        ASSERT_EQ(
+            ::setenv("PHOTOBRIDGE_TEST_PAUSE_AFTER_RECEIPT_MS", "10000", 1),
+            0);
+        const pid_t child = StartPhotobridge(
+            executable,
+            {"migrate", "--workspace", scenario.workspace.string(),
+             "--plan", scenario.plan.string()});
+        EXPECT_TRUE(WaitUntil([&scenario] {
+            return HasVerifiedReceipt(scenario.workspace)
+                && !FindTemp(scenario.target).empty();
+        }));
+        KillAndReap(child);
+        ::unsetenv("PHOTOBRIDGE_TEST_PAUSE_AFTER_RECEIPT_MS");
+
+        {
+            std::ofstream foreign_final(
+                scenario.target / "photo.jpg", std::ios::binary);
+            ASSERT_TRUE(foreign_final);
+            foreign_final << "foreign-final";
+        }
+        EXPECT_EQ(
+            RunPhotobridge(
+                executable,
+                {"resume", "--workspace", scenario.workspace.string(),
+                 "--plan", scenario.plan.string()}),
+            4);
+        EXPECT_EQ(
+            ReadTaskState(scenario.workspace),
+            static_cast<int>(photobridge::TaskState::kInconsistent));
+        std::ifstream final_file(scenario.target / "photo.jpg", std::ios::binary);
+        ASSERT_TRUE(final_file);
+        std::string final_bytes;
+        std::getline(final_file, final_bytes);
+        EXPECT_EQ(final_bytes, "foreign-final");
+        std::error_code error;
+        std::filesystem::remove_all(scenario.root, error);
+    }
+
+    {
+        CrashScenario scenario{};
+        PrepareCrashScenario(executable, 6, scenario);
+        ASSERT_FALSE(scenario.plan.empty());
+        ASSERT_EQ(
+            ::setenv(
+                "PHOTOBRIDGE_TEST_PAUSE_AFTER_FIRST_COPY_WRITE_MS",
+                "10000",
+                1),
+            0);
+        const pid_t child = StartPhotobridge(
+            executable,
+            {"migrate", "--workspace", scenario.workspace.string(),
+             "--plan", scenario.plan.string()});
+        EXPECT_TRUE(WaitUntil([&scenario] {
+            const auto temp = FindTemp(scenario.target);
+            std::error_code error;
+            return !temp.empty()
+                && std::filesystem::file_size(temp, error) > 0
+                && !error;
+        }));
+        EXPECT_FALSE(HasVerifiedReceipt(scenario.workspace));
+        KillAndReap(child);
+        ::unsetenv("PHOTOBRIDGE_TEST_PAUSE_AFTER_FIRST_COPY_WRITE_MS");
+
+        std::error_code replacement_error;
+        ASSERT_TRUE(std::filesystem::remove(
+            scenario.source / "photo.jpg", replacement_error));
+        ASSERT_FALSE(replacement_error);
+        {
+            std::ofstream replacement(
+                scenario.source / "photo.jpg", std::ios::binary);
+            ASSERT_TRUE(replacement);
+            replacement << "replacement-source";
+        }
+        EXPECT_EQ(
+            RunPhotobridge(
+                executable,
+                {"resume", "--workspace", scenario.workspace.string(),
+                 "--plan", scenario.plan.string()}),
+            7);
+        EXPECT_EQ(
+            ReadTaskState(scenario.workspace),
+            static_cast<int>(photobridge::TaskState::kInconsistent));
+        EXPECT_FALSE(std::filesystem::exists(scenario.target / "photo.jpg"));
+        EXPECT_NE(
+            RunPhotobridge(
+                executable,
+                {"migrate", "--workspace", scenario.workspace.string(),
+                 "--plan", scenario.plan.string()}),
+            0);
+        EXPECT_FALSE(std::filesystem::exists(scenario.target / "photo.jpg"));
         std::error_code error;
         std::filesystem::remove_all(scenario.root, error);
     }

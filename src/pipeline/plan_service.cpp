@@ -1,6 +1,241 @@
 #include "photobridge/pipeline/pipeline_support.h"
 
+#include <fstream>
+#include <iterator>
+
 namespace photobridge::pipeline {
+
+namespace {
+
+StatusOr<std::uint64_t> ReadUnsignedInteger(
+    sqlite3_stmt* statement,
+    int column,
+    std::string_view field_name)
+{
+    if (sqlite3_column_type(statement, column) != SQLITE_INTEGER) {
+        return Status(
+            StatusCode::kInternal,
+            std::string("manifest field is not an integer: ")
+                + std::string(field_name));
+    }
+
+    const sqlite3_int64 value = sqlite3_column_int64(statement, column);
+    if (value < 0) {
+        return Status(
+            StatusCode::kInternal,
+            std::string("manifest field is negative: ")
+                + std::string(field_name));
+    }
+    return static_cast<std::uint64_t>(value);
+}
+
+StatusOr<std::vector<PhysicalAsset>> ReadManifestAssets(
+    SqliteConnection& connection,
+    std::string_view manifest_id)
+{
+    sqlite3_stmt* statement = nullptr;
+    const int prepare_result = sqlite3_prepare_v2(
+        connection.native_handle(),
+        "SELECT relative_path, device, inode, size, mtime_ns, ctime_ns, "
+        "kind FROM physical_asset WHERE manifest_id = ? "
+        "ORDER BY relative_path ASC;",
+        -1,
+        &statement,
+        nullptr);
+    if (prepare_result != SQLITE_OK) {
+        return SqliteReadError(
+            connection.native_handle(),
+            "prepare manifest asset read");
+    }
+
+    const int bind_result = sqlite3_bind_text(
+        statement,
+        1,
+        manifest_id.data(),
+        static_cast<int>(manifest_id.size()),
+        SQLITE_TRANSIENT);
+    if (bind_result != SQLITE_OK) {
+        sqlite3_finalize(statement);
+        return SqliteReadError(
+            connection.native_handle(),
+            "bind manifest id for asset read");
+    }
+
+    std::vector<PhysicalAsset> assets;
+    while (true) {
+        const int step_result = sqlite3_step(statement);
+        if (step_result == SQLITE_DONE) {
+            break;
+        }
+        if (step_result != SQLITE_ROW) {
+            const Status status = SqliteReadError(
+                connection.native_handle(),
+                "read manifest asset");
+            sqlite3_finalize(statement);
+            return status;
+        }
+
+        if (sqlite3_column_type(statement, 0) != SQLITE_BLOB) {
+            sqlite3_finalize(statement);
+            return Status(
+                StatusCode::kInternal,
+                "manifest relative path is not a blob");
+        }
+        const int path_size = sqlite3_column_bytes(statement, 0);
+        const void* path_data = sqlite3_column_blob(statement, 0);
+        if (path_size <= 0 || path_data == nullptr) {
+            sqlite3_finalize(statement);
+            return Status(
+                StatusCode::kInternal,
+                "manifest relative path is empty");
+        }
+        auto relative_path = RelativePath::Parse(
+            std::string(
+                static_cast<const char*>(path_data),
+                static_cast<std::size_t>(path_size)));
+        if (!relative_path.ok()) {
+            sqlite3_finalize(statement);
+            return relative_path.status();
+        }
+
+        auto device = ReadUnsignedInteger(statement, 1, "device");
+        auto inode = ReadUnsignedInteger(statement, 2, "inode");
+        auto size = ReadUnsignedInteger(statement, 3, "size");
+        if (!device.ok() || !inode.ok() || !size.ok()) {
+            const Status status = !device.ok()
+                ? device.status()
+                : (!inode.ok() ? inode.status() : size.status());
+            sqlite3_finalize(statement);
+            return status;
+        }
+
+        if (sqlite3_column_type(statement, 4) != SQLITE_INTEGER
+            || sqlite3_column_type(statement, 5) != SQLITE_INTEGER
+            || sqlite3_column_type(statement, 6) != SQLITE_INTEGER) {
+            sqlite3_finalize(statement);
+            return Status(
+                StatusCode::kInternal,
+                "manifest identity or kind field is not an integer");
+        }
+
+        const sqlite3_int64 kind = sqlite3_column_int64(statement, 6);
+        if (kind < 0 || kind > static_cast<sqlite3_int64>(
+                AssetKind::kUnknown)) {
+            sqlite3_finalize(statement);
+            return Status(
+                StatusCode::kInternal,
+                "manifest asset kind is unknown");
+        }
+
+        FileIdentity identity;
+        identity.device = device.value();
+        identity.inode = inode.value();
+        identity.size = size.value();
+        identity.mtime_ns = sqlite3_column_int64(statement, 4);
+        identity.ctime_ns = sqlite3_column_int64(statement, 5);
+        assets.push_back(PhysicalAsset{
+            std::move(relative_path.value()),
+            identity,
+            static_cast<AssetKind>(kind),
+            {},
+        });
+    }
+
+    sqlite3_finalize(statement);
+    return assets;
+}
+
+Status WritePlanFile(
+    const std::filesystem::path& path,
+    std::string_view bytes)
+{
+    std::error_code exists_error;
+    const bool exists = std::filesystem::exists(path, exists_error);
+    if (exists_error) {
+        return Status(
+            StatusCode::kIoError,
+            "check plan artifact path: " + exists_error.message());
+    }
+
+    if (exists) {
+        if (std::filesystem::is_directory(path, exists_error)) {
+            return Status(
+                StatusCode::kAlreadyExists,
+                "plan artifact path is a directory: " + path.string());
+        }
+        if (exists_error) {
+            return Status(
+                StatusCode::kIoError,
+                "inspect plan artifact path: " + exists_error.message());
+        }
+
+        std::ifstream existing(path, std::ios::binary);
+        if (!existing) {
+            return Status(
+                StatusCode::kIoError,
+                "open existing plan artifact: " + path.string());
+        }
+        const std::string existing_bytes{
+            std::istreambuf_iterator<char>(existing),
+            std::istreambuf_iterator<char>()};
+        if (std::string_view(existing_bytes) == bytes) {
+            return Status::Ok();
+        }
+        return Status(
+            StatusCode::kAlreadyExists,
+            "plan artifact already exists with different bytes: "
+                + path.string());
+    }
+
+    LinuxFileOps file_ops;
+    auto parent = file_ops.OpenRoot(path.parent_path(), OpenRootMode::kExisting);
+    if (!parent.ok()) return parent.status();
+    const std::string final_name = path.filename().string();
+    const std::string temp_name = ".pbtmp." + final_name;
+    auto temporary = file_ops.CreateTempNoReplace(
+        parent.value().get(),
+        temp_name,
+        0600);
+    if (!temporary.ok()) return temporary.status();
+
+    const auto cleanup = [&file_ops, &parent, &temp_name]() {
+        static_cast<void>(file_ops.UnlinkAt(parent.value().get(), temp_name));
+    };
+    std::size_t offset = 0;
+    while (offset < bytes.size()) {
+        const auto* data = reinterpret_cast<const std::byte*>(
+            bytes.data() + offset);
+        const std::size_t remaining = bytes.size() - offset;
+        auto written = file_ops.Write(
+            temporary.value().get(),
+            std::span<const std::byte>(data, remaining));
+        if (!written.ok()) {
+            cleanup();
+            return written.status();
+        }
+        if (written.value() == 0) {
+            cleanup();
+            return Status(
+                StatusCode::kIoError,
+                "plan artifact write made no progress");
+        }
+        offset += written.value();
+    }
+    Status status = file_ops.Fdatasync(temporary.value().get());
+    if (!status.ok()) {
+        cleanup();
+        return status;
+    }
+    status = file_ops.RenameNoReplace(
+        parent.value().get(),
+        temp_name,
+        parent.value().get(),
+        final_name);
+    if (!status.ok()) return status;
+    return file_ops.FsyncDirectory(parent.value().get());
+}
+
+}  // namespace
 
 class PlanService final {
 public:
