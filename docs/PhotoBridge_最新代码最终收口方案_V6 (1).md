@@ -210,7 +210,7 @@ RecoverInconsistent(...)
 
 ```text
 pipeline_services.cpp
-tests/task_runtime_repository_test.cpp
+tests/integration/sqlite/task_runtime_repository_test.cpp
 ```
 
 都已经调用这些接口。
@@ -1362,7 +1362,7 @@ timestamps/events
 这一阶段直接以当前：
 
 ```text
-tests/task_runtime_repository_test.cpp
+tests/integration/sqlite/task_runtime_repository_test.cpp
 ```
 
 已表达的契约为主。

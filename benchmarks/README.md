@@ -26,6 +26,14 @@ cmake --build --preset bench-release -j2
 
 `bench-release` 使用 `build/bench-release`，固定为 Release，并且 build preset 只构建 `photobridge_bench`。可执行文件路径应为 `./build/bench-release/photobridge_bench`。
 
+按版本保存报告和机器信息时，从对应源码版本运行：
+
+```bash
+bash benchmarks/scripts/run_benchmark.sh v1-baseline --repetitions 10
+```
+
+脚本构建当前 checkout，输出到 `benchmark-results/<版本>/`，其中 JSON 是基准报告，同名 `.env.txt` 记录提交号、工作区状态及机器信息。版本目录只是结果标签，不会自动切换源码。也可单独运行 `bash benchmarks/scripts/collect_env.sh OUTPUT_FILE`。
+
 默认数据目录为系统临时目录下的 `photobridge_bench_data`。使用 `--data-root` 可把 fixture 和数据库放到指定 Linux/SMB 路径；程序只清理该目录下自己创建的 `run/` 子目录。`--keep-data` 可保留 fixture 供复查。
 
 P95/P99 是重复样本的 wall-time 和吞吐率分位数；当重复次数较少时，P99 会退化为最大样本，正式比较应固定参数并使用至少 10 次重复。

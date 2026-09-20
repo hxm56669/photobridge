@@ -56,6 +56,8 @@ cmake --build --preset bench-release -j2
   --output benchmark-results.json
 ```
 
+按源码版本归档 benchmark 报告与环境信息的脚本见 [`benchmarks/README.md`](benchmarks/README.md)。
+
 测试包含进程级 SIGKILL→resume→verify 场景，覆盖 partial temp/no receipt、durable receipt+temp、rename 后 DB 仍为 RUNNING、final mismatch 和 Frozen Source replacement。
 
 设计过程记录在 [`docs/state.md`](docs/state.md)、[`docs/DECISIONS.md`](docs/DECISIONS.md) 和蓝图文档中。

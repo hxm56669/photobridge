@@ -9,7 +9,7 @@
 - 正确性边界：当前 `PhysicalAssetId` 在 source manifest 内按相对路径区分；成员不能为空或重复；文件 identity、kind 和 extension 不参与 ID，因此源文件变化由 Mutation Guard 处理，而不是生成新逻辑资产。
 - 兼容性影响：Manifest 写入复用同一个 `PhysicalAssetIdFor()`，后续关联图可复用 `LogicalAssetIdForMembers()`；变更域、规范数组编码或成员 ID 规则必须升级版本并重新评估历史计划兼容性。
 - 何时重新评估：引入跨 source manifest 的全局资产身份、sidecar 关联或多成员 LogicalAsset 时。
-- 关联文件/测试：`include/photobridge/model/physical_asset.h`、`src/model/physical_asset.cpp`、`include/photobridge/model/logical_asset.h`、`src/model/logical_asset.cpp`、`tests/logical_asset_test.cpp`、`src/app/manifest_builder.cpp`。
+- 关联文件/测试：`include/photobridge/model/physical_asset.h`、`src/model/physical_asset.cpp`、`include/photobridge/model/logical_asset.h`、`src/model/logical_asset.cpp`、`tests/unit/model/logical_asset_test.cpp`、`src/app/manifest_builder.cpp`。
 
 ## Decision ID：C2-001
 
@@ -20,7 +20,7 @@
 - 正确性边界：`LocalDirectoryCapabilitiesV1()` 是纯函数，不探测挂载点；实际文件系统的 case-fold、normalization 和长度限制由后续目标探测/PathMapper 处理。
 - 兼容性影响：能力版本进入后续 Plan 输入；能力枚举或语义改变时升级版本并重新生成计划。
 - 何时重新评估：实现 C3 PathMapper、加入实际挂载点探测或支持 NAS 时。
-- 关联文件/测试：`include/photobridge/model/capability.h`、`src/model/capability.cpp`、`tests/capability_test.cpp`。
+- 关联文件/测试：`include/photobridge/model/capability.h`、`src/model/capability.cpp`、`tests/unit/model/capability_test.cpp`。
 
 ## Decision ID：C3-001
 
@@ -31,7 +31,7 @@
 - 正确性边界：当前 L0 Linux 目标允许原始非 NUL 路径字节，但 capability 未确认 Unicode normalization 时保守拒绝非 ASCII 目标路径；大小写冲突检测覆盖 ASCII，实际挂载点探测留给后续能力扩展。
 - 兼容性影响：`MigrationPolicy` 和 capability version 必须进入后续 Plan 语义摘要；修改 prefix、扁平化或长度限制会生成不同目标路径，不能静默复用旧计划。
 - 何时重新评估：实现真实挂载点探测、Unicode normalization 处理、完整媒体组件或 NAS 目标时。
-- 关联文件/测试：`include/photobridge/model/path_mapper.h`、`src/model/path_mapper.cpp`、`tests/path_mapper_test.cpp`、`include/photobridge/model/logical_asset.h`。
+- 关联文件/测试：`include/photobridge/model/path_mapper.h`、`src/model/path_mapper.cpp`、`tests/unit/model/path_mapper_test.cpp`、`include/photobridge/model/logical_asset.h`。
 
 ## Decision ID：C4-001
 
@@ -42,7 +42,7 @@
 - 正确性边界：C4 只负责 typed plan 和 semantic projection，不负责 JSONL 文件发布、artifact digest 或 SQLite task runtime；当前 L0 每个计划资产冻结一个源物理资产。
 - 兼容性影响：canonical domain/version、字段顺序和 capability/policy 字段变化必须升级 plan semantic profile；运行时状态不能写入 canonical payload。
 - 何时重新评估：实现 C5 JSON Lines、完整多成员 LogicalAsset 或需要对外兼容旧计划时。
-- 关联文件/测试：`include/photobridge/model/canonical_plan.h`、`src/model/canonical_plan.cpp`、`tests/canonical_plan_test.cpp`。
+- 关联文件/测试：`include/photobridge/model/canonical_plan.h`、`src/model/canonical_plan.cpp`、`tests/unit/model/canonical_plan_test.cpp`。
 
 ## Decision ID：C5-001
 
@@ -53,7 +53,7 @@
 - 正确性边界：C5 只负责 artifact 的内存读写与 digest 校验，不负责 SQLite runtime、任务调度或文件发布。
 - 兼容性影响：artifact schema、section 顺序、base64 表示和摘要域变化必须升级格式版本；旧 artifact 不应静默按新规则解释。
 - 何时重新评估：需要外部兼容的计划交换格式、签名封装或更大规模流式解析时。
-- 关联文件/测试：`include/photobridge/model/plan_artifact.h`、`src/model/plan_artifact.cpp`、`tests/plan_artifact_test.cpp`。
+- 关联文件/测试：`include/photobridge/model/plan_artifact.h`、`src/model/plan_artifact.cpp`、`tests/unit/model/plan_artifact_test.cpp`。
 
 ## Decision ID：C6-001
 
@@ -64,7 +64,7 @@
 - 正确性边界：C6 只定义类型、校验、task key 和状态转换；DAG 存储、SQLite 单写者和实际执行器留给后续阶段。
 - 兼容性影响：task key 域、任务类型枚举和状态机是持久化协议的一部分，改变它们必须升级版本并处理已有计划/runtime。
 - 何时重新评估：实现 TaskGraph、SQLite runtime 表、恢复扫描和实际文件提交协议时。
-- 关联文件/测试：`include/photobridge/model/task.h`、`src/model/task.cpp`、`tests/task_test.cpp`。
+- 关联文件/测试：`include/photobridge/model/task.h`、`src/model/task.cpp`、`tests/unit/model/task_test.cpp`。
 
 ## Decision ID：C7-001
 
@@ -86,7 +86,7 @@
 - 正确性边界：C8 只建立 schema 与版本迁移，不负责 runtime repository、单写者事务封装、Ready 计数更新或恢复算法。
 - 兼容性影响：schema version 3、列含义、枚举整数和复合约束属于持久化协议；变更必须追加迁移并拒绝未知更高版本。
 - 何时重新评估：实现 task repository、epoch lease、attempt 提交事务和崩溃恢复扫描时。
-- 关联文件/测试：`include/photobridge/app/sqlite_schema.h`、`src/app/sqlite_schema.cpp`、`tests/sqlite_schema_test.cpp`。
+- 关联文件/测试：`include/photobridge/app/sqlite_schema.h`、`src/app/sqlite_schema.cpp`、`tests/integration/sqlite/sqlite_schema_test.cpp`。
 
 ## Decision ID：C9-001
 
@@ -97,7 +97,7 @@
 - 正确性边界：C9 暂不实现 DB Writer 线程队列、文件锁、VerifiedReceipt 和文件提交协议；当前 repository 只覆盖任务状态与依赖就绪判断。
 - 兼容性影响：task state 整数映射、`plan_task` 字段和条件更新语义属于 runtime 协议；修改必须同步 schema/recovery 规则。
 - 何时重新评估：实现 CopyAndHash、commit intent、VerifiedReceipt、单写者队列和进程崩溃恢复时。
-- 关联文件/测试：`include/photobridge/app/task_runtime_repository.h`、`src/app/task_runtime_repository.cpp`、`tests/task_runtime_repository_test.cpp`。
+- 关联文件/测试：`include/photobridge/app/task_runtime_repository.h`、`src/app/task_runtime_repository.cpp`、`tests/integration/sqlite/task_runtime_repository_test.cpp`。
 
 ## Decision ID：C10-001
 
@@ -108,7 +108,7 @@
 - 正确性边界：C10 只产生源复制摘要和身份结果，不声称目标已持久化；目标独立读回、fdatasync、VerifiedReceipt 和 rename 留给后续提交协议。
 - 兼容性影响：`CopyResult` 字段语义和 Hasher finalize 规则属于执行层接口；修改必须同步提交/恢复协议。
 - 何时重新评估：引入 sparse file、稀疏复制、校验和硬件加速或多 Worker I/O 时。
-- 关联文件/测试：`include/photobridge/filesystem/copy_and_hash.h`、`src/filesystem/copy_and_hash.cpp`、`tests/copy_and_hash_test.cpp`。
+- 关联文件/测试：`include/photobridge/filesystem/copy_and_hash.h`、`src/filesystem/copy_and_hash.cpp`、`tests/unit/filesystem/copy_and_hash_test.cpp`。
 
 ## Decision ID：C11-001
 
@@ -130,7 +130,7 @@
 - 正确性边界：C12 不操作文件、不持锁、不写数据库；源当前不可用时只能依据 receipt 校验已有 final，不能声称源仍满足 Manifest。
 - 兼容性影响：receipt 绑定字段、观察字段和决策枚举是恢复协议的一部分；改变必须同步 runtime schema 与恢复测试。
 - 何时重新评估：实现独立目标读回 verifier、VerifiedReceipt 持久化、commit intent 表和 kill-9 恢复流程时。
-- 关联文件/测试：`include/photobridge/filesystem/reconciler.h`、`src/filesystem/reconciler.cpp`、`tests/reconciler_test.cpp`。
+- 关联文件/测试：`include/photobridge/filesystem/reconciler.h`、`src/filesystem/reconciler.cpp`、`tests/unit/filesystem/reconciler_test.cpp`。
 
 ## Decision ID：C13-001
 
@@ -141,7 +141,7 @@
 - 正确性边界：C13 不发布文件、不持久化 receipt、不执行媒体/元数据/关系验证；它只验证一个已打开目标 fd 的二进制内容。
 - 兼容性影响：二进制验证枚举和摘要/大小比较规则属于报告与恢复协议；变更必须同步 verifier 和 audit 输出。
 - 何时重新评估：支持稀疏文件、分块摘要、目标读回限速和多种二进制摘要算法时。
-- 关联文件/测试：`include/photobridge/filesystem/binary_verifier.h`、`src/filesystem/binary_verifier.cpp`、`tests/binary_verifier_test.cpp`。
+- 关联文件/测试：`include/photobridge/filesystem/binary_verifier.h`、`src/filesystem/binary_verifier.cpp`、`tests/unit/filesystem/binary_verifier_test.cpp`。
 
 ## Decision ID：C14-001
 
@@ -152,7 +152,7 @@
 - 正确性边界：C14 只保证五阶段的 CLI11 解析、参数约束、输出注入和 `Status` 路由；它不声称已经生成 Manifest/Plan、执行文件提交、恢复任务或验证目标内容。
 - 兼容性影响：阶段名称、选项名称和输出格式属于 CLI 协议；后续接入真实服务应保留这些入口，并仅替换 `PipelineCommand::Execute()` 的应用调用。
 - 何时重新评估：D1 接入 Local Folder Scanner 后，将 `scan` 从边界确认改为真实 Manifest 生成，并补充跨阶段集成测试。
-- 关联文件/测试：`include/photobridge/cli/pipeline_command.h`、`src/cli/pipeline_command.cpp`、`src/cli/cli_app.cpp`、`tests/cli_test.cpp`。
+- 关联文件/测试：`include/photobridge/cli/pipeline_command.h`、`src/cli/pipeline_command.cpp`、`src/cli/cli_app.cpp`、`tests/integration/cli/cli_test.cpp`。
 
 ## Decision ID：D1-001
 
@@ -163,4 +163,4 @@
 - 正确性边界：本决策不自动删除已有代码，也不声称 C2～C14 已完成 L0 闭环；每个阶段仍需真实代码、测试和状态记录证明。
 - 兼容性影响：后续新增接口必须服务于当前纵切，并保持 `RelativePath`、`FileIdentity`、`PhysicalAsset`、Manifest、Plan、Task 和 FileOps 契约兼容。
 - 何时重新评估：D1 scan、plan、migrate、resume、verify 最小闭环完成并通过可重复测试后。
-- 关联文件/测试：`docs/state.md`、`src/cli/pipeline_command.cpp`、`src/filesystem/local_folder_source.cpp`、`tests/local_folder_source_test.cpp`。
+- 关联文件/测试：`docs/state.md`、`src/cli/pipeline_command.cpp`、`src/filesystem/local_folder_source.cpp`、`tests/unit/filesystem/local_folder_source_test.cpp`。
