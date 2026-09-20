@@ -1,0 +1,8 @@
+PhotoBridge Release benchmark
+repetitions=5, data_root="/tmp/photobridge_bench_data", e2e_workers=4
+
+["copy_hash_fdatasync"]
+  wall ms: min=3704.839887 mean=7922.539499199998 p95=22821.612594 p99=22821.612594 max=22821.612594
+  throughput ("bytes/s"): mean=220537878.23905116 p95=289821384.12180185 p99=289821384.12180185
+  CPU ms: mean=4078.2706000000007, CPU utilization mean=82.76669890655214%
+  peak RSS KiB=6240, kernel read bytes=0, kernel write bytes=5368709120, read/write syscalls=5135/5120

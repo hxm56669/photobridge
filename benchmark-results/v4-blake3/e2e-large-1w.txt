@@ -1,0 +1,8 @@
+PhotoBridge Release benchmark
+repetitions=3, data_root="/tmp/photobridge_bench_data", e2e_workers=1
+
+["e2e_large_local_pipeline"]
+  wall ms: min=12096.784414 mean=12431.844330666667 p95=12902.122716 p99=12902.122716 max=12902.122716
+  throughput ("pipelines/s"): mean=0.08049878146865819 p95=0.08266659682243056 p99=0.08266659682243056
+  CPU ms: mean=11613.847666666668, CPU utilization mean=93.42729902024979%
+  peak RSS KiB=9288, kernel read bytes=0, kernel write bytes=3253792768, read/write syscalls=29045/16274

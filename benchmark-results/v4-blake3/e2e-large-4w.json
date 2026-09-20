@@ -1,0 +1,105 @@
+{
+  "copy_bytes": 67108864,
+  "data_root": "/tmp/photobridge_bench_data",
+  "e2e_file_bytes": 16777216,
+  "e2e_files": 64,
+  "e2e_workers": 4,
+  "repetitions": 3,
+  "scanner_files": 100000,
+  "schema_version": 1,
+  "sqlite_commands": 5000,
+  "workloads": [
+    {
+      "configured_bytes": 1073741824,
+      "configured_items": 1,
+      "name": "e2e_large_local_pipeline",
+      "samples": [
+        {
+          "bytes": 1073741824,
+          "cpu_ms": 12598.920999999997,
+          "cpu_utilization_percent": 143.2792791946936,
+          "io": {
+            "rchar_bytes": 6462332498,
+            "read_bytes": 0,
+            "read_syscalls": 11388,
+            "wchar_bytes": 1083235775,
+            "write_bytes": 1084747776,
+            "write_syscalls": 5462
+          },
+          "items": 1,
+          "max_rss_kib": 13436,
+          "rss_delta_kib": 5964,
+          "wall_ms": 8793.261015
+        },
+        {
+          "bytes": 1073741824,
+          "cpu_ms": 12673.768000000002,
+          "cpu_utilization_percent": 145.1000709681479,
+          "io": {
+            "rchar_bytes": 6462692954,
+            "read_bytes": 0,
+            "read_syscalls": 11476,
+            "wchar_bytes": 1083129231,
+            "write_bytes": 1084641280,
+            "write_syscalls": 5434
+          },
+          "items": 1,
+          "max_rss_kib": 13436,
+          "rss_delta_kib": 0,
+          "wall_ms": 8734.501586
+        },
+        {
+          "bytes": 1073741824,
+          "cpu_ms": 12988.721000000001,
+          "cpu_utilization_percent": 146.84827503568843,
+          "io": {
+            "rchar_bytes": 6461341276,
+            "read_bytes": 0,
+            "read_syscalls": 11146,
+            "wchar_bytes": 1083125303,
+            "write_bytes": 1084633088,
+            "write_syscalls": 5440
+          },
+          "items": 1,
+          "max_rss_kib": 13436,
+          "rss_delta_kib": 0,
+          "wall_ms": 8844.993921
+        }
+      ],
+      "summary": {
+        "cpu_ms": {
+          "mean": 12753.803333333335,
+          "p95": 12988.721000000001,
+          "p99": 12988.721000000001
+        },
+        "cpu_utilization_percent": {
+          "mean": 145.07587506617665,
+          "p95": 146.84827503568843,
+          "p99": 146.84827503568843
+        },
+        "peak_rss_kib": 13436,
+        "throughput_per_second": {
+          "max": 0.11448850173693242,
+          "mean": 0.11375675225700532,
+          "median": 0.11372345234539816,
+          "min": 0.11305830268868539,
+          "p95": 0.11448850173693242,
+          "p99": 0.11448850173693242
+        },
+        "total_kernel_read_bytes": 0,
+        "total_kernel_write_bytes": 3254022144,
+        "total_read_syscalls": 34010,
+        "total_write_syscalls": 16336,
+        "wall_ms": {
+          "max": 8844.993921,
+          "mean": 8790.918840666667,
+          "median": 8793.261015,
+          "min": 8734.501586,
+          "p95": 8844.993921,
+          "p99": 8844.993921
+        }
+      },
+      "unit": "pipelines/s"
+    }
+  ]
+}

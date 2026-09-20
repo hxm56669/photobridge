@@ -1,0 +1,139 @@
+{
+  "copy_bytes": 1073741824,
+  "data_root": "/tmp/photobridge_bench_data",
+  "e2e_file_bytes": 65536,
+  "e2e_files": 4,
+  "e2e_workers": 4,
+  "repetitions": 5,
+  "scanner_files": 100000,
+  "schema_version": 1,
+  "sqlite_commands": 5000,
+  "workloads": [
+    {
+      "configured_bytes": 1073741824,
+      "configured_items": 0,
+      "name": "copy_hash_fdatasync",
+      "samples": [
+        {
+          "bytes": 1073741824,
+          "cpu_ms": 5600.706000000001,
+          "cpu_utilization_percent": 99.86686269178057,
+          "io": {
+            "rchar_bytes": 1073741939,
+            "read_bytes": 0,
+            "read_syscalls": 1027,
+            "wchar_bytes": 1073741824,
+            "write_bytes": 1073741824,
+            "write_syscalls": 1024
+          },
+          "items": 1,
+          "max_rss_kib": 6240,
+          "rss_delta_kib": 0,
+          "wall_ms": 5608.17257
+        },
+        {
+          "bytes": 1073741824,
+          "cpu_ms": 3689.4519999999993,
+          "cpu_utilization_percent": 16.16648247271531,
+          "io": {
+            "rchar_bytes": 1073741947,
+            "read_bytes": 0,
+            "read_syscalls": 1027,
+            "wchar_bytes": 1073741824,
+            "write_bytes": 1073741824,
+            "write_syscalls": 1024
+          },
+          "items": 1,
+          "max_rss_kib": 6240,
+          "rss_delta_kib": 0,
+          "wall_ms": 22821.612594
+        },
+        {
+          "bytes": 1073741824,
+          "cpu_ms": 3746.6550000000025,
+          "cpu_utilization_percent": 99.66193877043385,
+          "io": {
+            "rchar_bytes": 1073741947,
+            "read_bytes": 0,
+            "read_syscalls": 1027,
+            "wchar_bytes": 1073741824,
+            "write_bytes": 1073741824,
+            "write_syscalls": 1024
+          },
+          "items": 1,
+          "max_rss_kib": 6240,
+          "rss_delta_kib": 0,
+          "wall_ms": 3759.363952
+        },
+        {
+          "bytes": 1073741824,
+          "cpu_ms": 3644.4289999999987,
+          "cpu_utilization_percent": 98.36940626740771,
+          "io": {
+            "rchar_bytes": 1073741947,
+            "read_bytes": 0,
+            "read_syscalls": 1027,
+            "wchar_bytes": 1073741824,
+            "write_bytes": 1073741824,
+            "write_syscalls": 1024
+          },
+          "items": 1,
+          "max_rss_kib": 6240,
+          "rss_delta_kib": 0,
+          "wall_ms": 3704.839887
+        },
+        {
+          "bytes": 1073741824,
+          "cpu_ms": 3710.1110000000012,
+          "cpu_utilization_percent": 99.76880433042325,
+          "io": {
+            "rchar_bytes": 1073741947,
+            "read_bytes": 0,
+            "read_syscalls": 1027,
+            "wchar_bytes": 1073741824,
+            "write_bytes": 1073741824,
+            "write_syscalls": 1024
+          },
+          "items": 1,
+          "max_rss_kib": 6240,
+          "rss_delta_kib": 0,
+          "wall_ms": 3718.708493
+        }
+      ],
+      "summary": {
+        "cpu_ms": {
+          "mean": 4078.2706000000007,
+          "p95": 5600.706000000001,
+          "p99": 5600.706000000001
+        },
+        "cpu_utilization_percent": {
+          "mean": 82.76669890655214,
+          "p95": 99.86686269178057,
+          "p99": 99.86686269178057
+        },
+        "peak_rss_kib": 6240,
+        "throughput_per_second": {
+          "max": 289821384.12180185,
+          "mean": 220537878.23905116,
+          "median": 285617949.66107607,
+          "min": 47049340.601036064,
+          "p95": 289821384.12180185,
+          "p99": 289821384.12180185
+        },
+        "total_kernel_read_bytes": 0,
+        "total_kernel_write_bytes": 5368709120,
+        "total_read_syscalls": 5135,
+        "total_write_syscalls": 5120,
+        "wall_ms": {
+          "max": 22821.612594,
+          "mean": 7922.539499199998,
+          "median": 3759.363952,
+          "min": 3704.839887,
+          "p95": 22821.612594,
+          "p99": 22821.612594
+        }
+      },
+      "unit": "bytes/s"
+    }
+  ]
+}

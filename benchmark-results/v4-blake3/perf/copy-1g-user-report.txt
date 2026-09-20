@@ -1,0 +1,317 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 5K of event 'cpu-clock:u'
+# Event count (approx.): 1444000000
+#
+# Children      Self  Command          Shared Object         Symbol                                           
+# ........  ........  ...............  ....................  .................................................
+#
+    73.29%    73.29%  photobridge_ben  photobridge_bench     [.] (anonymous namespace)::WriteDeterministicFile
+            |          
+            |--0.59%--0x7c7b7a7978777675
+            |          (anonymous namespace)::WriteDeterministicFile
+            |          
+             --0.50%--0xf5f4f3f2f1f0efee
+                       (anonymous namespace)::WriteDeterministicFile
+
+    26.21%    26.21%  photobridge_ben  photobridge_bench     [.] blake3_hash_many_avx2
+            |          
+            |--24.67%--0
+            |          blake3_hash_many_avx2
+            |          
+             --1.51%--0x4
+                       blake3_hash_many_avx2
+
+    24.71%     0.00%  photobridge_ben  [unknown]             [.] 0000000000000000
+            |
+            ---0
+               |          
+                --24.67%--blake3_hash_many_avx2
+
+     1.51%     0.00%  photobridge_ben  [unknown]             [.] 0x0000000000000004
+            |
+            ---0x4
+               blake3_hash_many_avx2
+
+     0.59%     0.00%  photobridge_ben  [unknown]             [.] 0x7c7b7a7978777675
+            |
+            ---0x7c7b7a7978777675
+               (anonymous namespace)::WriteDeterministicFile
+
+     0.50%     0.00%  photobridge_ben  [unknown]             [.] 0xf5f4f3f2f1f0efee
+            |
+            ---0xf5f4f3f2f1f0efee
+               (anonymous namespace)::WriteDeterministicFile
+
+     0.48%     0.00%  photobridge_ben  [unknown]             [.] 0x5554535251504f4e
+     0.48%     0.00%  photobridge_ben  [unknown]             [.] 0xa7a6a5a4a3a2a1a0
+     0.47%     0.00%  photobridge_ben  [unknown]             [.] 0xdedddcdbdad9d8d7
+     0.47%     0.00%  photobridge_ben  [unknown]             [.] 0x3938373635343332
+     0.47%     0.00%  photobridge_ben  [unknown]             [.] 0xb1b0afaeadacabaa
+     0.47%     0.00%  photobridge_ben  [unknown]             [.] 0xbab9b8b7b6b5b4b3
+     0.47%     0.00%  photobridge_ben  [unknown]             [.] 0xcbcac9c8c7c6c5c4
+     0.45%     0.00%  photobridge_ben  [unknown]             [.] 0x4948474645444342
+     0.45%     0.00%  photobridge_ben  [unknown]             [.] 0x807f7e7d7c7b7a79
+     0.45%     0.00%  photobridge_ben  [unknown]             [.] 0x8281807f7e7d7c7b
+     0.45%     0.00%  photobridge_ben  [unknown]             [.] 0xafaeadacabaaa9a8
+     0.43%     0.00%  photobridge_ben  [unknown]             [.] 0xefeeedecebeae9e8
+     0.43%     0.00%  photobridge_ben  [unknown]             [.] 0xf1f0efeeedecebea
+     0.43%     0.00%  photobridge_ben  [unknown]             [.] 0x232221201f1e1d1c
+     0.43%     0.00%  photobridge_ben  [unknown]             [.] 0x2b2a292827262524
+     0.43%     0.00%  photobridge_ben  [unknown]             [.] 0x302f2e2d2c2b2a29
+     0.43%     0.00%  photobridge_ben  [unknown]             [.] 0x8988878685848382
+     0.43%     0.00%  photobridge_ben  [unknown]             [.] 0x8c8b8a8988878685
+     0.43%     0.00%  photobridge_ben  [unknown]             [.] 0x94939291908f8e8d
+     0.43%     0.00%  photobridge_ben  [unknown]             [.] 0xbbbab9b8b7b6b5b4
+     0.42%     0.00%  photobridge_ben  [unknown]             [.] 0xdad9d8d7d6d5d4d3
+     0.42%     0.00%  photobridge_ben  [unknown]             [.] 0xe8e7e6e5e4e3e2e1
+     0.42%     0.00%  photobridge_ben  [unknown]             [.] 0xe9e8e7e6e5e4e3e2
+     0.42%     0.00%  photobridge_ben  [unknown]             [.] 0x0a09080706050403
+     0.42%     0.00%  photobridge_ben  [unknown]             [.] 0x706f6e6d6c6b6a69
+     0.42%     0.00%  photobridge_ben  [unknown]             [.] 0xb5b4b3b2b1b0afae
+     0.42%     0.00%  photobridge_ben  [unknown]             [.] 0xc6c5c4c3c2c1c0bf
+     0.40%     0.00%  photobridge_ben  [unknown]             [.] 0xf7f6f5f4f3f2f1f0
+     0.40%     0.00%  photobridge_ben  [unknown]             [.] 0x1514131211100f0e
+     0.40%     0.00%  photobridge_ben  [unknown]             [.] 0x262524232221201f
+     0.40%     0.00%  photobridge_ben  [unknown]             [.] 0x41403f3e3d3c3b3a
+     0.40%     0.00%  photobridge_ben  [unknown]             [.] 0x4847464544434241
+     0.40%     0.00%  photobridge_ben  [unknown]             [.] 0x5d5c5b5a59585756
+     0.40%     0.00%  photobridge_ben  [unknown]             [.] 0x6867666564636261
+     0.38%     0.00%  photobridge_ben  [unknown]             [.] 0x020100faf9f8f7f6
+     0.38%     0.00%  photobridge_ben  [unknown]             [.] 0x2e2d2c2b2a292827
+     0.38%     0.00%  photobridge_ben  [unknown]             [.] 0x31302f2e2d2c2b2a
+     0.38%     0.00%  photobridge_ben  [unknown]             [.] 0x3e3d3c3b3a393837
+     0.38%     0.00%  photobridge_ben  [unknown]             [.] 0x4746454443424140
+     0.38%     0.00%  photobridge_ben  [unknown]             [.] 0x4a49484746454443
+     0.38%     0.00%  photobridge_ben  [unknown]             [.] 0x54535251504f4e4d
+     0.38%     0.00%  photobridge_ben  [unknown]             [.] 0x91908f8e8d8c8b8a
+     0.38%     0.00%  photobridge_ben  [unknown]             [.] 0x9f9e9d9c9b9a9998
+     0.38%     0.00%  photobridge_ben  [unknown]             [.] 0xa9a8a7a6a5a4a3a2
+     0.38%     0.00%  photobridge_ben  [unknown]             [.] 0xc8c7c6c5c4c3c2c1
+     0.36%     0.00%  photobridge_ben  [unknown]             [.] 0xecebeae9e8e7e6e5
+     0.36%     0.00%  photobridge_ben  [unknown]             [.] 0x1c1b1a1918171615
+     0.36%     0.00%  photobridge_ben  [unknown]             [.] 0x4c4b4a4948474645
+     0.36%     0.00%  photobridge_ben  [unknown]             [.] 0x5f5e5d5c5b5a5958
+     0.36%     0.00%  photobridge_ben  [unknown]             [.] 0x969594939291908f
+     0.36%     0.00%  photobridge_ben  [unknown]             [.] 0xb8b7b6b5b4b3b2b1
+     0.36%     0.00%  photobridge_ben  [unknown]             [.] 0xcac9c8c7c6c5c4c3
+     0.35%     0.00%  photobridge_ben  [unknown]             [.] 0xd6d5d4d3d2d1d0cf
+     0.35%     0.00%  photobridge_ben  [unknown]             [.] 0xdbdad9d8d7d6d5d4
+     0.35%     0.00%  photobridge_ben  [unknown]             [.] 0xe7e6e5e4e3e2e1e0
+     0.35%     0.00%  photobridge_ben  [unknown]             [.] 0x0100faf9f8f7f6f5
+     0.35%     0.00%  photobridge_ben  [unknown]             [.] 0x5857565554535251
+     0.35%     0.00%  photobridge_ben  [unknown]             [.] 0x6261605f5e5d5c5b
+     0.35%     0.00%  photobridge_ben  [unknown]             [.] 0x7776757473727170
+     0.35%     0.00%  photobridge_ben  [unknown]             [.] 0x838281807f7e7d7c
+     0.35%     0.00%  photobridge_ben  [unknown]             [.] 0x8a89888786858483
+     0.35%     0.00%  photobridge_ben  [unknown]             [.] 0x9c9b9a9998979695
+     0.35%     0.00%  photobridge_ben  [unknown]             [.] 0xacabaaa9a8a7a6a5
+     0.35%     0.00%  photobridge_ben  [unknown]             [.] 0xb3b2b1b0afaeadac
+     0.35%     0.00%  photobridge_ben  [unknown]             [.] 0xc3c2c1c0bfbebdbc
+     0.35%     0.00%  photobridge_ben  [unknown]             [.] 0xcecdcccbcac9c8c7
+     0.33%     0.00%  photobridge_ben  [unknown]             [.] 0xe2e1e0dfdedddcdb
+     0.33%     0.00%  photobridge_ben  [unknown]             [.] 0xfaf9f8f7f6f5f4f3
+     0.33%     0.00%  photobridge_ben  [unknown]             [.] 0x0f0e0d0c0b0a0908
+     0.33%     0.00%  photobridge_ben  [unknown]             [.] 0x2221201f1e1d1c1b
+     0.33%     0.00%  photobridge_ben  [unknown]             [.] 0x2928272625242322
+     0.33%     0.00%  photobridge_ben  [unknown]             [.] 0x333231302f2e2d2c
+     0.33%     0.00%  photobridge_ben  [unknown]             [.] 0x3534333231302f2e
+     0.33%     0.00%  photobridge_ben  [unknown]             [.] 0x535251504f4e4d4c
+     0.33%     0.00%  photobridge_ben  [unknown]             [.] 0x605f5e5d5c5b5a59
+     0.33%     0.00%  photobridge_ben  [unknown]             [.] 0x64636261605f5e5d
+     0.33%     0.00%  photobridge_ben  [unknown]             [.] 0x767574737271706f
+     0.33%     0.00%  photobridge_ben  [unknown]             [.] 0x7877767574737271
+     0.33%     0.00%  photobridge_ben  [unknown]             [.] 0x9998979695949392
+     0.33%     0.00%  photobridge_ben  [unknown]             [.] 0xadacabaaa9a8a7a6
+     0.33%     0.00%  photobridge_ben  [unknown]             [.] 0xaeadacabaaa9a8a7
+     0.31%     0.00%  photobridge_ben  [unknown]             [.] 0xd9d8d7d6d5d4d3d2
+     0.31%     0.00%  photobridge_ben  [unknown]             [.] 0xdcdbdad9d8d7d6d5
+     0.31%     0.00%  photobridge_ben  [unknown]             [.] 0xe4e3e2e1e0dfdedd
+     0.31%     0.00%  photobridge_ben  [unknown]             [.] 0xeae9e8e7e6e5e4e3
+     0.31%     0.00%  photobridge_ben  [unknown]             [.] 0x0403020100faf9f8
+     0.31%     0.00%  photobridge_ben  [unknown]             [.] 0x1a19181716151413
+     0.31%     0.00%  photobridge_ben  [unknown]             [.] 0x1d1c1b1a19181716
+     0.31%     0.00%  photobridge_ben  [unknown]             [.] 0x1f1e1d1c1b1a1918
+     0.31%     0.00%  photobridge_ben  [unknown]             [.] 0x21201f1e1d1c1b1a
+     0.31%     0.00%  photobridge_ben  [unknown]             [.] 0x363534333231302f
+     0.31%     0.00%  photobridge_ben  [unknown]             [.] 0x464544434241403f
+     0.31%     0.00%  photobridge_ben  [unknown]             [.] 0x4d4c4b4a49484746
+     0.31%     0.00%  photobridge_ben  [unknown]             [.] 0x5251504f4e4d4c4b
+     0.31%     0.00%  photobridge_ben  [unknown]             [.] 0x5756555453525150
+     0.31%     0.00%  photobridge_ben  [unknown]             [.] 0x61605f5e5d5c5b5a
+     0.31%     0.00%  photobridge_ben  [unknown]             [.] 0x6766656463626160
+     0.31%     0.00%  photobridge_ben  [unknown]             [.] 0x6d6c6b6a69686766
+     0.31%     0.00%  photobridge_ben  [unknown]             [.] 0x7574737271706f6e
+     0.31%     0.00%  photobridge_ben  [unknown]             [.] 0x939291908f8e8d8c
+     0.31%     0.00%  photobridge_ben  [unknown]             [.] 0x9796959493929190
+     0.31%     0.00%  photobridge_ben  [unknown]             [.] 0x9b9a999897969594
+     0.31%     0.00%  photobridge_ben  [unknown]             [.] 0xa4a3a2a1a09f9e9d
+     0.31%     0.00%  photobridge_ben  [unknown]             [.] 0xc9c8c7c6c5c4c3c2
+     0.31%     0.00%  photobridge_ben  [unknown]             [.] 0xd3d2d1d0cfcecdcc
+     0.29%     0.00%  photobridge_ben  [unknown]             [.] 0xdddcdbdad9d8d7d6
+     0.29%     0.00%  photobridge_ben  [unknown]             [.] 0x1211100f0e0d0c0b
+     0.29%     0.00%  photobridge_ben  [unknown]             [.] 0x1e1d1c1b1a191817
+     0.29%     0.00%  photobridge_ben  [unknown]             [.] 0x24232221201f1e1d
+     0.29%     0.00%  photobridge_ben  [unknown]             [.] 0x2827262524232221
+     0.29%     0.00%  photobridge_ben  [unknown]             [.] 0x2f2e2d2c2b2a2928
+     0.29%     0.00%  photobridge_ben  [unknown]             [.] 0x44434241403f3e3d
+     0.29%     0.00%  photobridge_ben  [unknown]             [.] 0x4544434241403f3e
+     0.29%     0.00%  photobridge_ben  [unknown]             [.] 0x5a59585756555453
+     0.29%     0.00%  photobridge_ben  [unknown]             [.] 0x7271706f6e6d6c6b
+     0.29%     0.00%  photobridge_ben  [unknown]             [.] 0x7f7e7d7c7b7a7978
+     0.29%     0.00%  photobridge_ben  [unknown]             [.] 0xa3a2a1a09f9e9d9c
+     0.29%     0.00%  photobridge_ben  [unknown]             [.] 0xa6a5a4a3a2a1a09f
+     0.29%     0.00%  photobridge_ben  [unknown]             [.] 0xc1c0bfbebdbcbbba
+     0.29%     0.00%  photobridge_ben  [unknown]             [.] 0xd2d1d0cfcecdcccb
+     0.28%     0.00%  photobridge_ben  [unknown]             [.] 0xe5e4e3e2e1e0dfde
+     0.28%     0.00%  photobridge_ben  [unknown]             [.] 0xe6e5e4e3e2e1e0df
+     0.28%     0.00%  photobridge_ben  [unknown]             [.] 0xedecebeae9e8e7e6
+     0.28%     0.00%  photobridge_ben  [unknown]             [.] 0xf0efeeedecebeae9
+     0.28%     0.00%  photobridge_ben  [unknown]             [.] 0x0b0a090807060504
+     0.28%     0.00%  photobridge_ben  [unknown]             [.] 0x0d0c0b0a09080706
+     0.28%     0.00%  photobridge_ben  [unknown]             [.] 0x100f0e0d0c0b0a09
+     0.28%     0.00%  photobridge_ben  [unknown]             [.] 0x161514131211100f
+     0.28%     0.00%  photobridge_ben  [unknown]             [.] 0x1918171615141312
+     0.28%     0.00%  photobridge_ben  [unknown]             [.] 0x3736353433323130
+     0.28%     0.00%  photobridge_ben  [unknown]             [.] 0x3d3c3b3a39383736
+     0.28%     0.00%  photobridge_ben  [unknown]             [.] 0x71706f6e6d6c6b6a
+     0.28%     0.00%  photobridge_ben  [unknown]             [.] 0x7b7a797877767574
+     0.28%     0.00%  photobridge_ben  [unknown]             [.] 0x81807f7e7d7c7b7a
+     0.28%     0.00%  photobridge_ben  [unknown]             [.] 0x84838281807f7e7d
+     0.28%     0.00%  photobridge_ben  [unknown]             [.] 0x8b8a898887868584
+     0.28%     0.00%  photobridge_ben  [unknown]             [.] 0x8f8e8d8c8b8a8988
+     0.28%     0.00%  photobridge_ben  [unknown]             [.] 0x9291908f8e8d8c8b
+     0.28%     0.00%  photobridge_ben  [unknown]             [.] 0x9e9d9c9b9a999897
+     0.28%     0.00%  photobridge_ben  [unknown]             [.] 0xa1a09f9e9d9c9b9a
+     0.28%     0.00%  photobridge_ben  [unknown]             [.] 0xabaaa9a8a7a6a5a4
+     0.28%     0.00%  photobridge_ben  [unknown]             [.] 0xb2b1b0afaeadacab
+     0.28%     0.00%  photobridge_ben  [unknown]             [.] 0xb6b5b4b3b2b1b0af
+     0.28%     0.00%  photobridge_ben  [unknown]             [.] 0xbfbebdbcbbbab9b8
+     0.26%     0.00%  photobridge_ben  [unknown]             [.] 0xf2f1f0efeeedeceb
+     0.26%     0.00%  photobridge_ben  [unknown]             [.] 0xf4f3f2f1f0efeeed
+     0.26%     0.00%  photobridge_ben  [unknown]             [.] 0x050403020100faf9
+     0.26%     0.00%  photobridge_ben  [unknown]             [.] 0x0706050403020100
+     0.26%     0.00%  photobridge_ben  [unknown]             [.] 0x0908070605040302
+     0.26%     0.00%  photobridge_ben  [unknown]             [.] 0x1b1a191817161514
+     0.26%     0.00%  photobridge_ben  [unknown]             [.] 0x2726252423222120
+     0.26%     0.00%  photobridge_ben  [unknown]             [.] 0x2d2c2b2a29282726
+     0.26%     0.00%  photobridge_ben  [unknown]             [.] 0x3837363534333231
+     0.26%     0.00%  photobridge_ben  [unknown]             [.] 0x4b4a494847464544
+     0.26%     0.00%  photobridge_ben  [unknown]             [.] 0x4f4e4d4c4b4a4948
+     0.26%     0.00%  photobridge_ben  [unknown]             [.] 0x504f4e4d4c4b4a49
+     0.26%     0.00%  photobridge_ben  [unknown]             [.] 0x51504f4e4d4c4b4a
+     0.26%     0.00%  photobridge_ben  [unknown]             [.] 0x565554535251504f
+     0.26%     0.00%  photobridge_ben  [unknown]             [.] 0x5b5a595857565554
+     0.26%     0.00%  photobridge_ben  [unknown]             [.] 0x6564636261605f5e
+     0.26%     0.00%  photobridge_ben  [unknown]             [.] 0x6f6e6d6c6b6a6968
+     0.26%     0.00%  photobridge_ben  [unknown]             [.] 0x74737271706f6e6d
+     0.26%     0.00%  photobridge_ben  [unknown]             [.] 0x7a79787776757473
+     0.26%     0.00%  photobridge_ben  [unknown]             [.] 0x7e7d7c7b7a797877
+     0.26%     0.00%  photobridge_ben  [unknown]             [.] 0x8d8c8b8a89888786
+     0.26%     0.00%  photobridge_ben  [unknown]             [.] 0xb7b6b5b4b3b2b1b0
+     0.26%     0.00%  photobridge_ben  [unknown]             [.] 0xbdbcbbbab9b8b7b6
+     0.26%     0.00%  photobridge_ben  [unknown]             [.] 0xbebdbcbbbab9b8b7
+     0.26%     0.00%  photobridge_ben  [unknown]             [.] 0xc0bfbebdbcbbbab9
+     0.26%     0.00%  photobridge_ben  [unknown]             [.] 0xc5c4c3c2c1c0bfbe
+     0.26%     0.00%  photobridge_ben  [unknown]             [.] 0xd0cfcecdcccbcac9
+     0.24%     0.00%  photobridge_ben  [unknown]             [.] 0xd8d7d6d5d4d3d2d1
+     0.24%     0.00%  photobridge_ben  [unknown]             [.] 0xe3e2e1e0dfdedddc
+     0.24%     0.00%  photobridge_ben  [unknown]             [.] 0xebeae9e8e7e6e5e4
+     0.24%     0.00%  photobridge_ben  [unknown]             [.] 0xf3f2f1f0efeeedec
+     0.24%     0.00%  photobridge_ben  [unknown]             [.] 0x0c0b0a0908070605
+     0.24%     0.00%  photobridge_ben  [unknown]             [.] 0x0e0d0c0b0a090807
+     0.24%     0.00%  photobridge_ben  [unknown]             [.] 0x11100f0e0d0c0b0a
+     0.24%     0.00%  photobridge_ben  [unknown]             [.] 0x2c2b2a2928272625
+     0.24%     0.00%  photobridge_ben  [unknown]             [.] 0x3f3e3d3c3b3a3938
+     0.24%     0.00%  photobridge_ben  [unknown]             [.] 0x403f3e3d3c3b3a39
+     0.24%     0.00%  photobridge_ben  [unknown]             [.] 0x5c5b5a5958575655
+     0.24%     0.00%  photobridge_ben  [unknown]             [.] 0x7d7c7b7a79787776
+     0.24%     0.00%  photobridge_ben  [unknown]             [.] 0x8786858483828180
+     0.24%     0.00%  photobridge_ben  [unknown]             [.] 0x8e8d8c8b8a898887
+     0.24%     0.00%  photobridge_ben  [unknown]             [.] 0xcdcccbcac9c8c7c6
+     0.23%     0.00%  photobridge_ben  [unknown]             [.] 0x34333231302f2e2d
+     0.23%     0.00%  photobridge_ben  [unknown]             [.] 0x6e6d6c6b6a696867
+     0.23%     0.00%  photobridge_ben  [unknown]             [.] 0x7978777675747372
+     0.23%     0.00%  photobridge_ben  [unknown]             [.] 0x8887868584838281
+     0.23%     0.00%  photobridge_ben  [unknown]             [.] 0x9897969594939291
+     0.23%     0.00%  photobridge_ben  [unknown]             [.] 0x9a99989796959493
+     0.21%     0.00%  photobridge_ben  [unknown]             [.] 0xd4d3d2d1d0cfcecd
+     0.21%     0.00%  photobridge_ben  [unknown]             [.] 0xdfdedddcdbdad9d8
+     0.21%     0.00%  photobridge_ben  [unknown]             [.] 0x03020100faf9f8f7
+     0.21%     0.00%  photobridge_ben  [unknown]             [.] 0x06050403020100fa
+     0.21%     0.00%  photobridge_ben  [unknown]             [.] 0x131211100f0e0d0c
+     0.21%     0.00%  photobridge_ben  [unknown]             [.] 0x201f1e1d1c1b1a19
+     0.21%     0.00%  photobridge_ben  [unknown]             [.] 0x2524232221201f1e
+     0.21%     0.00%  photobridge_ben  [unknown]             [.] 0x434241403f3e3d3c
+     0.21%     0.00%  photobridge_ben  [unknown]             [.] 0x5e5d5c5b5a595857
+     0.21%     0.00%  photobridge_ben  [unknown]             [.] 0x6b6a696867666564
+     0.21%     0.00%  photobridge_ben  [unknown]             [.] 0x737271706f6e6d6c
+     0.21%     0.00%  photobridge_ben  [unknown]             [.] 0x8584838281807f7e
+     0.21%     0.00%  photobridge_ben  [unknown]             [.] 0x868584838281807f
+     0.21%     0.00%  photobridge_ben  [unknown]             [.] 0x9d9c9b9a99989796
+     0.21%     0.00%  photobridge_ben  [unknown]             [.] 0xa09f9e9d9c9b9a99
+     0.21%     0.00%  photobridge_ben  [unknown]             [.] 0xa5a4a3a2a1a09f9e
+     0.21%     0.00%  photobridge_ben  [unknown]             [.] 0xaaa9a8a7a6a5a4a3
+     0.21%     0.00%  photobridge_ben  [unknown]             [.] 0xc2c1c0bfbebdbcbb
+     0.21%     0.00%  photobridge_ben  [unknown]             [.] 0xc7c6c5c4c3c2c1c0
+     0.19%     0.00%  photobridge_ben  [unknown]             [.] 0xd5d4d3d2d1d0cfce
+     0.19%     0.00%  photobridge_ben  [unknown]             [.] 0x0807060504030201
+     0.19%     0.00%  photobridge_ben  [unknown]             [.] 0x3a39383736353433
+     0.19%     0.00%  photobridge_ben  [unknown]             [.] 0x4e4d4c4b4a494847
+     0.19%     0.00%  photobridge_ben  [unknown]             [.] 0x5958575655545352
+     0.19%     0.00%  photobridge_ben  [unknown]             [.] 0x6a69686766656463
+     0.19%     0.00%  photobridge_ben  [unknown]             [.] 0x6c6b6a6968676665
+     0.19%     0.00%  photobridge_ben  [unknown]             [.] 0xa2a1a09f9e9d9c9b
+     0.19%     0.00%  photobridge_ben  [unknown]             [.] 0xb4b3b2b1b0afaead
+     0.19%     0.00%  photobridge_ben  [unknown]             [.] 0xc4c3c2c1c0bfbebd
+     0.19%     0.00%  photobridge_ben  [unknown]             [.] 0xd1d0cfcecdcccbca
+     0.17%     0.00%  photobridge_ben  [unknown]             [.] 0xe0dfdedddcdbdad9
+     0.17%     0.00%  photobridge_ben  [unknown]             [.] 0xf6f5f4f3f2f1f0ef
+     0.17%     0.00%  photobridge_ben  [unknown]             [.] 0xf8f7f6f5f4f3f2f1
+     0.17%     0.00%  photobridge_ben  [unknown]             [.] 0x00faf9f8f7f6f5f4
+     0.17%     0.00%  photobridge_ben  [unknown]             [.] 0x14131211100f0e0d
+     0.17%     0.00%  photobridge_ben  [unknown]             [.] 0x1716151413121110
+     0.17%     0.00%  photobridge_ben  [unknown]             [.] 0x1817161514131211
+     0.17%     0.00%  photobridge_ben  [unknown]             [.] 0x2a29282726252423
+     0.17%     0.00%  photobridge_ben  [unknown]             [.] 0x3231302f2e2d2c2b
+     0.17%     0.00%  photobridge_ben  [unknown]             [.] 0x3c3b3a3938373635
+     0.17%     0.00%  photobridge_ben  [unknown]             [.] 0x636261605f5e5d5c
+     0.17%     0.00%  photobridge_ben  [unknown]             [.] 0x666564636261605f
+     0.17%     0.00%  photobridge_ben  [unknown]             [.] 0x6968676665646362
+     0.17%     0.00%  photobridge_ben  [unknown]             [.] 0x908f8e8d8c8b8a89
+     0.17%     0.00%  photobridge_ben  [unknown]             [.] 0xa8a7a6a5a4a3a2a1
+     0.17%     0.00%  photobridge_ben  [unknown]             [.] 0xb0afaeadacabaaa9
+     0.17%     0.00%  photobridge_ben  [unknown]             [.] 0xbcbbbab9b8b7b6b5
+     0.17%     0.00%  photobridge_ben  [unknown]             [.] 0xcccbcac9c8c7c6c5
+     0.16%     0.00%  photobridge_ben  [unknown]             [.] 0xe1e0dfdedddcdbda
+     0.16%     0.00%  photobridge_ben  [unknown]             [.] 0xeeedecebeae9e8e7
+     0.16%     0.00%  photobridge_ben  [unknown]             [.] 0xf9f8f7f6f5f4f3f2
+     0.16%     0.00%  photobridge_ben  [unknown]             [.] 0x9594939291908f8e
+     0.16%     0.00%  photobridge_ben  [unknown]             [.] 0xb9b8b7b6b5b4b3b2
+     0.14%     0.00%  photobridge_ben  [unknown]             [.] 0x3b3a393837363534
+     0.14%     0.00%  photobridge_ben  [unknown]             [.] 0x4241403f3e3d3c3b
+     0.14%     0.14%  photobridge_ben  photobridge_bench     [.] blake3_compress_subtree_wide
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xd7d6d5d4d3d2d1d0
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xcfcecdcccbcac9c8
+     0.09%     0.09%  photobridge_ben  libc.so.6             [.] write
+     0.07%     0.07%  photobridge_ben  photobridge_bench     [.] blake3_hash_many
+     0.05%     0.05%  photobridge_ben  photobridge_bench     [.] photobridge::LinuxFileOps::Write
+     0.03%     0.03%  photobridge_ben  ld-linux-x86-64.so.2  [.] 0x000000000000b780
+     0.03%     0.03%  photobridge_ben  photobridge_bench     [.] blake3_hasher_update.part.0
+     0.03%     0.03%  photobridge_ben  photobridge_bench     [.] photobridge::LinuxFileOps::Read
+     0.03%     0.00%  photobridge_ben  ld-linux-x86-64.so.2  [.] 0x00007f4cb9537780
+     0.02%     0.02%  photobridge_ben  photobridge_bench     [.] 0x0000000000018ef0
+     0.02%     0.00%  photobridge_ben  [unknown]             [.] 0x45528062e7048ea3
+     0.02%     0.00%  photobridge_ben  [unknown]             [.] 0x4cb53faf9c963921
+     0.02%     0.00%  photobridge_ben  [unknown]             [.] 0x73db52bf42bbb8f4
+     0.02%     0.02%  photobridge_ben  photobridge_bench     [.] blake3_simd_degree
+     0.02%     0.02%  photobridge_ben  photobridge_bench     [.] photobridge::CopyAndHash
+     0.02%     0.00%  photobridge_ben  photobridge_bench     [.] 0x000055b939e06ef0
+
+
+#
+# (Cannot load tips.txt file, please install perf!)
+#

@@ -208,3 +208,29 @@ TEST(CopyAndHashTest, StreamsLargePayloadWithoutChangingContract)
     EXPECT_EQ(result.value().bytes_copied, payload.size());
     EXPECT_EQ(file_ops.target(), Bytes(payload));
 }
+
+TEST(CopyAndHashTest, Blake3MatchesOfficialMultiChunkVector)
+{
+    // Official BLAKE3 test vector: 16,384 bytes repeating 0..250.
+    std::vector<std::byte> input(16U * 1024U);
+    for (std::size_t index = 0; index < input.size(); ++index) {
+        input[index] = static_cast<std::byte>(index % 251U);
+    }
+    constexpr std::string_view expected =
+        "f875d6646de28985646f34ee13be9a576fd515f76b5b0a26bb324735041ddde4";
+
+    photobridge::Blake3Hasher one_update;
+    ASSERT_TRUE(one_update.Update(input).ok());
+    const auto whole = one_update.Finalize();
+    ASSERT_TRUE(whole.ok()) << whole.status().message();
+    EXPECT_EQ(whole.value().ToHex(), expected);
+
+    photobridge::Blake3Hasher streamed;
+    for (std::size_t offset = 0; offset < input.size(); offset += 1024) {
+        ASSERT_TRUE(streamed.Update(
+            std::span<const std::byte>(input).subspan(offset, 1024)).ok());
+    }
+    const auto chunks = streamed.Finalize();
+    ASSERT_TRUE(chunks.ok()) << chunks.status().message();
+    EXPECT_EQ(chunks.value().ToHex(), expected);
+}
