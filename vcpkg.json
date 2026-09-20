@@ -25,6 +25,7 @@
       "default-features": false
     },
     "blake3",
+    "liburing",
     "nayuki-qr-code-generator"
   ]
 }

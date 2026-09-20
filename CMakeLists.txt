@@ -64,6 +64,8 @@ find_package(exiv2 CONFIG REQUIRED)
 find_package(CLI11 CONFIG REQUIRED)
 find_package(httplib CONFIG REQUIRED)
 find_package(blake3 CONFIG REQUIRED)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(LIBURING REQUIRED IMPORTED_TARGET liburing)
 find_package(unofficial-sqlite3 CONFIG REQUIRED)
 find_package(xxHash CONFIG REQUIRED)
 find_package(unofficial-nayuki-qr-code-generator CONFIG REQUIRED)
@@ -110,6 +112,7 @@ add_library(photobridge_core STATIC
     src/app/plan_execution_lock.cpp
     src/filesystem/mutation_guard.cpp
     src/filesystem/copy_and_hash.cpp
+    src/filesystem/io_uring_copy_engine.cpp
     src/filesystem/reconciler.cpp
     src/filesystem/binary_verifier.cpp
 
@@ -164,6 +167,7 @@ target_link_libraries(photobridge_core
         unofficial::sqlite3::sqlite3
         Threads::Threads
         BLAKE3::blake3
+        PkgConfig::LIBURING
 )
 
 add_executable(photobridge

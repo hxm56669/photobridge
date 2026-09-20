@@ -5,6 +5,7 @@
 #include "photobridge/common/test_hooks.h"
 #include "photobridge/filesystem/binary_verifier.h"
 #include "photobridge/filesystem/copy_and_hash.h"
+#include "photobridge/filesystem/io_uring_copy_engine.h"
 #include "photobridge/filesystem/linux_file_ops.h"
 
 namespace photobridge {
@@ -47,13 +48,25 @@ StatusOr<VerifiedReceipt> MigrationAttemptPreparer::Prepare(
     if (!temp_fd.ok()) return temp_fd.status();
 
     Blake3Hasher hasher;
-    auto copy = CopyAndHash(
-        file_ops,
+    status = source_guard.VerifyBeforeRead();
+    if (!status.ok()) return status;
+    auto accelerated = TryIoUringCopyAndHash(
         hasher,
-        source_guard,
+        source_guard.fd(),
         temp_fd.value().get(),
-        buffer);
-    if (!copy.ok()) return copy.status();
+        source_guard.manifest_identity().size);
+    if (!accelerated.ok()) return accelerated.status();
+    CopyResult copy;
+    if (accelerated.value().has_value()) {
+        copy = accelerated.value().value();
+        status = source_guard.VerifyAfterRead();
+        if (!status.ok()) return status;
+    } else {
+        auto synchronous = CopyAndHash(
+            file_ops, hasher, source_guard, temp_fd.value().get(), buffer);
+        if (!synchronous.ok()) return synchronous.status();
+        copy = synchronous.value();
+    }
 
     status = file_ops.Fdatasync(temp_fd.value().get());
     if (!status.ok()) return status;
@@ -72,8 +85,8 @@ StatusOr<VerifiedReceipt> MigrationAttemptPreparer::Prepare(
         file_ops,
         target_hasher,
         verify_fd.value().get(),
-        copy.value().bytes_copied,
-        std::optional<Digest>(copy.value().source_digest),
+        copy.bytes_copied,
+        std::optional<Digest>(copy.source_digest),
         buffer);
     if (!target_verification.ok()) return target_verification.status();
     if (target_verification.value().status != BinaryVerification::kIdentical) {
@@ -88,8 +101,8 @@ StatusOr<VerifiedReceipt> MigrationAttemptPreparer::Prepare(
         execution_epoch,
         temp_name,
         std::string(plan_asset.target_path.bytes()),
-        copy.value().bytes_copied,
-        copy.value().source_digest,
+        copy.bytes_copied,
+        copy.source_digest,
         target_verification.value().target_digest,
         source_guard.manifest_identity(),
     };

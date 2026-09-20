@@ -30,6 +30,7 @@ add_executable(photobridge_tests
 
     unit/filesystem/binary_verifier_test.cpp
     unit/filesystem/copy_and_hash_test.cpp
+    unit/filesystem/io_uring_copy_engine_test.cpp
     unit/filesystem/directory_walker_test.cpp
     unit/filesystem/linux_file_ops_test.cpp
     unit/filesystem/local_folder_source_test.cpp
