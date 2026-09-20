@@ -100,8 +100,7 @@ public:
         }
 
         TaskRuntimeRepository repository(connection.value());
-        std::size_t selected_index = artifact.value().plan.assets().size();
-        std::size_t running_count = 0;
+        std::vector<std::size_t> running_indices;
         for (std::size_t index = 0;
              index < artifact.value().plan.assets().size();
              ++index) {
@@ -113,21 +112,19 @@ public:
                 candidate.value().id);
             if (!candidate_runtime.ok()) return candidate_runtime.status();
             if (candidate_runtime.value().state == TaskState::kRunning) {
-                ++running_count;
-                selected_index = index;
+                running_indices.push_back(index);
             }
         }
-        if (running_count == 0) {
+        if (running_indices.empty()) {
             return Status(
                 StatusCode::kNotFound,
                 "no RUNNING task remains in the materialized plan");
         }
-        if (running_count != 1) {
-            return Status(
-                StatusCode::kInvalidArgument,
-                "resume requires exactly one RUNNING task in V1");
-        }
+        auto recovery_epoch = repository.AcquireNextExecutionEpoch(
+            artifact.value().plan_id);
+        if (!recovery_epoch.ok()) return recovery_epoch.status();
 
+        const auto recover_one = [&](std::size_t selected_index) -> Status {
         auto task = TaskSpecForPlanAsset(
             artifact.value().plan.assets()[selected_index]);
         if (!task.ok()) return task.status();
@@ -150,7 +147,7 @@ public:
         if (target_path.components().size() != 1) {
             return Status(
                 StatusCode::kInvalidArgument,
-                "single-thread resume requires a single target path component");
+                "resume requires a single target path component");
         }
 
         const std::string attempt_id = runtime.value().attempt_id.value();
@@ -183,9 +180,6 @@ public:
                 && receipt->source_digest.has_value()
                 && receipt->source_digest.value() == receipt->target_digest;
             if (!receipt_matches_plan) {
-                auto recovery_epoch = repository.AcquireNextExecutionEpoch(
-                    artifact.value().plan_id);
-                if (!recovery_epoch.ok()) return recovery_epoch.status();
                 const Status recovery_status = repository.RecoverInconsistent(
                     artifact.value().plan_id,
                     task.value().id,
@@ -216,10 +210,6 @@ public:
             std::filesystem::path(artifact.value().plan.target_root()),
             OpenRootMode::kExisting);
         if (!target_root_fd.ok()) return target_root_fd.status();
-
-        auto recovery_epoch = repository.AcquireNextExecutionEpoch(
-            artifact.value().plan_id);
-        if (!recovery_epoch.ok()) return recovery_epoch.status();
 
         ObservedFileState observed;
         const PhysicalAsset source_asset{
@@ -447,6 +437,14 @@ public:
         return Status(
             StatusCode::kInternal,
             "recovery service reached an unreachable state");
+        };
+
+        Status first_error = Status::Ok();
+        for (const std::size_t index : running_indices) {
+            const Status result = recover_one(index);
+            if (!result.ok() && first_error.ok()) first_error = result;
+        }
+        return first_error;
     }
 };
 

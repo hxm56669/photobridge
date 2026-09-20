@@ -1,0 +1,92 @@
+]633;E;echo "=== Git ===";1846ba91-095f-410a-a4b0-fc5d74112cdf]633;C=== Git ===
+952a481738e274a656944538b74a6d95bb0761c5
+ D benchmark-results/v2-sqlite/e2e-large.json
+ D benchmark-results/v2-sqlite/e2e.json
+ D benchmark-results/v2-sqlite/sqlite-compare.json
+ D benchmark-results/v2-sqlite/strace/exec-autocommit.txt
+ D benchmark-results/v2-sqlite/strace/sqlite-batch-100.txt
+ D benchmark-results/v2-sqlite/strace/sqlite-batch-5000.txt
+ D benchmark-results/v2-sqlite/strace/sqlite-prepared.txt
+ D benchmark-results/v2-sqlite/v1-control-e2e-large.json
+ D benchmark-results/v2-sqlite/v1-control-e2e.json
+?? benchmark-results/v2-sqlite/environment.txt
+=== System ===
+Linux hxmserver 5.15.0-185-generic #195-Ubuntu SMP Fri Jun 19 17:11:50 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
+=== CPU ===
+Architecture:                            x86_64
+CPU op-mode(s):                          32-bit, 64-bit
+Address sizes:                           45 bits physical, 48 bits virtual
+Byte Order:                              Little Endian
+CPU(s):                                  8
+On-line CPU(s) list:                     0-7
+Vendor ID:                               GenuineIntel
+Model name:                              13th Gen Intel(R) Core(TM) i7-13700F
+CPU family:                              6
+Model:                                   183
+Thread(s) per core:                      1
+Core(s) per socket:                      4
+Socket(s):                               2
+Stepping:                                1
+BogoMIPS:                                4224.00
+Flags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss ht syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon rep_good nopl xtopology tsc_reliable nonstop_tsc cpuid tsc_known_freq pni pclmulqdq ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch invpcid_single ssbd ibrs ibpb stibp ibrs_enhanced fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid rdseed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 xsaves avx_vnni arat umip pku ospke gfni vaes vpclmulqdq rdpid movdiri movdir64b fsrm md_clear serialize flush_l1d arch_capabilities
+Hypervisor vendor:                       VMware
+Virtualization type:                     full
+L1d cache:                               384 KiB (8 instances)
+L1i cache:                               256 KiB (8 instances)
+L2 cache:                                16 MiB (8 instances)
+L3 cache:                                60 MiB (2 instances)
+NUMA node(s):                            1
+NUMA node0 CPU(s):                       0-7
+Vulnerability Gather data sampling:      Not affected
+Vulnerability Indirect target selection: Not affected
+Vulnerability Itlb multihit:             KVM: Mitigation: VMX unsupported
+Vulnerability L1tf:                      Not affected
+Vulnerability Mds:                       Not affected
+Vulnerability Meltdown:                  Not affected
+Vulnerability Mmio stale data:           Unknown: No mitigations
+Vulnerability Reg file data sampling:    Vulnerable: No microcode
+Vulnerability Retbleed:                  Not affected
+Vulnerability Spec rstack overflow:      Not affected
+Vulnerability Spec store bypass:         Mitigation; Speculative Store Bypass disabled via prctl and seccomp
+Vulnerability Spectre v1:                Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerability Spectre v2:                Mitigation; Enhanced / Automatic IBRS; IBPB conditional; PBRSB-eIBRS SW sequence; BHI BHI_DIS_S
+Vulnerability Srbds:                     Not affected
+Vulnerability Tsa:                       Not affected
+Vulnerability Tsx async abort:           Not affected
+Vulnerability Vmscape:                   Not affected
+=== Memory ===
+               total        used        free      shared  buff/cache   available
+Mem:           7.7Gi       2.0Gi       1.8Gi        13Mi       3.9Gi       5.4Gi
+Swap:          4.0Gi       8.0Mi       4.0Gi
+=== Disk ===
+NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
+loop0    7:0    0  63.9M  1 loop /snap/core20/2318
+loop1    7:1    0    74M  1 loop /snap/core22/2411
+loop3    7:3    0 115.3M  1 loop /snap/lxd/40338
+loop4    7:4    0  50.3M  1 loop /snap/snapd/27738
+loop5    7:5    0  78.6M  1 loop /snap/powershell/389
+loop6    7:6    0    74M  1 loop /snap/core22/2955
+loop7    7:7    0  50.1M  1 loop /snap/snapd/27406
+loop8    7:8    0  75.7M  1 loop /snap/powershell/405
+loop9    7:9    0  63.8M  1 loop /snap/core20/2922
+loop10   7:10   0 115.3M  1 loop /snap/lxd/40575
+sda      8:0    0   100G  0 disk 
+├─sda1   8:1    0     1M  0 part 
+└─sda2   8:2    0   100G  0 part /
+sr0     11:0    1  1024M  0 rom  
+Filesystem     Type  1K-blocks     Used Available Use% Mounted on
+tmpfs          tmpfs    809144    13660    795484   2% /run
+/dev/sda2      ext4  102623160 22654100  74709952  24% /
+tmpfs          tmpfs   4045704        4   4045700   1% /dev/shm
+tmpfs          tmpfs      5120        0      5120   0% /run/lock
+tmpfs          tmpfs    809140        4    809136   1% /run/user/1000
+=== Compiler ===
+g++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0
+Copyright (C) 2021 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+=== CMake ===
+cmake version 3.22.1
+
+CMake suite maintained and supported by Kitware (kitware.com/cmake).

@@ -129,6 +129,45 @@ TEST_F(TaskRuntimeRepositoryTest, ClaimsInStableOrderAndRequiresDependencies)
         photobridge::StatusCode::kNotFound);
 }
 
+TEST_F(TaskRuntimeRepositoryTest, GeneratesAttemptIdsInsideAtomicClaim)
+{
+    auto connection = photobridge::SqliteConnection::Open(database_path_);
+    ASSERT_TRUE(connection.ok()) << connection.status().message();
+    ASSERT_TRUE(photobridge::EnsureSchema(connection.value()).ok());
+    CreatePlan(connection.value());
+    photobridge::TaskRuntimeRepository repository(connection.value());
+    ASSERT_TRUE(repository.AddTask("plan-1", Task("a")).ok());
+    ASSERT_TRUE(repository.AddTask("plan-1", Task("b")).ok());
+    ASSERT_TRUE(repository.SetReady("plan-1", "a").ok());
+    ASSERT_TRUE(repository.SetReady("plan-1", "b").ok());
+    ASSERT_TRUE(AdvanceToEpoch(repository, 1));
+
+    const auto first = repository.ClaimNextReady("plan-1", {1});
+    ASSERT_TRUE(first.ok()) << first.status().message();
+    EXPECT_EQ(first.value().id, "a");
+    ASSERT_TRUE(first.value().runtime.attempt_id.has_value());
+    EXPECT_EQ(*first.value().runtime.attempt_id, "attempt-plan-1-a-1");
+    const auto second = repository.ClaimNextReady("plan-1", {1});
+    ASSERT_TRUE(second.ok()) << second.status().message();
+    EXPECT_EQ(second.value().id, "b");
+    ASSERT_TRUE(second.value().runtime.attempt_id.has_value());
+    EXPECT_EQ(*second.value().runtime.attempt_id, "attempt-plan-1-b-1");
+    EXPECT_EQ(repository.ClaimNextReady("plan-1", {1}).status().code(),
+              photobridge::StatusCode::kNotFound);
+
+    const photobridge::Status error(
+        photobridge::StatusCode::kIoError, "retry claim");
+    ASSERT_TRUE(repository.MarkRetryable(
+        "plan-1", "a", {1}, *first.value().runtime.attempt_id, error).ok());
+    ASSERT_TRUE(repository.SetReady("plan-1", "a").ok());
+    ASSERT_TRUE(AdvanceToEpoch(repository, 2));
+    const auto retry = repository.ClaimNextReady("plan-1", {2});
+    ASSERT_TRUE(retry.ok()) << retry.status().message();
+    EXPECT_EQ(retry.value().id, "a");
+    ASSERT_TRUE(retry.value().runtime.attempt_id.has_value());
+    EXPECT_EQ(*retry.value().runtime.attempt_id, "attempt-plan-1-a-2");
+}
+
 TEST_F(TaskRuntimeRepositoryTest, ReusesStatementsAcrossBatchRollbackAndErrors)
 {
     auto connection = photobridge::SqliteConnection::Open(database_path_);

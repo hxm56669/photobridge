@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <memory>
 #include <filesystem>
 #include <fstream>
@@ -327,7 +328,7 @@ TEST(RunCliTest, PlanBuildsAndPersistsFrozenArtifact)
     std::filesystem::remove_all(target, cleanup_error);
 }
 
-TEST(RunCliTest, ExecutesMultiplePlanAssetsSequentially)
+TEST(RunCliTest, MigratesAndResumesMoreTasksThanQueueCapacity)
 {
     const auto source = std::filesystem::temp_directory_path()
         / "photobridge_cli_multi_source";
@@ -347,6 +348,12 @@ TEST(RunCliTest, ExecutesMultiplePlanAssetsSequentially)
         ASSERT_TRUE(first && second);
         first << "one";
         second << "two!";
+    }
+    for (int index = 0; index < 10; ++index) {
+        std::ofstream extra(source / ("extra-" + std::to_string(index) + ".jpg"),
+                            std::ios::binary);
+        ASSERT_TRUE(extra);
+        extra << "x";
     }
 
     std::ostringstream out;
@@ -398,46 +405,46 @@ TEST(RunCliTest, ExecutesMultiplePlanAssetsSequentially)
             std::istreambuf_iterator<char>()};
         const auto artifact = photobridge::ReadFrozenPlan(bytes);
         ASSERT_TRUE(artifact.ok()) << artifact.status().message();
-        EXPECT_EQ(artifact.value().plan.assets().size(), 2U);
+        EXPECT_EQ(artifact.value().plan.assets().size(), 12U);
     }
 
-    for (int index = 0; index < 2; ++index) {
-        out.str("");
-        out.clear();
-        err.str("");
-        ASSERT_EQ(
-            RunCliWithArgs(
-                {"photobridge", "migrate", "--workspace", workspace.string(),
-                "--plan", plan_path.string()},
-                out,
-                err),
-            0);
-        EXPECT_NE(out.str().find("state=RUNNING"), std::string::npos);
-        if (index == 0) {
-            out.str("");
-            out.clear();
-            err.str("");
-            err.clear();
-            EXPECT_EQ(
-                RunCliWithArgs(
-                    {"photobridge", "migrate", "--workspace", workspace.string(),
-                    "--plan", plan_path.string()},
-                    out,
-                    err),
-                2);
-        }
-        out.str("");
-        out.clear();
-        err.str("");
-        ASSERT_EQ(
-            RunCliWithArgs(
-                {"photobridge", "resume", "--workspace", workspace.string(),
-                    "--plan", plan_path.string()},
-                out,
-                err),
-            0);
-        EXPECT_NE(out.str().find("state=SUCCEEDED"), std::string::npos);
+    out.str("");
+    out.clear();
+    err.str("");
+    ASSERT_EQ(
+        RunCliWithArgs(
+            {"photobridge", "migrate", "--workspace", workspace.string(),
+             "--plan", plan_path.string(), "--workers", "2"}, out, err),
+        0);
+    const std::string migrated_output = out.str();
+    EXPECT_EQ(std::count(migrated_output.begin(), migrated_output.end(), '\n'), 12);
+    out.str("");
+    out.clear();
+    err.str("");
+    err.clear();
+    EXPECT_EQ(
+        RunCliWithArgs(
+            {"photobridge", "migrate", "--workspace", workspace.string(),
+             "--plan", plan_path.string()}, out, err),
+        2);
+    out.str("");
+    out.clear();
+    err.str("");
+    err.clear();
+    ASSERT_EQ(
+        RunCliWithArgs(
+            {"photobridge", "resume", "--workspace", workspace.string(),
+             "--plan", plan_path.string()}, out, err),
+        0);
+    const std::string resumed_output = out.str();
+    std::size_t completed = 0;
+    std::size_t position = 0;
+    while ((position = resumed_output.find("resume completed:", position))
+           != std::string::npos) {
+        ++completed;
+        position += sizeof("resume completed:") - 1;
     }
+    EXPECT_EQ(completed, 12U);
 
     out.str("");
     out.clear();
@@ -449,7 +456,7 @@ TEST(RunCliTest, ExecutesMultiplePlanAssetsSequentially)
             out,
             err),
         0);
-    EXPECT_NE(out.str().find("tasks=2 status=IDENTICAL bytes=7"), std::string::npos);
+    EXPECT_NE(out.str().find("tasks=12 status=IDENTICAL bytes=17"), std::string::npos);
     EXPECT_TRUE(std::filesystem::is_regular_file(target / "a.jpg"));
     EXPECT_TRUE(std::filesystem::is_regular_file(target / "b.jpg"));
 

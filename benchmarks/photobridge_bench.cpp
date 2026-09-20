@@ -154,7 +154,7 @@ Options ParseOptions(int argc, char** argv)
         if (argument == "--help" || argument == "-h") {
             std::cout
                 << "Usage: photobridge_bench [options]\n"
-                << "  --workload all|scanner|copy|sqlite|sqlite-prepared|sqlite-batch-{10,100,1000,5000}|sqlite-compare|e2e|e2e-large\n"
+                << "  --workload all|scanner|copy|sqlite|sqlite-v1|sqlite-v2|sqlite-prepared|sqlite-batch-{10,100,1000,5000}|sqlite-compare|e2e|e2e-large\n"
                 << "  --data-root PATH       benchmark-owned data directory\n"
                 << "  --output PATH          write JSON report\n"
                 << "  --repetitions N        measured samples (default 5)\n"
@@ -199,6 +199,8 @@ Options ParseOptions(int argc, char** argv)
 
     if (options.workload != "all" && options.workload != "scanner"
         && options.workload != "copy" && options.workload != "sqlite"
+        && options.workload != "sqlite-v1"
+        && options.workload != "sqlite-v2"
         && options.workload != "sqlite-prepared"
         && options.workload != "sqlite-batch-10"
         && options.workload != "sqlite-batch-100"
@@ -498,10 +500,14 @@ WorkloadResult RunCopy(
 
 enum class SqliteMode { kExecAutocommit, kPreparedAutocommit, kPreparedBatch };
 
+// Match ManifestBuilder's default batch size for the V2 SQLite workload.
+constexpr std::size_t kSqliteV2BatchSize = 256;
+
 WorkloadResult RunSqlite(
     const Options& options,
     SqliteMode mode,
-    std::size_t batch_size = 1)
+    std::size_t batch_size = 1,
+    std::string_view report_name = {})
 {
     std::string name = "sqlite_batch_insert"; // V1 baseline report name
     if (mode == SqliteMode::kPreparedAutocommit) {
@@ -509,6 +515,7 @@ WorkloadResult RunSqlite(
     } else if (mode == SqliteMode::kPreparedBatch) {
         name = "sqlite_prepared_batch_" + std::to_string(batch_size);
     }
+    if (!report_name.empty()) name = report_name;
     WorkloadResult result{
         name,
         "commands/s",
@@ -948,9 +955,16 @@ int main(int argc, char** argv)
             report["workloads"].push_back(
                 WorkloadJson(RunCopy(options, run_root)));
         }
-        if (options.workload == "all" || options.workload == "sqlite") {
+        if (options.workload == "all" || options.workload == "sqlite"
+            || options.workload == "sqlite-v2") {
             report["workloads"].push_back(
-                WorkloadJson(RunSqlite(options, SqliteMode::kExecAutocommit)));
+                WorkloadJson(RunSqlite(options, SqliteMode::kPreparedBatch,
+                    kSqliteV2BatchSize, "sqlite_v2_prepared_batch_256")));
+        }
+        if (options.workload == "sqlite-v1") {
+            report["workloads"].push_back(
+                WorkloadJson(RunSqlite(options, SqliteMode::kExecAutocommit,
+                    1, "sqlite_v1_exec_autocommit")));
         }
         if (options.workload == "sqlite-compare") {
             report["workloads"].push_back(

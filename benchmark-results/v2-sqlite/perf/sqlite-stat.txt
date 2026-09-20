@@ -1,0 +1,20 @@
+# started on Sun Sep 20 06:28:52 2026
+
+
+ Performance counter stats for './build/bench-release/photobridge_bench --workload sqlite-v2 --repetitions 10 --sqlite-commands 5000':
+
+            125.80 msec task-clock                #    0.289 CPUs utilized          
+               736      context-switches          #    5.851 K/sec                  
+                 5      cpu-migrations            #   39.746 /sec                   
+               353      page-faults               #    2.806 K/sec                  
+   <not supported>      cycles                                                      
+   <not supported>      instructions                                                
+   <not supported>      branches                                                    
+   <not supported>      branch-misses                                               
+
+       0.435026620 seconds time elapsed
+
+       0.021056000 seconds user
+       0.110959000 seconds sys
+
+

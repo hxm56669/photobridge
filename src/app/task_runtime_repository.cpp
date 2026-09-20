@@ -1067,12 +1067,28 @@ Status TaskRuntimeRepository::SetReady(
 
 StatusOr<ClaimedTask> TaskRuntimeRepository::ClaimNextReady(
     const std::string& plan_id,
+    ExecutionEpoch epoch)
+{
+    return ClaimNextReadyImpl(plan_id, epoch, nullptr);
+}
+
+StatusOr<ClaimedTask> TaskRuntimeRepository::ClaimNextReady(
+    const std::string& plan_id,
     ExecutionEpoch epoch,
     const std::string& attempt_id)
 {
+    return ClaimNextReadyImpl(plan_id, epoch, &attempt_id);
+}
+
+StatusOr<ClaimedTask> TaskRuntimeRepository::ClaimNextReadyImpl(
+    const std::string& plan_id,
+    ExecutionEpoch epoch,
+    const std::string* supplied_attempt_id)
+{
     Status status = CheckIds(plan_id, "claim");
     if (!status.ok()) return status;
-    status = CheckEpochAttempt(epoch, attempt_id);
+    status = CheckEpochAttempt(
+        epoch, supplied_attempt_id == nullptr ? "generated" : *supplied_attempt_id);
     if (!status.ok()) return status;
     status = connection_->Execute("BEGIN IMMEDIATE;");
     if (!status.ok()) return status;
@@ -1087,7 +1103,7 @@ StatusOr<ClaimedTask> TaskRuntimeRepository::ClaimNextReady(
     ReusableStatement select(
         claim_next_ready_,
         connection_->native_handle(),
-        "SELECT task_id FROM plan_task pt "
+        "SELECT task_id, attempt_count FROM plan_task pt "
         "WHERE pt.plan_id = ?1 AND pt.state = ?2 "
         "AND NOT EXISTS (SELECT 1 FROM task_dependency d "
         "JOIN plan_task dependency ON dependency.plan_id = d.plan_id "
@@ -1121,6 +1137,16 @@ StatusOr<ClaimedTask> TaskRuntimeRepository::ClaimNextReady(
     }
     const TaskId task_id = reinterpret_cast<const char*>(
         sqlite3_column_text(select.get(), 0));
+    if (sqlite3_column_type(select.get(), 1) != SQLITE_INTEGER
+        || sqlite3_column_int64(select.get(), 1) < 0
+        || sqlite3_column_int64(select.get(), 1)
+            >= std::numeric_limits<std::uint32_t>::max()) {
+        return Rollback(*connection_, Invalid("task attempt count is invalid"));
+    }
+    const std::string attempt_id = supplied_attempt_id == nullptr
+        ? "attempt-" + plan_id + "-" + task_id + "-"
+            + std::to_string(sqlite3_column_int64(select.get(), 1) + 1)
+        : *supplied_attempt_id;
 
     ReusableStatement update(
         claim_task_,

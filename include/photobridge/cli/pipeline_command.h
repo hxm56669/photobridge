@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <cstddef>
 
 #include "photobridge/cli/command.h"
 
@@ -21,7 +22,8 @@ public:
         PipelineStage stage,
         std::string workspace_path,
         std::string input_path,
-        std::string target_path = {});
+        std::string target_path = {},
+        std::size_t workers = 4);
 
     Status Execute(CommandContext& context) override;
 
@@ -30,6 +32,7 @@ private:
     std::string workspace_path_;
     std::string input_path_;
     std::string target_path_;
+    std::size_t workers_;
 };
 
 }  // namespace photobridge

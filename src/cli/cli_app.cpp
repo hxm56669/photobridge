@@ -77,6 +77,7 @@ int RunCli(
     std::string error_report_path;
     std::string bind_address;
     std::uint16_t port = 8787;
+    std::size_t workers = 4;
     bool bootstrap_only = false;
     init_command->add_option(
         "--workspace",
@@ -124,6 +125,10 @@ int RunCli(
         migrate_command,
         "--plan",
         "frozen plan path");
+    migrate_command->add_option(
+        "--workers", workers, "number of migration workers (1-8)")
+        ->check(CLI::Range(1, 8))
+        ->capture_default_str();
     add_pipeline_options(
         resume_command,
         "--plan",
@@ -202,7 +207,9 @@ int RunCli(
             std::make_unique<PipelineCommand>(
                 PipelineStage::kMigrate,
                 workspace_path,
-                input_path));
+                input_path,
+                std::string{},
+                workers));
     } else if (resume_command->parsed()) {
         selected_command = "resume";
         dispatcher.Register(

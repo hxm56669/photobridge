@@ -34,6 +34,9 @@ public:
 
     StatusOr<ClaimedTask> ClaimNextReady(
         const std::string& plan_id,
+        ExecutionEpoch epoch);
+    StatusOr<ClaimedTask> ClaimNextReady(
+        const std::string& plan_id,
         ExecutionEpoch epoch,
         const std::string& attempt_id);
 
@@ -96,6 +99,10 @@ public:
         const TaskId& task_id) const;
 
 private:
+    StatusOr<ClaimedTask> ClaimNextReadyImpl(
+        const std::string& plan_id,
+        ExecutionEpoch epoch,
+        const std::string* supplied_attempt_id);
     SqliteConnection* connection_;
     SqliteStatement insert_task_;
     SqliteStatement check_dependency_cycle_;

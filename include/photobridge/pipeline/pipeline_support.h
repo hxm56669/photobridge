@@ -128,6 +128,7 @@ Status RunPlanService(
 Status RunMigrationService(
     const StatusOr<WorkspaceLayout>& layout,
     const std::string& input_path,
+    std::size_t workers,
     CommandContext& context);
 Status RunRecoveryService(
     const StatusOr<WorkspaceLayout>& layout,

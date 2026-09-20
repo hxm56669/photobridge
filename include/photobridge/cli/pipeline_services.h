@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <cstddef>
 
 #include "photobridge/cli/pipeline_command.h"
 
@@ -11,6 +12,7 @@ Status RunPipelineStage(
     std::string workspace_path,
     std::string input_path,
     std::string target_path,
+    std::size_t workers,
     CommandContext& context);
 
 }  // namespace photobridge
