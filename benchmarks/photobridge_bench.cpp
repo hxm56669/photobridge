@@ -32,6 +32,7 @@
 #include "photobridge/cli/cli_app.h"
 #include "photobridge/common/digest.h"
 #include "photobridge/filesystem/copy_and_hash.h"
+#include "photobridge/filesystem/io_uring_copy_engine.h"
 #include "photobridge/filesystem/linux_directory_walker.h"
 #include "photobridge/filesystem/linux_file_ops.h"
 #include "photobridge/model/asset_classifier.h"
@@ -49,6 +50,7 @@ struct Options {
     std::size_t repetitions = 5;
     std::size_t scanner_files = 100'000;
     std::size_t copy_bytes = 64U * 1024U * 1024U;
+    std::size_t copy_uring_qd = 4;
     std::size_t sqlite_commands = 5'000;
     std::size_t e2e_files = 4;
     std::size_t e2e_file_bytes = 64U * 1024U;
@@ -155,12 +157,13 @@ Options ParseOptions(int argc, char** argv)
         if (argument == "--help" || argument == "-h") {
             std::cout
                 << "Usage: photobridge_bench [options]\n"
-                << "  --workload all|scanner|copy|sqlite|sqlite-v1|sqlite-v2|sqlite-prepared|sqlite-batch-{10,100,1000,5000}|sqlite-compare|e2e|e2e-large\n"
+                << "  --workload all|scanner|copy|copy-sync|copy-uring|copy-uring-qd{1,2,4,8,16}|copy-compare|sqlite|sqlite-v1|sqlite-v2|sqlite-prepared|sqlite-batch-{10,100,1000,5000}|sqlite-compare|e2e|e2e-large\n"
                 << "  --data-root PATH       benchmark-owned data directory\n"
                 << "  --output PATH          write JSON report\n"
                 << "  --repetitions N        measured samples (default 5)\n"
                 << "  --scanner-files N      files per scan (default 100000)\n"
                 << "  --copy-bytes N         payload bytes (default 67108864)\n"
+                << "  --copy-uring-qd N      io_uring queue depth, 1-16 (default 4)\n"
                 << "  --sqlite-commands N    queued commands (default 5000)\n"
                 << "  --e2e-files N          files per local pipeline (default 4)\n"
                 << "  --e2e-file-bytes N     bytes per local file (default 65536)\n"
@@ -185,6 +188,10 @@ Options ParseOptions(int argc, char** argv)
         } else if (argument == "--copy-bytes") {
             options.copy_bytes = static_cast<std::size_t>(
                 ParseUnsigned(value_for(argument), argument));
+        } else if (argument == "--copy-uring-qd") {
+            const std::uint64_t depth = ParseUnsigned(value_for(argument), argument);
+            if (depth > 16) Fail("--copy-uring-qd must be between 1 and 16");
+            options.copy_uring_qd = static_cast<std::size_t>(depth);
         } else if (argument == "--sqlite-commands") {
             options.sqlite_commands = static_cast<std::size_t>(
                 ParseUnsigned(value_for(argument), argument));
@@ -204,7 +211,15 @@ Options ParseOptions(int argc, char** argv)
     }
 
     if (options.workload != "all" && options.workload != "scanner"
-        && options.workload != "copy" && options.workload != "sqlite"
+        && options.workload != "copy" && options.workload != "copy-sync"
+        && options.workload != "copy-uring"
+        && options.workload != "copy-uring-qd1"
+        && options.workload != "copy-uring-qd2"
+        && options.workload != "copy-uring-qd4"
+        && options.workload != "copy-uring-qd8"
+        && options.workload != "copy-uring-qd16"
+        && options.workload != "copy-compare"
+        && options.workload != "sqlite"
         && options.workload != "sqlite-v1"
         && options.workload != "sqlite-v2"
         && options.workload != "sqlite-prepared"
@@ -442,12 +457,18 @@ WorkloadResult RunScanner(
     return result;
 }
 
+enum class CopyMode { kSync, kIoUring };
+
 WorkloadResult RunCopy(
     const Options& options,
-    const std::filesystem::path& fixture_root)
+    const std::filesystem::path& fixture_root,
+    CopyMode mode = CopyMode::kSync,
+    std::size_t queue_depth = 4)
 {
     WorkloadResult result{
-        "copy_hash_fdatasync",
+        mode == CopyMode::kSync
+            ? "copy_hash_fdatasync"
+            : "copy_uring_qd" + std::to_string(queue_depth) + "_hash_fdatasync",
         "bytes/s",
         0,
         options.copy_bytes,
@@ -478,14 +499,25 @@ WorkloadResult RunCopy(
                 file_ops.CreateTempNoReplace(root_fd.get(), temp_name, 0600),
                 "create copy benchmark target");
             photobridge::Blake3Hasher hasher;
-            const auto copied = Require(
-                photobridge::CopyAndHash(
+            photobridge::CopyResult copied;
+            if (mode == CopyMode::kSync) {
+                copied = Require(photobridge::CopyAndHash(
                     file_ops,
                     hasher,
                     source_fd.get(),
                     target_fd.get(),
-                    buffer),
-                "copy and hash benchmark payload");
+                    buffer), "copy and hash benchmark payload");
+            } else {
+                auto accelerated = Require(
+                    photobridge::TryIoUringCopyAndHash(
+                        hasher, source_fd.get(), target_fd.get(),
+                        options.copy_bytes, buffer.size(), queue_depth),
+                    "io_uring copy benchmark payload");
+                if (!accelerated.has_value()) {
+                    Fail("io_uring is unavailable; refusing to label a sync copy as io_uring");
+                }
+                copied = accelerated.value();
+            }
             Require(
                 file_ops.Fdatasync(target_fd.get()),
                 "fdatasync copy benchmark target");
@@ -948,6 +980,7 @@ int main(int argc, char** argv)
             {"data_root", options.data_root.string()},
             {"scanner_files", options.scanner_files},
             {"copy_bytes", options.copy_bytes},
+            {"copy_uring_qd", options.copy_uring_qd},
             {"sqlite_commands", options.sqlite_commands},
             {"e2e_files", options.e2e_files},
             {"e2e_file_bytes", options.e2e_file_bytes},
@@ -958,9 +991,22 @@ int main(int argc, char** argv)
             report["workloads"].push_back(
                 WorkloadJson(RunScanner(options, scanner_root)));
         }
-        if (options.workload == "all" || options.workload == "copy") {
+        if (options.workload == "all" || options.workload == "copy"
+            || options.workload == "copy-sync"
+            || options.workload == "copy-compare") {
             report["workloads"].push_back(
                 WorkloadJson(RunCopy(options, run_root)));
+        }
+        if (options.workload == "copy-uring") {
+            report["workloads"].push_back(WorkloadJson(RunCopy(
+                options, run_root, CopyMode::kIoUring, options.copy_uring_qd)));
+        }
+        for (const std::size_t depth : {1U, 2U, 4U, 8U, 16U}) {
+            if (options.workload == "copy-compare"
+                || options.workload == "copy-uring-qd" + std::to_string(depth)) {
+                report["workloads"].push_back(WorkloadJson(RunCopy(
+                    options, run_root, CopyMode::kIoUring, depth)));
+            }
         }
         if (options.workload == "all" || options.workload == "sqlite"
             || options.workload == "sqlite-v2") {

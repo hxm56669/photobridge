@@ -4,7 +4,9 @@
 
 #include <algorithm>
 #include <cerrno>
+#include <cstdlib>
 #include <limits>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -13,8 +15,6 @@
 
 namespace photobridge {
 namespace {
-
-constexpr std::size_t kBufferCount = 4;
 
 class IoUringContext final {
 public:
@@ -65,16 +65,29 @@ StatusOr<std::optional<CopyResult>> TryIoUringCopyAndHash(
     int source_fd,
     int target_fd,
     std::uint64_t source_size,
-    std::size_t chunk_size)
+    std::size_t chunk_size,
+    std::size_t queue_depth)
 {
     if (source_fd < 0 || target_fd < 0 || chunk_size == 0
         || chunk_size > std::numeric_limits<unsigned>::max()
+        || queue_depth == 0 || queue_depth > 16
         || source_size > static_cast<std::uint64_t>(
                std::numeric_limits<off_t>::max())) {
-        return Invalid("invalid io_uring copy descriptors, size, or chunk size");
+        return Invalid("invalid io_uring copy descriptors, size, or queue depth");
+    }
+    const char* disabled = std::getenv("PHOTOBRIDGE_TEST_DISABLE_IO_URING");
+    if (disabled != nullptr && disabled[0] == '1' && disabled[1] == '\0') {
+        return std::optional<CopyResult>{};
     }
 
-    IoUringContext context(8);
+    thread_local std::unique_ptr<IoUringContext> cached_context;
+    thread_local std::size_t cached_depth = 0;
+    if (!cached_context || cached_depth != queue_depth) {
+        cached_context = std::make_unique<IoUringContext>(
+            static_cast<unsigned>(std::max<std::size_t>(8, queue_depth)));
+        cached_depth = queue_depth;
+    }
+    IoUringContext& context = *cached_context;
     if (context.result() != 0) {
         if (context.result() == -ENOSYS || context.result() == -EPERM
             || context.result() == -EOPNOTSUPP || context.result() == -EINVAL) {
@@ -87,7 +100,7 @@ StatusOr<std::optional<CopyResult>> TryIoUringCopyAndHash(
     const std::uint64_t chunk_count = source_size / chunk_size
         + (source_size % chunk_size != 0);
     const std::size_t slot_count = static_cast<std::size_t>(
-        std::min<std::uint64_t>(kBufferCount, chunk_count));
+        std::min<std::uint64_t>(queue_depth, chunk_count));
     std::vector<BufferSlot> slots(slot_count);
     for (auto& slot : slots) slot.bytes.resize(chunk_size);
 
@@ -95,16 +108,21 @@ StatusOr<std::optional<CopyResult>> TryIoUringCopyAndHash(
     std::uint64_t next_hash = 0;
     std::uint64_t completed = 0;
     std::size_t in_flight = 0;
+    std::size_t queued = 0;
     bool paused_after_first_write = false;
     Status failure = Status::Ok();
 
-    const auto submit = [&]() -> Status {
-        const int submitted = io_uring_submit(context.get());
-        if (submitted < 0) return IoError(submitted, "submit io_uring copy I/O");
-        if (submitted == 0) {
-            return Status(StatusCode::kInternal, "io_uring submitted no I/O");
+    const auto flush = [&]() -> Status {
+        while (queued != 0) {
+            const int submitted = io_uring_submit(context.get());
+            if (submitted < 0) return IoError(submitted, "submit io_uring copy I/O");
+            if (submitted == 0
+                || static_cast<std::size_t>(submitted) > queued) {
+                return Status(StatusCode::kInternal, "io_uring submitted an invalid I/O count");
+            }
+            queued -= static_cast<std::size_t>(submitted);
+            in_flight += static_cast<std::size_t>(submitted);
         }
-        ++in_flight;
         return Status::Ok();
     };
 
@@ -126,7 +144,8 @@ StatusOr<std::optional<CopyResult>> TryIoUringCopyAndHash(
             slot.phase = Phase::kReading;
         }
         io_uring_sqe_set_data64(sqe, index * 2 + (write ? 1 : 0));
-        return submit();
+        ++queued;
+        return Status::Ok();
     };
 
     const auto start_read = [&](std::size_t index) -> Status {
@@ -166,12 +185,14 @@ StatusOr<std::optional<CopyResult>> TryIoUringCopyAndHash(
         failure = start_read(index);
         if (!failure.ok()) break;
     }
+    if (failure.ok()) failure = flush();
 
     while (in_flight != 0) {
         io_uring_cqe* cqe = nullptr;
         const int waited = io_uring_wait_cqe(context.get(), &cqe);
         if (waited == -EINTR) continue;
         if (waited < 0) {
+            cached_context.reset();
             return IoError(waited, "wait for io_uring copy completion");
         }
 
@@ -207,6 +228,7 @@ StatusOr<std::optional<CopyResult>> TryIoUringCopyAndHash(
         slot.progress += static_cast<std::size_t>(transferred);
         if (slot.progress < slot.length) {
             failure = submit_request(index, write);
+            if (failure.ok()) failure = flush();
             continue;
         }
 
@@ -223,9 +245,13 @@ StatusOr<std::optional<CopyResult>> TryIoUringCopyAndHash(
             slot.phase = Phase::kReady;
         }
         if (failure.ok()) failure = hash_ready();
+        if (failure.ok()) failure = flush();
     }
 
-    if (!failure.ok()) return failure;
+    if (!failure.ok()) {
+        cached_context.reset();
+        return failure;
+    }
     if (completed != chunk_count || next_hash != chunk_count
         || result.bytes_copied != source_size) {
         return Status(StatusCode::kInternal, "io_uring copy ended early");

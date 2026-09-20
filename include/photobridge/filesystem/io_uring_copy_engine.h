@@ -9,12 +9,14 @@
 namespace photobridge {
 
 // Returns nullopt only when io_uring is unavailable before any I/O starts.
-// Once a request is submitted, errors are returned without retrying the copy.
+// The ring is reused by later calls on the same Worker thread. Once a request
+// is submitted, errors are returned without retrying the copy.
 StatusOr<std::optional<CopyResult>> TryIoUringCopyAndHash(
     Hasher& hasher,
     int source_fd,
     int target_fd,
     std::uint64_t source_size,
-    std::size_t chunk_size = 1024U * 1024U);
+    std::size_t chunk_size = 1024U * 1024U,
+    std::size_t queue_depth = 4);
 
 }  // namespace photobridge
