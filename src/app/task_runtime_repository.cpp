@@ -56,8 +56,6 @@ Status CheckEpochAttempt(ExecutionEpoch epoch, std::string_view attempt_id)
     return Status::Ok();
 }
 
-using Statement = SqliteStatement;
-
 class ReusableStatement final {
 public:
     ReusableStatement(
@@ -401,10 +399,13 @@ StatusOr<TaskRuntime> ReadRuntimeWithStatement(
 
 StatusOr<ExecutionEpoch> ReadCurrentEpochForPlan(
     sqlite3* database,
+    SqliteStatement& cached_statement,
     std::string_view plan_id);
 
 Status FinishTask(
     SqliteConnection& connection,
+    SqliteStatement& cached_epoch_read,
+    SqliteStatement& cached_task_finish,
     SqliteStatement& cached_attempt_update,
     SqliteStatement& cached_event_insert,
     std::string_view plan_id,
@@ -417,14 +418,15 @@ Status FinishTask(
     Status status = connection.Execute("BEGIN IMMEDIATE;");
     if (!status.ok()) return status;
     const auto current = ReadCurrentEpochForPlan(
-        connection.native_handle(), plan_id);
+        connection.native_handle(), cached_epoch_read, plan_id);
     if (!current.ok()) return Rollback(connection, current.status());
     if (current.value() != epoch) {
         return Rollback(connection, Invalid(
             "stale executor epoch cannot finish a task"));
     }
 
-    Statement statement(
+    ReusableStatement statement(
+        cached_task_finish,
         connection.native_handle(),
         "UPDATE plan_task SET state = ?5, owner_epoch = NULL, "
         "active_attempt_id = NULL, last_error_code = ?6, "
@@ -512,6 +514,8 @@ Status FinishTask(
 
 Status RecoverTask(
     SqliteConnection& connection,
+    SqliteStatement& cached_epoch_read,
+    SqliteStatement& cached_task_recover,
     SqliteStatement& cached_attempt_update,
     SqliteStatement& cached_event_insert,
     std::string_view plan_id,
@@ -528,14 +532,15 @@ Status RecoverTask(
     Status status = connection.Execute("BEGIN IMMEDIATE;");
     if (!status.ok()) return status;
     const auto current = ReadCurrentEpochForPlan(
-        connection.native_handle(), plan_id);
+        connection.native_handle(), cached_epoch_read, plan_id);
     if (!current.ok()) return Rollback(connection, current.status());
     if (current.value() != recovery_epoch) {
         return Rollback(connection, Invalid(
             "stale recovery epoch cannot transition a task"));
     }
 
-    Statement update(
+    ReusableStatement update(
+        cached_task_recover,
         connection.native_handle(),
         "UPDATE plan_task SET state = ?6, owner_epoch = NULL, "
         "active_attempt_id = NULL, last_error_code = ?7, "
@@ -622,6 +627,7 @@ Status RecoverTask(
 
 Status CheckTaskOwnership(
     sqlite3* database,
+    SqliteStatement& cached_statement,
     std::string_view plan_id,
     std::string_view task_id,
     ExecutionEpoch epoch,
@@ -629,6 +635,9 @@ Status CheckTaskOwnership(
 
 Status AdvanceAttempt(
     SqliteConnection& connection,
+    SqliteStatement& cached_epoch_read,
+    SqliteStatement& cached_ownership_check,
+    SqliteStatement& cached_attempt_state_read,
     SqliteStatement& cached_attempt_update,
     SqliteStatement& cached_event_insert,
     std::string_view plan_id,
@@ -641,17 +650,19 @@ Status AdvanceAttempt(
     Status status = connection.Execute("BEGIN IMMEDIATE;");
     if (!status.ok()) return status;
     const auto current = ReadCurrentEpochForPlan(
-        connection.native_handle(), plan_id);
+        connection.native_handle(), cached_epoch_read, plan_id);
     if (!current.ok()) return Rollback(connection, current.status());
     if (current.value() != epoch) {
         return Rollback(connection, Invalid(
             "stale executor epoch cannot advance an attempt"));
     }
     status = CheckTaskOwnership(
-        connection.native_handle(), plan_id, task_id, epoch, attempt_id);
+        connection.native_handle(), cached_ownership_check,
+        plan_id, task_id, epoch, attempt_id);
     if (!status.ok()) return Rollback(connection, status);
 
-    Statement select(
+    ReusableStatement select(
+        cached_attempt_state_read,
         connection.native_handle(),
         "SELECT file_state FROM task_attempt "
         "WHERE plan_id = ?1 AND task_id = ?2 AND attempt_id = ?3 "
@@ -720,9 +731,11 @@ Status AdvanceAttempt(
 
 StatusOr<ExecutionEpoch> ReadCurrentEpochForPlan(
     sqlite3* database,
+    SqliteStatement& cached_statement,
     std::string_view plan_id)
 {
-    Statement statement(
+    ReusableStatement statement(
+        cached_statement,
         database,
         "SELECT migration.current_epoch FROM migration_plan "
         "JOIN migration ON migration.migration_id = migration_plan.migration_id "
@@ -755,12 +768,14 @@ StatusOr<ExecutionEpoch> ReadCurrentEpochForPlan(
 
 Status CheckTaskOwnership(
     sqlite3* database,
+    SqliteStatement& cached_statement,
     std::string_view plan_id,
     std::string_view task_id,
     ExecutionEpoch epoch,
     std::string_view attempt_id)
 {
-    Statement statement(
+    ReusableStatement statement(
+        cached_statement,
         database,
         "SELECT state, owner_epoch, active_attempt_id FROM plan_task "
         "WHERE plan_id = ?1 AND task_id = ?2;");
@@ -811,14 +826,15 @@ StatusOr<ExecutionEpoch> TaskRuntimeRepository::AcquireNextExecutionEpoch(
     Status status = connection_->Execute("BEGIN IMMEDIATE;");
     if (!status.ok()) return status;
     const auto current = ReadCurrentEpochForPlan(
-        connection_->native_handle(), plan_id);
+        connection_->native_handle(), read_current_epoch_, plan_id);
     if (!current.ok()) return Rollback(*connection_, current.status());
     if (current.value().value
         >= static_cast<std::uint64_t>(std::numeric_limits<sqlite3_int64>::max())) {
         return Rollback(*connection_, Invalid("execution epoch overflow"));
     }
     const ExecutionEpoch next{current.value().value + 1};
-    Statement statement(
+    ReusableStatement statement(
+        update_epoch_,
         connection_->native_handle(),
         "UPDATE migration SET current_epoch = ?2 WHERE migration_id = "
         "(SELECT migration_id FROM migration_plan WHERE plan_id = ?1);");
@@ -849,7 +865,8 @@ StatusOr<ExecutionEpoch> TaskRuntimeRepository::ReadCurrentEpoch(
     if (plan_id.empty() || plan_id.find('\0') != std::string::npos) {
         return Invalid("plan id must be non-empty and NUL-free");
     }
-    return ReadCurrentEpochForPlan(connection_->native_handle(), plan_id);
+    return ReadCurrentEpochForPlan(
+        connection_->native_handle(), read_current_epoch_, plan_id);
 }
 
 Status TaskRuntimeRepository::AddTask(
@@ -1060,14 +1077,15 @@ StatusOr<ClaimedTask> TaskRuntimeRepository::ClaimNextReady(
     status = connection_->Execute("BEGIN IMMEDIATE;");
     if (!status.ok()) return status;
     const auto current = ReadCurrentEpochForPlan(
-        connection_->native_handle(), plan_id);
+        connection_->native_handle(), read_current_epoch_, plan_id);
     if (!current.ok()) return Rollback(*connection_, current.status());
     if (current.value() != epoch) {
         return Rollback(*connection_, Invalid(
             "stale executor epoch cannot claim a ready task"));
     }
 
-    Statement select(
+    ReusableStatement select(
+        claim_next_ready_,
         connection_->native_handle(),
         "SELECT task_id FROM plan_task pt "
         "WHERE pt.plan_id = ?1 AND pt.state = ?2 "
@@ -1104,7 +1122,8 @@ StatusOr<ClaimedTask> TaskRuntimeRepository::ClaimNextReady(
     const TaskId task_id = reinterpret_cast<const char*>(
         sqlite3_column_text(select.get(), 0));
 
-    Statement update(
+    ReusableStatement update(
+        claim_task_,
         connection_->native_handle(),
         "UPDATE plan_task SET state = ?3, owner_epoch = ?4, "
         "active_attempt_id = ?5, attempt_count = attempt_count + 1, "
@@ -1139,7 +1158,8 @@ StatusOr<ClaimedTask> TaskRuntimeRepository::ClaimNextReady(
     if (sqlite3_changes(connection_->native_handle()) != 1) {
         return Rollback(*connection_, Invalid("ready task claim was lost"));
     }
-    Statement attempt(
+    ReusableStatement attempt(
+        insert_attempt_,
         connection_->native_handle(),
         "INSERT INTO task_attempt("
         "attempt_id, plan_id, task_id, owner_epoch, file_state, started_at_ns) "
@@ -1202,6 +1222,9 @@ Status TaskRuntimeRepository::MarkCommitIntent(
     if (!status.ok()) return status;
     return AdvanceAttempt(
         *connection_,
+        read_current_epoch_,
+        check_task_ownership_,
+        read_attempt_state_,
         update_attempt_,
         insert_event_,
         plan_id,
@@ -1224,6 +1247,9 @@ Status TaskRuntimeRepository::MarkTempWritten(
     if (!status.ok()) return status;
     return AdvanceAttempt(
         *connection_,
+        read_current_epoch_,
+        check_task_ownership_,
+        read_attempt_state_,
         update_attempt_,
         insert_event_,
         plan_id,
@@ -1246,6 +1272,8 @@ Status TaskRuntimeRepository::MarkSucceeded(
     if (!status.ok()) return status;
     return FinishTask(
         *connection_,
+        read_current_epoch_,
+        finish_task_,
         update_attempt_,
         insert_event_,
         plan_id,
@@ -1270,6 +1298,8 @@ Status TaskRuntimeRepository::MarkRetryable(
     if (error.ok()) return Invalid("retryable task result requires an error");
     return FinishTask(
         *connection_,
+        read_current_epoch_,
+        finish_task_,
         update_attempt_,
         insert_event_,
         plan_id,
@@ -1297,6 +1327,8 @@ Status TaskRuntimeRepository::RecoverSucceeded(
     if (reason.empty()) return Invalid("recovery reason must not be empty");
     return RecoverTask(
         *connection_,
+        read_current_epoch_,
+        recover_task_,
         update_attempt_,
         insert_event_,
         plan_id,
@@ -1329,6 +1361,8 @@ Status TaskRuntimeRepository::RecoverRetryable(
     const Status error(StatusCode::kIoError, reason);
     return RecoverTask(
         *connection_,
+        read_current_epoch_,
+        recover_task_,
         update_attempt_,
         insert_event_,
         plan_id,
@@ -1361,6 +1395,8 @@ Status TaskRuntimeRepository::RecoverInconsistent(
     const Status error(StatusCode::kInternal, reason);
     return RecoverTask(
         *connection_,
+        read_current_epoch_,
+        recover_task_,
         update_attempt_,
         insert_event_,
         plan_id,
@@ -1397,7 +1433,7 @@ Status TaskRuntimeRepository::PersistVerifiedReceipt(
     status = connection_->Execute("BEGIN IMMEDIATE;");
     if (!status.ok()) return status;
     const auto current = ReadCurrentEpochForPlan(
-        connection_->native_handle(), plan_id);
+        connection_->native_handle(), read_current_epoch_, plan_id);
     if (!current.ok()) return Rollback(*connection_, current.status());
     if (current.value() != receipt.owner_epoch) {
         return Rollback(*connection_, Invalid(
@@ -1405,12 +1441,14 @@ Status TaskRuntimeRepository::PersistVerifiedReceipt(
     }
     status = CheckTaskOwnership(
         connection_->native_handle(),
+        check_task_ownership_,
         plan_id,
         receipt.task_id,
         receipt.owner_epoch,
         receipt.attempt_id);
     if (!status.ok()) return Rollback(*connection_, status);
-    Statement statement(
+    ReusableStatement statement(
+        insert_receipt_,
         connection_->native_handle(),
         "INSERT INTO verified_receipt("
         "plan_id, task_id, attempt_id, owner_epoch, temp_path, final_path, "
@@ -1518,7 +1556,8 @@ StatusOr<VerifiedReceipt> TaskRuntimeRepository::ReadVerifiedReceipt(
     if (attempt_id.empty() || attempt_id.find('\0') != std::string::npos) {
         return Invalid("attempt id must be non-empty and NUL-free");
     }
-    Statement statement(
+    ReusableStatement statement(
+        read_receipt_,
         connection_->native_handle(),
         "SELECT task_id, attempt_id, owner_epoch, temp_path, final_path, "
         "content_size, source_digest, target_digest, source_identity "

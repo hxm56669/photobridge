@@ -104,6 +104,17 @@ private:
     SqliteStatement insert_event_;
     SqliteStatement update_attempt_;
     mutable SqliteStatement read_runtime_;
+    mutable SqliteStatement read_current_epoch_;
+    mutable SqliteStatement check_task_ownership_;
+    SqliteStatement read_attempt_state_;
+    SqliteStatement update_epoch_;
+    SqliteStatement claim_next_ready_;
+    SqliteStatement claim_task_;
+    SqliteStatement insert_attempt_;
+    SqliteStatement finish_task_;
+    SqliteStatement recover_task_;
+    SqliteStatement insert_receipt_;
+    mutable SqliteStatement read_receipt_;
 };
 
 }  // namespace photobridge
