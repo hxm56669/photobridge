@@ -1,0 +1,439 @@
+Test project /home/hxm/share/project/photobridge/build/debug
+        Start   1: DigestTest.RoundTripsLowercaseHex
+  1/217 Test   #1: DigestTest.RoundTripsLowercaseHex ...........................................   Passed    0.01 sec
+        Start   2: DigestTest.AcceptsUppercaseHexAndNormalizesOutput
+  2/217 Test   #2: DigestTest.AcceptsUppercaseHexAndNormalizesOutput ...........................   Passed    0.01 sec
+        Start   3: DigestTest.RejectsMalformedHex
+  3/217 Test   #3: DigestTest.RejectsMalformedHex ..............................................   Passed    0.01 sec
+        Start   4: PosixErrorTest.MapsExpectedErrnoCategories
+  4/217 Test   #4: PosixErrorTest.MapsExpectedErrnoCategories ..................................   Passed    0.01 sec
+        Start   5: PosixErrorTest.PreservesOperationInErrorMessage
+  5/217 Test   #5: PosixErrorTest.PreservesOperationInErrorMessage .............................   Passed    0.01 sec
+        Start   6: PhotoBridgeSmokeTest.Basic
+  6/217 Test   #6: PhotoBridgeSmokeTest.Basic ..................................................   Passed    0.01 sec
+        Start   7: StatusOrTest.SuccessContainsValue
+  7/217 Test   #7: StatusOrTest.SuccessContainsValue ...........................................   Passed    0.01 sec
+        Start   8: StatusOrTest.ErrorContainsStatus
+  8/217 Test   #8: StatusOrTest.ErrorContainsStatus ............................................   Passed    0.01 sec
+        Start   9: StatusTest.OkStatus
+  9/217 Test   #9: StatusTest.OkStatus .........................................................   Passed    0.01 sec
+        Start  10: StatusTest.ErrorStatus
+ 10/217 Test  #10: StatusTest.ErrorStatus ......................................................   Passed    0.01 sec
+        Start  11: UniqueFdTest.DefaultValueIsInvalid
+ 11/217 Test  #11: UniqueFdTest.DefaultValueIsInvalid ..........................................   Passed    0.01 sec
+        Start  12: UniqueFdTest.MoveTransfersOwnership
+ 12/217 Test  #12: UniqueFdTest.MoveTransfersOwnership .........................................   Passed    0.01 sec
+        Start  13: UniqueFdTest.ResetClosesPreviousDescriptor
+ 13/217 Test  #13: UniqueFdTest.ResetClosesPreviousDescriptor ..................................   Passed    0.02 sec
+        Start  14: AssetClassifierTest.ClassifiesKnownExtensionsCaseInsensitively
+ 14/217 Test  #14: AssetClassifierTest.ClassifiesKnownExtensionsCaseInsensitively ..............   Passed    0.01 sec
+        Start  15: AssetClassifierTest.RecognizesAlbumMetadataByStableName
+ 15/217 Test  #15: AssetClassifierTest.RecognizesAlbumMetadataByStableName .....................   Passed    0.01 sec
+        Start  16: AssetClassifierTest.PreservesUnknownRegularFiles
+ 16/217 Test  #16: AssetClassifierTest.PreservesUnknownRegularFiles ............................   Passed    0.01 sec
+        Start  17: AssetClassifierTest.PreservesPathAndFileIdentity
+ 17/217 Test  #17: AssetClassifierTest.PreservesPathAndFileIdentity ............................   Passed    0.01 sec
+        Start  18: AssetClassifierTest.SkipsNonRegularEntries
+ 18/217 Test  #18: AssetClassifierTest.SkipsNonRegularEntries ..................................   Passed    0.01 sec
+        Start  19: AssociationGraphTest.OnlyConfirmedCompositionEdgesUnion
+ 19/217 Test  #19: AssociationGraphTest.OnlyConfirmedCompositionEdgesUnion .....................   Passed    0.01 sec
+        Start  20: AssociationGraphTest.BuildIsIndependentOfInsertionOrder
+ 20/217 Test  #20: AssociationGraphTest.BuildIsIndependentOfInsertionOrder .....................   Passed    0.01 sec
+        Start  21: AssociationGraphTest.AggregatesCompositionChainsCanonically
+ 21/217 Test  #21: AssociationGraphTest.AggregatesCompositionChainsCanonically .................   Passed    0.01 sec
+        Start  22: AssociationGraphTest.LogicalAssetIdIgnoresEdgeEvidence
+ 22/217 Test  #22: AssociationGraphTest.LogicalAssetIdIgnoresEdgeEvidence ......................   Passed    0.01 sec
+        Start  23: AssociationGraphTest.RejectsUnknownAndDuplicateVerticesOrEdges
+ 23/217 Test  #23: AssociationGraphTest.RejectsUnknownAndDuplicateVerticesOrEdges ..............   Passed    0.01 sec
+        Start  24: AuditReportTest.RendersStableJsonlWithVisibleDiffAndError
+ 24/217 Test  #24: AuditReportTest.RendersStableJsonlWithVisibleDiffAndError ...................   Passed    0.01 sec
+        Start  25: CanonicalPlanTest.SortsAssetsAndProducesStablePayload
+ 25/217 Test  #25: CanonicalPlanTest.SortsAssetsAndProducesStablePayload .......................   Passed    0.01 sec
+        Start  26: CanonicalPlanTest.PayloadBindsManifestTargetAndPolicyInputs
+ 26/217 Test  #26: CanonicalPlanTest.PayloadBindsManifestTargetAndPolicyInputs .................   Passed    0.01 sec
+        Start  27: CanonicalPlanTest.RejectsDuplicateIdsAndMissingBindings
+ 27/217 Test  #27: CanonicalPlanTest.RejectsDuplicateIdsAndMissingBindings .....................   Passed    0.01 sec
+        Start  28: CanonicalPlanTest.KeepsFrozenInputsReadOnly
+ 28/217 Test  #28: CanonicalPlanTest.KeepsFrozenInputsReadOnly .................................   Passed    0.01 sec
+        Start  29: CapabilityTest.LocalDirectoryV1HasStableValidatedContract
+ 29/217 Test  #29: CapabilityTest.LocalDirectoryV1HasStableValidatedContract ...................   Passed    0.01 sec
+        Start  30: CapabilityTest.ExposesL0SupportLevelsExplicitly
+ 30/217 Test  #30: CapabilityTest.ExposesL0SupportLevelsExplicitly .............................   Passed    0.01 sec
+        Start  31: CapabilityTest.RejectsDuplicateOrUnorderedEntries
+ 31/217 Test  #31: CapabilityTest.RejectsDuplicateOrUnorderedEntries ...........................   Passed    0.01 sec
+        Start  32: CapabilityTest.FindReturnsNullForAbsentKind
+ 32/217 Test  #32: CapabilityTest.FindReturnsNullForAbsentKind .................................   Passed    0.01 sec
+        Start  33: CapabilityTest.SupportLevelsHaveStableNamesAndRejectUnknownValues
+ 33/217 Test  #33: CapabilityTest.SupportLevelsHaveStableNamesAndRejectUnknownValues ...........   Passed    0.01 sec
+        Start  34: CapabilityTest.RequireIsThePlannerCapabilityBoundary
+ 34/217 Test  #34: CapabilityTest.RequireIsThePlannerCapabilityBoundary ........................   Passed    0.01 sec
+        Start  35: DiffEngineTest.ProducesSortedAddedRemovedAndChangedEntries
+ 35/217 Test  #35: DiffEngineTest.ProducesSortedAddedRemovedAndChangedEntries ..................   Passed    0.01 sec
+        Start  36: LogicalAssetTest.MapsOnePhysicalAssetToOneLogicalAsset
+ 36/217 Test  #36: LogicalAssetTest.MapsOnePhysicalAssetToOneLogicalAsset ......................   Passed    0.01 sec
+        Start  37: LogicalAssetTest.PhysicalIdIsStableAndMetadataIndependent
+ 37/217 Test  #37: LogicalAssetTest.PhysicalIdIsStableAndMetadataIndependent ...................   Passed    0.01 sec
+        Start  38: LogicalAssetTest.MemberOrderDoesNotChangeLogicalId
+ 38/217 Test  #38: LogicalAssetTest.MemberOrderDoesNotChangeLogicalId ..........................   Passed    0.01 sec
+        Start  39: LogicalAssetTest.DifferentMembersProduceDifferentLogicalIds
+ 39/217 Test  #39: LogicalAssetTest.DifferentMembersProduceDifferentLogicalIds .................   Passed    0.01 sec
+        Start  40: LogicalAssetTest.RejectsEmptyAndDuplicateMembers
+ 40/217 Test  #40: LogicalAssetTest.RejectsEmptyAndDuplicateMembers ............................   Passed    0.01 sec
+        Start  41: LossAnalysisTest.ReportsNonFullCapabilitiesWithoutChangingContract
+ 41/217 Test  #41: LossAnalysisTest.ReportsNonFullCapabilitiesWithoutChangingContract ..........   Passed    0.01 sec
+        Start  42: LossAnalysisTest.RejectsInvalidCapabilities
+ 42/217 Test  #42: LossAnalysisTest.RejectsInvalidCapabilities .................................   Passed    0.01 sec
+        Start  43: MetadataCandidateTest.ReportsTheControlledVariantKind
+ 43/217 Test  #43: MetadataCandidateTest.ReportsTheControlledVariantKind .......................   Passed    0.01 sec
+        Start  44: MetadataCandidateTest.EnforcesTheInitialFieldTypeContract
+ 44/217 Test  #44: MetadataCandidateTest.EnforcesTheInitialFieldTypeContract ...................   Passed    0.01 sec
+        Start  45: MetadataResolverTest.SelectsDeterministicallyAndRetainsAllCandidates
+ 45/217 Test  #45: MetadataResolverTest.SelectsDeterministicallyAndRetainsAllCandidates ........   Passed    0.01 sec
+        Start  46: MetadataResolverTest.RecordsConflictAndCanonicalTieBreak
+ 46/217 Test  #46: MetadataResolverTest.RecordsConflictAndCanonicalTieBreak ....................   Passed    0.01 sec
+        Start  47: MetadataResolverTest.RejectsWrongFieldOrRule
+ 47/217 Test  #47: MetadataResolverTest.RejectsWrongFieldOrRule ................................   Passed    0.01 sec
+        Start  48: MetadataResolverTest.ReversingInputsDoesNotChangeResolution
+ 48/217 Test  #48: MetadataResolverTest.ReversingInputsDoesNotChangeResolution .................   Passed    0.01 sec
+        Start  49: MetadataResolverTest.BindsResultToRulesetVersion
+ 49/217 Test  #49: MetadataResolverTest.BindsResultToRulesetVersion ............................   Passed    0.01 sec
+        Start  50: MetadataRulesTest.TakeoutRulesetHasStableVersionedOrder
+ 50/217 Test  #50: MetadataRulesTest.TakeoutRulesetHasStableVersionedOrder .....................   Passed    0.01 sec
+        Start  51: MetadataRulesTest.BindsRuleToFieldAndSource
+ 51/217 Test  #51: MetadataRulesTest.BindsRuleToFieldAndSource .................................   Passed    0.01 sec
+        Start  52: MetadataRulesTest.RejectsDuplicateOrEmptyRuleIds
+ 52/217 Test  #52: MetadataRulesTest.RejectsDuplicateOrEmptyRuleIds ............................   Passed    0.01 sec
+        Start  53: PathMapperTest.PreservesRelativePathAndExtension
+ 53/217 Test  #53: PathMapperTest.PreservesRelativePathAndExtension ............................   Passed    0.02 sec
+        Start  54: PathMapperTest.SupportsExplicitPrefixAndFlattening
+ 54/217 Test  #54: PathMapperTest.SupportsExplicitPrefixAndFlattening ..........................   Passed    0.01 sec
+        Start  55: PathMapperTest.RejectsExactAndCaseFoldCollisions
+ 55/217 Test  #55: PathMapperTest.RejectsExactAndCaseFoldCollisions ............................   Passed    0.01 sec
+        Start  56: PathMapperTest.SortsSuccessfulBatchByLogicalAssetId
+ 56/217 Test  #56: PathMapperTest.SortsSuccessfulBatchByLogicalAssetId .........................   Passed    0.01 sec
+        Start  57: PathMapperTest.RejectsUnsafeOrOversizedPaths
+ 57/217 Test  #57: PathMapperTest.RejectsUnsafeOrOversizedPaths ................................   Passed    0.01 sec
+        Start  58: PathMapperTest.RejectsMissingSourcePathAndUnverifiableUnicode
+ 58/217 Test  #58: PathMapperTest.RejectsMissingSourcePathAndUnverifiableUnicode ...............   Passed    0.01 sec
+        Start  59: PhotoIrTest.ProjectsStableMediaAndConfirmedRelations
+ 59/217 Test  #59: PhotoIrTest.ProjectsStableMediaAndConfirmedRelations ........................   Passed    0.01 sec
+        Start  60: PhotoIrTest.IgnoresUnconfirmedAndOutOfComponentEdges
+ 60/217 Test  #60: PhotoIrTest.IgnoresUnconfirmedAndOutOfComponentEdges ........................   Passed    0.01 sec
+        Start  61: PhotoIrTest.RejectsMissingMemberOrUnstableId
+ 61/217 Test  #61: PhotoIrTest.RejectsMissingMemberOrUnstableId ................................   Passed    0.01 sec
+        Start  62: PlanArtifactTest.WritesFixedJsonLinesSections
+ 62/217 Test  #62: PlanArtifactTest.WritesFixedJsonLinesSections ...............................   Passed    0.01 sec
+        Start  63: PlanArtifactTest.RoundTripsTypedPlanAndRawPathBytes
+ 63/217 Test  #63: PlanArtifactTest.RoundTripsTypedPlanAndRawPathBytes .........................   Passed    0.01 sec
+        Start  64: PlanArtifactTest.SeparatesArtifactAndSemanticDigests
+ 64/217 Test  #64: PlanArtifactTest.SeparatesArtifactAndSemanticDigests ........................   Passed    0.01 sec
+        Start  65: PlanArtifactTest.SerializesAssetInputInCanonicalOrder
+ 65/217 Test  #65: PlanArtifactTest.SerializesAssetInputInCanonicalOrder .......................   Passed    0.01 sec
+        Start  66: PlanArtifactTest.RejectsMalformedOrOutOfOrderRecords
+ 66/217 Test  #66: PlanArtifactTest.RejectsMalformedOrOutOfOrderRecords ........................   Passed    0.01 sec
+        Start  67: PlanArtifactTest.RejectsUnknownSemanticProjectionVersion
+ 67/217 Test  #67: PlanArtifactTest.RejectsUnknownSemanticProjectionVersion ....................   Passed    0.01 sec
+        Start  68: ProvenanceTest.ExplainsSelectedAndRejectedCandidates
+ 68/217 Test  #68: ProvenanceTest.ExplainsSelectedAndRejectedCandidates ........................   Passed    0.01 sec
+        Start  69: ProvenanceTest.EmptyResolutionHasNoFabricatedProvenance
+ 69/217 Test  #69: ProvenanceTest.EmptyResolutionHasNoFabricatedProvenance .....................   Passed    0.01 sec
+        Start  70: RelativePathTest.ParsesComponentsAndPreservesBytes
+ 70/217 Test  #70: RelativePathTest.ParsesComponentsAndPreservesBytes ..........................   Passed    0.01 sec
+        Start  71: RelativePathTest.RejectsUnsafeComponents
+ 71/217 Test  #71: RelativePathTest.RejectsUnsafeComponents ....................................   Passed    0.01 sec
+        Start  72: RelativePathTest.EscapesNonPrintableBytesForDisplay
+ 72/217 Test  #72: RelativePathTest.EscapesNonPrintableBytesForDisplay .........................   Passed    0.01 sec
+        Start  73: RelativePathTest.PreservesNonUtf8Bytes
+ 73/217 Test  #73: RelativePathTest.PreservesNonUtf8Bytes ......................................   Passed    0.01 sec
+        Start  74: RelativePathTest.TreatsBackslashAsAByteOnLinux
+ 74/217 Test  #74: RelativePathTest.TreatsBackslashAsAByteOnLinux ..............................   Passed    0.01 sec
+        Start  75: ResolutionRecordTest.CarriesSelectionCandidatesAndRuleProvenance
+ 75/217 Test  #75: ResolutionRecordTest.CarriesSelectionCandidatesAndRuleProvenance ............   Passed    0.01 sec
+        Start  76: ResolutionRecordTest.RequiresPairedSelectionAndRuleIdentity
+ 76/217 Test  #76: ResolutionRecordTest.RequiresPairedSelectionAndRuleIdentity .................   Passed    0.01 sec
+        Start  77: ResolutionRecordTest.ConflictRequiresReasonAndMatchingCandidates
+ 77/217 Test  #77: ResolutionRecordTest.ConflictRequiresReasonAndMatchingCandidates ............   Passed    0.01 sec
+        Start  78: TaskTest.TaskKeyIsStableAndBindsTaskSemantics
+ 78/217 Test  #78: TaskTest.TaskKeyIsStableAndBindsTaskSemantics ...............................   Passed    0.01 sec
+        Start  79: TaskTest.TaskKeyExcludesExecutionAndOutputMetadata
+ 79/217 Test  #79: TaskTest.TaskKeyExcludesExecutionAndOutputMetadata ..........................   Passed    0.01 sec
+        Start  80: TaskTest.ValidatesImmutableAndRuntimeFields
+ 80/217 Test  #80: TaskTest.ValidatesImmutableAndRuntimeFields .................................   Passed    0.01 sec
+        Start  81: TaskTest.CentralizesTaskAndFileAttemptTransitions
+ 81/217 Test  #81: TaskTest.CentralizesTaskAndFileAttemptTransitions ...........................   Passed    0.01 sec
+        Start  82: TaskTest.ExposesStableTaskTypeContract
+ 82/217 Test  #82: TaskTest.ExposesStableTaskTypeContract ......................................   Passed    0.01 sec
+        Start  83: TaskTest.PublishesTaskKeySemanticVersion
+ 83/217 Test  #83: TaskTest.PublishesTaskKeySemanticVersion ....................................   Passed    0.01 sec
+        Start  84: TimeCandidateTest.AcceptsAbsoluteTimeWithoutReinterpretingIt
+ 84/217 Test  #84: TimeCandidateTest.AcceptsAbsoluteTimeWithoutReinterpretingIt ................   Passed    0.01 sec
+        Start  85: TimeCandidateTest.ValidatesLocalCalendarAndOffsetStructure
+ 85/217 Test  #85: TimeCandidateTest.ValidatesLocalCalendarAndOffsetStructure ..................   Passed    0.01 sec
+        Start  86: TimeCandidateTest.RequiresRawValueAndKnownEnumValues
+ 86/217 Test  #86: TimeCandidateTest.RequiresRawValueAndKnownEnumValues ........................   Passed    0.01 sec
+        Start  87: BinaryVerifierTest.IndependentlyReadsAndRecognizesIdenticalTarget
+ 87/217 Test  #87: BinaryVerifierTest.IndependentlyReadsAndRecognizesIdenticalTarget ...........   Passed    0.01 sec
+        Start  88: BinaryVerifierTest.ReportsMismatchAndNotApplicableSeparately
+ 88/217 Test  #88: BinaryVerifierTest.ReportsMismatchAndNotApplicableSeparately ................   Passed    0.01 sec
+        Start  89: BinaryVerifierTest.RejectsTargetMutationAndEmptyBuffer
+ 89/217 Test  #89: BinaryVerifierTest.RejectsTargetMutationAndEmptyBuffer ......................   Passed    0.01 sec
+        Start  90: CopyAndHashTest.HandlesShortReadsAndShortWrites
+ 90/217 Test  #90: CopyAndHashTest.HandlesShortReadsAndShortWrites .............................   Passed    0.01 sec
+        Start  91: CopyAndHashTest.RejectsZeroProgressWrites
+ 91/217 Test  #91: CopyAndHashTest.RejectsZeroProgressWrites ...................................   Passed    0.01 sec
+        Start  92: CopyAndHashTest.RejectsEmptyBuffer
+ 92/217 Test  #92: CopyAndHashTest.RejectsEmptyBuffer ..........................................   Passed    0.01 sec
+        Start  93: CopyAndHashTest.StreamsLargePayloadWithoutChangingContract
+ 93/217 Test  #93: CopyAndHashTest.StreamsLargePayloadWithoutChangingContract ..................   Passed    3.94 sec
+        Start  94: DirectoryWalkerTest.WalksNestedEntriesAndDoesNotFollowSymlinks
+ 94/217 Test  #94: DirectoryWalkerTest.WalksNestedEntriesAndDoesNotFollowSymlinks ..............   Passed    0.01 sec
+        Start  95: DirectoryWalkerTest.PropagatesSinkErrorAndStopsImmediately
+ 95/217 Test  #95: DirectoryWalkerTest.PropagatesSinkErrorAndStopsImmediately ..................   Passed    0.01 sec
+        Start  96: DirectoryWalkerTest.RejectsInvalidRootFd
+ 96/217 Test  #96: DirectoryWalkerTest.RejectsInvalidRootFd ....................................   Passed    0.01 sec
+        Start  97: DirectoryWalkerTest.ReportsDirectoryThatDisappearsDuringScan
+ 97/217 Test  #97: DirectoryWalkerTest.ReportsDirectoryThatDisappearsDuringScan ................   Passed    0.01 sec
+        Start  98: LinuxFileOpsTest.OpensExistingDirectoryAsOwnedFd
+ 98/217 Test  #98: LinuxFileOpsTest.OpensExistingDirectoryAsOwnedFd ............................   Passed    0.01 sec
+        Start  99: LinuxFileOpsTest.CreatesMissingDirectoryWhenRequested
+ 99/217 Test  #99: LinuxFileOpsTest.CreatesMissingDirectoryWhenRequested .......................   Passed    0.01 sec
+        Start 100: LinuxFileOpsTest.MissingDirectoryReturnsNotFound
+100/217 Test #100: LinuxFileOpsTest.MissingDirectoryReturnsNotFound ............................   Passed    0.01 sec
+        Start 101: LinuxFileOpsTest.OpensSourceRelativeToRootFd
+101/217 Test #101: LinuxFileOpsTest.OpensSourceRelativeToRootFd ................................   Passed    0.01 sec
+        Start 102: LinuxFileOpsTest.RejectsSymlinkedFinalSourcePath
+102/217 Test #102: LinuxFileOpsTest.RejectsSymlinkedFinalSourcePath ............................   Passed    0.01 sec
+        Start 103: LinuxFileOpsTest.RejectsSymlinkedIntermediateDirectory
+103/217 Test #103: LinuxFileOpsTest.RejectsSymlinkedIntermediateDirectory ......................   Passed    0.01 sec
+        Start 104: LinuxFileOpsTest.StatsOpenedFdIntoFileIdentity
+104/217 Test #104: LinuxFileOpsTest.StatsOpenedFdIntoFileIdentity ..............................   Passed    0.01 sec
+        Start 105: LinuxFileOpsTest.StatsOpenedFdAfterPathIsReplaced
+105/217 Test #105: LinuxFileOpsTest.StatsOpenedFdAfterPathIsReplaced ...........................   Passed    0.01 sec
+        Start 106: LinuxFileOpsTest.InvalidFdReturnsInternalStatus
+106/217 Test #106: LinuxFileOpsTest.InvalidFdReturnsInternalStatus .............................   Passed    0.01 sec
+        Start 107: LinuxFileOpsTest.CreatesTempFileWithoutReplacingExistingFile
+107/217 Test #107: LinuxFileOpsTest.CreatesTempFileWithoutReplacingExistingFile ................   Passed    0.01 sec
+        Start 108: LinuxFileOpsTest.RejectsTempNameThatEscapesParentDirectory
+108/217 Test #108: LinuxFileOpsTest.RejectsTempNameThatEscapesParentDirectory ..................   Passed    0.01 sec
+        Start 109: LinuxFileOpsTest.WritesAndReadsBytesWithShortOperationSemantics
+109/217 Test #109: LinuxFileOpsTest.WritesAndReadsBytesWithShortOperationSemantics .............   Passed    0.01 sec
+        Start 110: LinuxFileOpsTest.InvalidFdReturnsIoStatusForReadAndWrite
+110/217 Test #110: LinuxFileOpsTest.InvalidFdReturnsIoStatusForReadAndWrite ....................   Passed    0.01 sec
+        Start 111: LinuxFileOpsTest.SynchronizesFileAndDirectoryDescriptors
+111/217 Test #111: LinuxFileOpsTest.SynchronizesFileAndDirectoryDescriptors ....................   Passed    0.01 sec
+        Start 112: LinuxFileOpsTest.InvalidDescriptorFailsSynchronization
+112/217 Test #112: LinuxFileOpsTest.InvalidDescriptorFailsSynchronization ......................   Passed    0.01 sec
+        Start 113: LinuxFileOpsTest.RenamesWithoutReplacingExistingTarget
+113/217 Test #113: LinuxFileOpsTest.RenamesWithoutReplacingExistingTarget ......................   Passed    0.01 sec
+        Start 114: LinuxFileOpsTest.UnlinkAtRemovesOnlyNamedEntry
+114/217 Test #114: LinuxFileOpsTest.UnlinkAtRemovesOnlyNamedEntry ..............................   Passed    0.01 sec
+        Start 115: LocalFolderSourceTest.StreamsRegularFilesInStablePathOrder
+115/217 Test #115: LocalFolderSourceTest.StreamsRegularFilesInStablePathOrder ..................   Passed    0.01 sec
+        Start 116: LocalFolderSourceTest.ReportsMissingRoot
+116/217 Test #116: LocalFolderSourceTest.ReportsMissingRoot ....................................   Passed    0.01 sec
+        Start 117: LocalFolderSourceTest.IgnoresReceiverTemporaryFiles
+117/217 Test #117: LocalFolderSourceTest.IgnoresReceiverTemporaryFiles .........................   Passed    0.01 sec
+        Start 118: MutationGuardTest.OpensAndVerifiesStableFileIdentity
+118/217 Test #118: MutationGuardTest.OpensAndVerifiesStableFileIdentity ........................   Passed    0.01 sec
+        Start 119: MutationGuardTest.RejectsFileChangedThroughOpenedDescriptor
+119/217 Test #119: MutationGuardTest.RejectsFileChangedThroughOpenedDescriptor .................   Passed    0.01 sec
+        Start 120: MutationGuardTest.RejectsFileChangedBeforeGuardOpens
+120/217 Test #120: MutationGuardTest.RejectsFileChangedBeforeGuardOpens ........................   Passed    0.01 sec
+        Start 121: ReconcilerTest.RedoesIntentWithoutReceiptAndRejectsUnprovenFinal
+121/217 Test #121: ReconcilerTest.RedoesIntentWithoutReceiptAndRejectsUnprovenFinal ............   Passed    0.01 sec
+        Start 122: ReconcilerTest.ResumesMatchingTempOrAdoptsMatchingFinal
+122/217 Test #122: ReconcilerTest.ResumesMatchingTempOrAdoptsMatchingFinal .....................   Passed    0.01 sec
+        Start 123: ReconcilerTest.DistinguishesCommittedMismatchAndUnavailableSource
+123/217 Test #123: ReconcilerTest.DistinguishesCommittedMismatchAndUnavailableSource ...........   Passed    0.01 sec
+        Start 124: ReconcilerTest.SourceReplacementIsNotRetryable
+124/217 Test #124: ReconcilerTest.SourceReplacementIsNotRetryable ..............................   Passed    0.01 sec
+        Start 125: ReconcilerTest.RejectsIntentBindingMismatch
+125/217 Test #125: ReconcilerTest.RejectsIntentBindingMismatch .................................   Passed    0.01 sec
+        Start 126: ServeBootstrapTest.GeneratesTokenAndUrlForExplicitBind
+126/217 Test #126: ServeBootstrapTest.GeneratesTokenAndUrlForExplicitBind ......................   Passed    0.02 sec
+        Start 127: ServeBootstrapTest.FormatsIpv6UrlWithBrackets
+127/217 Test #127: ServeBootstrapTest.FormatsIpv6UrlWithBrackets ...............................   Passed    0.02 sec
+        Start 128: ServeBootstrapTest.RejectsPortZero
+128/217 Test #128: ServeBootstrapTest.RejectsPortZero ..........................................   Passed    0.01 sec
+        Start 129: UploadPageTest.ReturnsSelfContainedHtmlResponse
+129/217 Test #129: UploadPageTest.ReturnsSelfContainedHtmlResponse .............................   Passed    0.01 sec
+        Start 130: UploadPageTest.ContainsNoThirdPartyResourceReference
+130/217 Test #130: UploadPageTest.ContainsNoThirdPartyResourceReference ........................   Passed    0.01 sec
+        Start 131: UploadPageTest.ComparesTokensWithoutAcceptingLengthMismatch
+131/217 Test #131: UploadPageTest.ComparesTokensWithoutAcceptingLengthMismatch .................   Passed    0.01 sec
+        Start 132: UploadPageTest.IncludesThreeLaneMixedSizeScheduler
+132/217 Test #132: UploadPageTest.IncludesThreeLaneMixedSizeScheduler ..........................   Passed    0.01 sec
+        Start 133: UploadPageTest.KeepsThreeWorkerConcurrencyBound
+133/217 Test #133: UploadPageTest.KeepsThreeWorkerConcurrencyBound .............................   Passed    0.01 sec
+        Start 134: UploadPageTest.IncludesMobileViewportAndAccessibleStatus
+134/217 Test #134: UploadPageTest.IncludesMobileViewportAndAccessibleStatus ....................   Passed    0.01 sec
+        Start 135: UploadSessionStoreTest.CreatesSessionAndAllocatesCollisionSuffixes
+135/217 Test #135: UploadSessionStoreTest.CreatesSessionAndAllocatesCollisionSuffixes ..........   Passed    0.02 sec
+        Start 136: UploadSessionStoreTest.RejectsTraversalAndQuotaOverflow
+136/217 Test #136: UploadSessionStoreTest.RejectsTraversalAndQuotaOverflow .....................   Passed    0.02 sec
+        Start 137: UploadSessionStoreTest.AppliesTotalReservedQuota
+137/217 Test #137: UploadSessionStoreTest.AppliesTotalReservedQuota ............................   Passed    0.02 sec
+        Start 138: UploadSessionStoreTest.SerializesRetryAndRecognizesReceivedFile
+138/217 Test #138: UploadSessionStoreTest.SerializesRetryAndRecognizesReceivedFile .............   Passed    0.03 sec
+        Start 139: UploadSessionStoreTest.CompletesOnlyAfterEveryFileIsReceived
+139/217 Test #139: UploadSessionStoreTest.CompletesOnlyAfterEveryFileIsReceived ................   Passed    0.04 sec
+        Start 140: UploadSessionStoreTest.ReopensAndAdoptsDurableFinalAfterInterruptedCommit
+140/217 Test #140: UploadSessionStoreTest.ReopensAndAdoptsDurableFinalAfterInterruptedCommit ...   Passed    0.04 sec
+        Start 141: UploadSessionStoreTest.ReopensInterruptedTempAsRetryableFailure
+141/217 Test #141: UploadSessionStoreTest.ReopensInterruptedTempAsRetryableFailure .............   Passed    0.03 sec
+        Start 142: WorkspaceLayoutTest.DerivesStablePathsFromRoot
+142/217 Test #142: WorkspaceLayoutTest.DerivesStablePathsFromRoot ..............................   Passed    0.01 sec
+        Start 143: WorkspaceLayoutTest.RejectsEmptyRoot
+143/217 Test #143: WorkspaceLayoutTest.RejectsEmptyRoot ........................................   Passed    0.02 sec
+        Start 144: ExitCodeForStatusTest.MapsStatusCodesToStableExitCodes
+144/217 Test #144: ExitCodeForStatusTest.MapsStatusCodesToStableExitCodes ......................   Passed    0.01 sec
+        Start 145: CommandDispatcherTest.MissingCommandReturnsNotFound
+145/217 Test #145: CommandDispatcherTest.MissingCommandReturnsNotFound .........................   Passed    0.01 sec
+        Start 146: RunCliTest.ScanPipelineUsesInjectedOutput
+146/217 Test #146: RunCliTest.ScanPipelineUsesInjectedOutput ...................................   Passed    0.05 sec
+        Start 147: RunCliTest.PlanBuildsAndPersistsFrozenArtifact
+147/217 Test #147: RunCliTest.PlanBuildsAndPersistsFrozenArtifact ..............................   Passed    0.09 sec
+        Start 148: RunCliTest.MigratesAndResumesMoreTasksThanQueueCapacity
+148/217 Test #148: RunCliTest.MigratesAndResumesMoreTasksThanQueueCapacity .....................   Passed    0.35 sec
+        Start 149: RunCliTest.InitCreatesWorkspace
+149/217 Test #149: RunCliTest.InitCreatesWorkspace .............................................   Passed    0.04 sec
+        Start 150: PipelineCommandRoutingTest.DelegatesToPipelineStageValidation
+150/217 Test #150: PipelineCommandRoutingTest.DelegatesToPipelineStageValidation ...............   Passed    0.01 sec
+        Start 151: LargeFixtureTest.ScansLargeFixtureThroughStreamingSink
+151/217 Test #151: LargeFixtureTest.ScansLargeFixtureThroughStreamingSink ......................   Passed   13.40 sec
+        Start 152: LivePhotoTest.UniqueStillAndMotionBecomeOneComposition
+152/217 Test #152: LivePhotoTest.UniqueStillAndMotionBecomeOneComposition ......................   Passed    0.01 sec
+        Start 153: LivePhotoTest.MultipleStillOrMotionFilesAreAmbiguous
+153/217 Test #153: LivePhotoTest.MultipleStillOrMotionFilesAreAmbiguous ........................   Passed    0.01 sec
+        Start 154: RawJpegTest.UniquePairBecomesConfirmedComposition
+154/217 Test #154: RawJpegTest.UniquePairBecomesConfirmedComposition ...........................   Passed    0.01 sec
+        Start 155: TakeoutParserTest.ClassifiesFixtureAndReportsParserErrors
+155/217 Test #155: TakeoutParserTest.ClassifiesFixtureAndReportsParserErrors ...................   Passed    0.01 sec
+        Start 156: TakeoutParserTest.OutputIsStableAcrossCreationOrder
+156/217 Test #156: TakeoutParserTest.OutputIsStableAcrossCreationOrder .........................   Passed    0.01 sec
+        Start 157: TakeoutParserTest.MissingRootIsAnError
+157/217 Test #157: TakeoutParserTest.MissingRootIsAnError ......................................   Passed    0.02 sec
+        Start 158: TakeoutParserTest.InvalidCandidateFieldsBecomeParserErrors
+158/217 Test #158: TakeoutParserTest.InvalidCandidateFieldsBecomeParserErrors ..................   Passed    0.01 sec
+        Start 159: TakeoutParserTest.UsesStableMediaAndSidecarClassificationContract
+159/217 Test #159: TakeoutParserTest.UsesStableMediaAndSidecarClassificationContract ...........   Passed    0.01 sec
+        Start 160: TakeoutParserTest.GeneratesOnlyUnambiguousBasenameRelations
+160/217 Test #160: TakeoutParserTest.GeneratesOnlyUnambiguousBasenameRelations .................   Passed    0.01 sec
+        Start 161: TakeoutParserTest.SeparatesExtendedSidecarNamesFromTruncatedMatches
+161/217 Test #161: TakeoutParserTest.SeparatesExtendedSidecarNamesFromTruncatedMatches .........   Passed    0.01 sec
+        Start 162: TakeoutParserCliTest.PrintsDiagnosticErrorsAndReturnsInvalidArgument
+162/217 Test #162: TakeoutParserCliTest.PrintsDiagnosticErrorsAndReturnsInvalidArgument ........   Passed    0.01 sec
+        Start 163: ManifestBuilderTest.WritesAssetsInCommittedBatchesAndFreezes
+163/217 Test #163: ManifestBuilderTest.WritesAssetsInCommittedBatchesAndFreezes ................   Passed    0.10 sec
+        Start 164: ManifestBuilderTest.RejectsDuplicatePathWithoutPartialBatch
+164/217 Test #164: ManifestBuilderTest.RejectsDuplicatePathWithoutPartialBatch .................   Passed    0.02 sec
+        Start 165: ManifestBuilderTest.RejectsAddAfterFreeze
+165/217 Test #165: ManifestBuilderTest.RejectsAddAfterFreeze ...................................   Passed    0.03 sec
+        Start 166: ManifestBuilderTest.DigestIgnoresScanOrderAndManifestId
+166/217 Test #166: ManifestBuilderTest.DigestIgnoresScanOrderAndManifestId .....................   Passed    0.03 sec
+        Start 167: ManifestBuilderTest.DigestChangesWhenFileIdentityChanges
+167/217 Test #167: ManifestBuilderTest.DigestChangesWhenFileIdentityChanges ....................   Passed    0.04 sec
+        Start 168: ManifestBuilderTest.ReopensFrozenManifestAndRejectsMutation
+168/217 Test #168: ManifestBuilderTest.ReopensFrozenManifestAndRejectsMutation .................   Passed    0.04 sec
+        Start 169: ManifestBuilderTest.ReopenRejectsManifestDigestMismatch
+169/217 Test #169: ManifestBuilderTest.ReopenRejectsManifestDigestMismatch .....................   Passed    0.03 sec
+        Start 170: ManifestBuilderTest.ReopenRejectsBuildingManifest
+170/217 Test #170: ManifestBuilderTest.ReopenRejectsBuildingManifest ...........................   Passed    0.02 sec
+        Start 171: SqliteConnectionTest.OpensAndAppliesDurabilityPragmas
+171/217 Test #171: SqliteConnectionTest.OpensAndAppliesDurabilityPragmas .......................   Passed    0.02 sec
+        Start 172: SqliteConnectionTest.RejectsEmptyPath
+172/217 Test #172: SqliteConnectionTest.RejectsEmptyPath .......................................   Passed    0.01 sec
+        Start 173: SqliteConnectionTest.IsMoveOnly
+173/217 Test #173: SqliteConnectionTest.IsMoveOnly .............................................   Passed    0.01 sec
+        Start 174: SqliteSchemaTest.InitializesNewDatabaseAtCurrentVersion
+174/217 Test #174: SqliteSchemaTest.InitializesNewDatabaseAtCurrentVersion .....................   Passed    0.03 sec
+        Start 175: SqliteSchemaTest.MigratesVersionOneToCurrentVersion
+175/217 Test #175: SqliteSchemaTest.MigratesVersionOneToCurrentVersion .........................   Passed    0.03 sec
+        Start 176: SqliteSchemaTest.CreatesTaskRuntimeTablesAtCurrentVersion
+176/217 Test #176: SqliteSchemaTest.CreatesTaskRuntimeTablesAtCurrentVersion ...................   Passed    0.01 sec
+        Start 177: SqliteSchemaTest.MigratesVersionTwoToTaskRuntimeSchema
+177/217 Test #177: SqliteSchemaTest.MigratesVersionTwoToTaskRuntimeSchema ......................   Passed    0.03 sec
+        Start 178: SqliteSchemaTest.RejectsNewerSchemaVersion
+178/217 Test #178: SqliteSchemaTest.RejectsNewerSchemaVersion ..................................   Passed    0.03 sec
+        Start 179: SqliteSchemaTest.RejectsOlderSchemaVersionWithoutGuessingMigration
+179/217 Test #179: SqliteSchemaTest.RejectsOlderSchemaVersionWithoutGuessingMigration ..........   Passed    0.02 sec
+        Start 180: SqliteSchemaTest.RejectsEmptySchemaVersionTable
+180/217 Test #180: SqliteSchemaTest.RejectsEmptySchemaVersionTable .............................   Passed    0.03 sec
+        Start 181: SqliteSchemaTest.RejectsMultipleSchemaVersionRows
+181/217 Test #181: SqliteSchemaTest.RejectsMultipleSchemaVersionRows ...........................   Passed    0.02 sec
+        Start 182: TaskRuntimeRepositoryTest.ClaimsInStableOrderAndRequiresDependencies
+182/217 Test #182: TaskRuntimeRepositoryTest.ClaimsInStableOrderAndRequiresDependencies ........   Passed    0.06 sec
+        Start 183: TaskRuntimeRepositoryTest.GeneratesAttemptIdsInsideAtomicClaim
+183/217 Test #183: TaskRuntimeRepositoryTest.GeneratesAttemptIdsInsideAtomicClaim ..............   Passed    0.05 sec
+        Start 184: TaskRuntimeRepositoryTest.ReusesStatementsAcrossBatchRollbackAndErrors
+184/217 Test #184: TaskRuntimeRepositoryTest.ReusesStatementsAcrossBatchRollbackAndErrors ......   Passed    0.05 sec
+        Start 185: TaskRuntimeRepositoryTest.ExecutionEpochRepositoryIsMonotonic
+185/217 Test #185: TaskRuntimeRepositoryTest.ExecutionEpochRepositoryIsMonotonic ...............   Passed    0.04 sec
+        Start 186: TaskRuntimeRepositoryTest.FencesStaleCompletionAndAllowsRetry
+186/217 Test #186: TaskRuntimeRepositoryTest.FencesStaleCompletionAndAllowsRetry ...............   Passed    0.04 sec
+        Start 187: TaskRuntimeRepositoryTest.ClaimRequiresCurrentEpoch
+187/217 Test #187: TaskRuntimeRepositoryTest.ClaimRequiresCurrentEpoch .........................   Passed    0.06 sec
+        Start 188: TaskRuntimeRepositoryTest.FinishRequiresCurrentEpoch
+188/217 Test #188: TaskRuntimeRepositoryTest.FinishRequiresCurrentEpoch ........................   Passed    0.05 sec
+        Start 189: TaskRuntimeRepositoryTest.EpochAdvanceFencesOldFinish
+189/217 Test #189: TaskRuntimeRepositoryTest.EpochAdvanceFencesOldFinish .......................   Passed    0.05 sec
+        Start 190: TaskRuntimeRepositoryTest.StaleEpochCannotPersistReceipt
+190/217 Test #190: TaskRuntimeRepositoryTest.StaleEpochCannotPersistReceipt ....................   Passed    0.05 sec
+        Start 191: TaskRuntimeRepositoryTest.WrongAttemptCannotPersistReceipt
+191/217 Test #191: TaskRuntimeRepositoryTest.WrongAttemptCannotPersistReceipt ..................   Passed    0.04 sec
+        Start 192: TaskRuntimeRepositoryTest.RecoverySuccessClosesOldAttempt
+192/217 Test #192: TaskRuntimeRepositoryTest.RecoverySuccessClosesOldAttempt ...................   Passed    0.04 sec
+        Start 193: TaskRuntimeRepositoryTest.RecoveryRetryableRecordsReason
+193/217 Test #193: TaskRuntimeRepositoryTest.RecoveryRetryableRecordsReason ....................   Passed    0.05 sec
+        Start 194: TaskRuntimeRepositoryTest.RecoveryInconsistentRecordsTerminalState
+194/217 Test #194: TaskRuntimeRepositoryTest.RecoveryInconsistentRecordsTerminalState ..........   Passed    0.06 sec
+        Start 195: TaskRuntimeRepositoryTest.RecoveryRequiresCurrentEpochAndOldOwnership
+195/217 Test #195: TaskRuntimeRepositoryTest.RecoveryRequiresCurrentEpochAndOldOwnership .......   Passed    0.05 sec
+        Start 196: TaskRuntimeRepositoryTest.ClaimCreatesRunningAttempt
+196/217 Test #196: TaskRuntimeRepositoryTest.ClaimCreatesRunningAttempt ........................   Passed    0.06 sec
+        Start 197: TaskRuntimeRepositoryTest.RecordsAttemptCommitLifecycle
+197/217 Test #197: TaskRuntimeRepositoryTest.RecordsAttemptCommitLifecycle .....................   Passed    0.03 sec
+        Start 198: TaskRuntimeRepositoryTest.RejectsDuplicateTaskKeyAndUnknownDependency
+198/217 Test #198: TaskRuntimeRepositoryTest.RejectsDuplicateTaskKeyAndUnknownDependency .......   Passed    0.03 sec
+        Start 199: TaskRuntimeRepositoryTest.DependencyCannotCrossPlanBoundary
+199/217 Test #199: TaskRuntimeRepositoryTest.DependencyCannotCrossPlanBoundary .................   Passed    0.03 sec
+        Start 200: TaskRuntimeRepositoryTest.RejectsPersistedDependencyCycle
+200/217 Test #200: TaskRuntimeRepositoryTest.RejectsPersistedDependencyCycle ...................   Passed    0.03 sec
+        Start 201: TaskRuntimeRepositoryTest.ClaimRequiresFencingIdentity
+201/217 Test #201: TaskRuntimeRepositoryTest.ClaimRequiresFencingIdentity ......................   Passed    0.03 sec
+        Start 202: TaskRuntimeRepositoryTest.DurableEventsTrackClaimAndCompletion
+202/217 Test #202: TaskRuntimeRepositoryTest.DurableEventsTrackClaimAndCompletion ..............   Passed    0.04 sec
+        Start 203: TaskRuntimeRepositoryTest.SuccessClosesAttemptAsCommitted
+203/217 Test #203: TaskRuntimeRepositoryTest.SuccessClosesAttemptAsCommitted ...................   Passed    0.06 sec
+        Start 204: TaskRuntimeRepositoryTest.PersistsVerifiedReceiptBeforeCompletion
+204/217 Test #204: TaskRuntimeRepositoryTest.PersistsVerifiedReceiptBeforeCompletion ...........   Passed    0.03 sec
+        Start 205: TaskRuntimeRepositoryTest.VerifiedReceiptMarksAttemptVerifiedDurable
+205/217 Test #205: TaskRuntimeRepositoryTest.VerifiedReceiptMarksAttemptVerifiedDurable ........   Passed    0.04 sec
+        Start 206: TaskRuntimeRepositoryTest.RetryMarksAttemptRetryable
+206/217 Test #206: TaskRuntimeRepositoryTest.RetryMarksAttemptRetryable ........................   Passed    0.06 sec
+        Start 207: TaskRuntimeRepositoryTest.SameReceiptReplayIsIdempotent
+207/217 Test #207: TaskRuntimeRepositoryTest.SameReceiptReplayIsIdempotent .....................   Passed    0.04 sec
+        Start 208: TaskRuntimeRepositoryTest.ConflictingReceiptDigestFails
+208/217 Test #208: TaskRuntimeRepositoryTest.ConflictingReceiptDigestFails .....................   Passed    0.06 sec
+        Start 209: TaskRuntimeRepositoryTest.ConflictingReceiptPathFails
+209/217 Test #209: TaskRuntimeRepositoryTest.ConflictingReceiptPathFails .......................   Passed    0.06 sec
+        Start 210: TaskRuntimeRepositoryTest.ConflictingReceiptIdentityFails
+210/217 Test #210: TaskRuntimeRepositoryTest.ConflictingReceiptIdentityFails ...................   Passed    0.06 sec
+        Start 211: TaskRuntimeRepositoryTest.ReceiptReadRejectsNegativeEpoch
+211/217 Test #211: TaskRuntimeRepositoryTest.ReceiptReadRejectsNegativeEpoch ...................   Passed    0.07 sec
+        Start 212: TaskRuntimeRepositoryTest.ReceiptReadRejectsNegativeSize
+212/217 Test #212: TaskRuntimeRepositoryTest.ReceiptReadRejectsNegativeSize ....................   Passed    0.06 sec
+        Start 213: TaskRuntimeRepositoryTest.MultipleConnectionsCannotClaimSameReadyTask
+213/217 Test #213: TaskRuntimeRepositoryTest.MultipleConnectionsCannotClaimSameReadyTask .......   Passed    0.05 sec
+        Start 214: LockRecoveryTest.KilledOwnerReleasesStableLockForNextOwner
+214/217 Test #214: LockRecoveryTest.KilledOwnerReleasesStableLockForNextOwner ..................   Passed    0.01 sec
+        Start 215: LockRecoveryTest.PlanExecutionLockRejectsSecondExecutor
+215/217 Test #215: LockRecoveryTest.PlanExecutionLockRejectsSecondExecutor .....................   Passed    0.01 sec
+        Start 216: ProcessCrashE2ETest.SigkillResumeVerifyCoversAllCommitWindows
+216/217 Test #216: ProcessCrashE2ETest.SigkillResumeVerifyCoversAllCommitWindows ...............   Passed    1.54 sec
+        Start 217: ProcessCrashE2ETest.MultipleWorkersRecoverReceiptsAndPartialTemps
+217/217 Test #217: ProcessCrashE2ETest.MultipleWorkersRecoverReceiptsAndPartialTemps ...........   Passed    1.23 sec
+
+100% tests passed, 0 tests failed out of 217
+
+Total Test time (real) =  24.50 sec
