@@ -1,0 +1,563 @@
+{
+  "copy_bytes": 67108864,
+  "data_root": "/tmp/photobridge_bench_data",
+  "e2e_file_bytes": 65536,
+  "e2e_files": 4,
+  "repetitions": 30,
+  "scanner_files": 100000,
+  "schema_version": 1,
+  "sqlite_commands": 5000,
+  "workloads": [
+    {
+      "configured_bytes": 262144,
+      "configured_items": 1,
+      "name": "e2e_local_pipeline",
+      "samples": [
+        {
+          "bytes": 262144,
+          "cpu_ms": 38.576,
+          "cpu_utilization_percent": 39.7653498002455,
+          "io": {
+            "rchar_bytes": 2755318,
+            "read_bytes": 0,
+            "read_syscalls": 360,
+            "wchar_bytes": 1108635,
+            "write_bytes": 1634304,
+            "write_syscalls": 435
+          },
+          "items": 1,
+          "max_rss_kib": 8184,
+          "rss_delta_kib": 792,
+          "wall_ms": 97.00908
+        },
+        {
+          "bytes": 262144,
+          "cpu_ms": 43.708999999999996,
+          "cpu_utilization_percent": 43.44491271244226,
+          "io": {
+            "rchar_bytes": 2755324,
+            "read_bytes": 0,
+            "read_syscalls": 360,
+            "wchar_bytes": 1108635,
+            "write_bytes": 1634304,
+            "write_syscalls": 435
+          },
+          "items": 1,
+          "max_rss_kib": 8284,
+          "rss_delta_kib": 0,
+          "wall_ms": 100.607867
+        },
+        {
+          "bytes": 262144,
+          "cpu_ms": 37.59599999999999,
+          "cpu_utilization_percent": 36.28733325077086,
+          "io": {
+            "rchar_bytes": 2755325,
+            "read_bytes": 0,
+            "read_syscalls": 360,
+            "wchar_bytes": 1108635,
+            "write_bytes": 1634304,
+            "write_syscalls": 435
+          },
+          "items": 1,
+          "max_rss_kib": 8292,
+          "rss_delta_kib": 0,
+          "wall_ms": 103.606401
+        },
+        {
+          "bytes": 262144,
+          "cpu_ms": 36.17800000000002,
+          "cpu_utilization_percent": 37.71319125348766,
+          "io": {
+            "rchar_bytes": 2755327,
+            "read_bytes": 0,
+            "read_syscalls": 360,
+            "wchar_bytes": 1108635,
+            "write_bytes": 1634304,
+            "write_syscalls": 435
+          },
+          "items": 1,
+          "max_rss_kib": 8304,
+          "rss_delta_kib": 0,
+          "wall_ms": 95.929299
+        },
+        {
+          "bytes": 262144,
+          "cpu_ms": 35.17499999999998,
+          "cpu_utilization_percent": 36.02324622323529,
+          "io": {
+            "rchar_bytes": 2755328,
+            "read_bytes": 0,
+            "read_syscalls": 360,
+            "wchar_bytes": 1108635,
+            "write_bytes": 1634304,
+            "write_syscalls": 435
+          },
+          "items": 1,
+          "max_rss_kib": 8312,
+          "rss_delta_kib": 0,
+          "wall_ms": 97.645281
+        },
+        {
+          "bytes": 262144,
+          "cpu_ms": 46.94799999999999,
+          "cpu_utilization_percent": 43.16371694067768,
+          "io": {
+            "rchar_bytes": 2755329,
+            "read_bytes": 0,
+            "read_syscalls": 360,
+            "wchar_bytes": 1108635,
+            "write_bytes": 1634304,
+            "write_syscalls": 435
+          },
+          "items": 1,
+          "max_rss_kib": 8316,
+          "rss_delta_kib": 0,
+          "wall_ms": 108.767278
+        },
+        {
+          "bytes": 262144,
+          "cpu_ms": 46.483999999999966,
+          "cpu_utilization_percent": 39.05575150553769,
+          "io": {
+            "rchar_bytes": 2755329,
+            "read_bytes": 0,
+            "read_syscalls": 360,
+            "wchar_bytes": 1108635,
+            "write_bytes": 1634304,
+            "write_syscalls": 435
+          },
+          "items": 1,
+          "max_rss_kib": 8324,
+          "rss_delta_kib": 0,
+          "wall_ms": 119.019602
+        },
+        {
+          "bytes": 262144,
+          "cpu_ms": 35.56599999999999,
+          "cpu_utilization_percent": 39.99595654666368,
+          "io": {
+            "rchar_bytes": 2755329,
+            "read_bytes": 0,
+            "read_syscalls": 360,
+            "wchar_bytes": 1108635,
+            "write_bytes": 1634304,
+            "write_syscalls": 435
+          },
+          "items": 1,
+          "max_rss_kib": 8328,
+          "rss_delta_kib": 0,
+          "wall_ms": 88.923989
+        },
+        {
+          "bytes": 262144,
+          "cpu_ms": 55.421000000000056,
+          "cpu_utilization_percent": 45.34848107831543,
+          "io": {
+            "rchar_bytes": 2755330,
+            "read_bytes": 0,
+            "read_syscalls": 360,
+            "wchar_bytes": 1108635,
+            "write_bytes": 1634304,
+            "write_syscalls": 435
+          },
+          "items": 1,
+          "max_rss_kib": 8328,
+          "rss_delta_kib": 0,
+          "wall_ms": 122.21137
+        },
+        {
+          "bytes": 262144,
+          "cpu_ms": 36.73700000000002,
+          "cpu_utilization_percent": 39.14694046046275,
+          "io": {
+            "rchar_bytes": 2755330,
+            "read_bytes": 0,
+            "read_syscalls": 360,
+            "wchar_bytes": 1108635,
+            "write_bytes": 1634304,
+            "write_syscalls": 435
+          },
+          "items": 1,
+          "max_rss_kib": 8336,
+          "rss_delta_kib": 0,
+          "wall_ms": 93.84386
+        },
+        {
+          "bytes": 262144,
+          "cpu_ms": 40.327999999999975,
+          "cpu_utilization_percent": 36.911080723274104,
+          "io": {
+            "rchar_bytes": 2755339,
+            "read_bytes": 0,
+            "read_syscalls": 360,
+            "wchar_bytes": 1108636,
+            "write_bytes": 1634304,
+            "write_syscalls": 435
+          },
+          "items": 1,
+          "max_rss_kib": 8336,
+          "rss_delta_kib": 0,
+          "wall_ms": 109.257164
+        },
+        {
+          "bytes": 262144,
+          "cpu_ms": 41.25699999999999,
+          "cpu_utilization_percent": 34.023776481675796,
+          "io": {
+            "rchar_bytes": 2755339,
+            "read_bytes": 0,
+            "read_syscalls": 360,
+            "wchar_bytes": 1108636,
+            "write_bytes": 1634304,
+            "write_syscalls": 435
+          },
+          "items": 1,
+          "max_rss_kib": 8336,
+          "rss_delta_kib": 0,
+          "wall_ms": 121.25932
+        },
+        {
+          "bytes": 262144,
+          "cpu_ms": 38.84299999999996,
+          "cpu_utilization_percent": 38.48714935653541,
+          "io": {
+            "rchar_bytes": 2755339,
+            "read_bytes": 0,
+            "read_syscalls": 360,
+            "wchar_bytes": 1108636,
+            "write_bytes": 1634304,
+            "write_syscalls": 435
+          },
+          "items": 1,
+          "max_rss_kib": 8336,
+          "rss_delta_kib": 0,
+          "wall_ms": 100.924596
+        },
+        {
+          "bytes": 262144,
+          "cpu_ms": 49.57899999999993,
+          "cpu_utilization_percent": 39.00166989985331,
+          "io": {
+            "rchar_bytes": 2755339,
+            "read_bytes": 0,
+            "read_syscalls": 360,
+            "wchar_bytes": 1108636,
+            "write_bytes": 1634304,
+            "write_syscalls": 435
+          },
+          "items": 1,
+          "max_rss_kib": 8336,
+          "rss_delta_kib": 0,
+          "wall_ms": 127.120198
+        },
+        {
+          "bytes": 262144,
+          "cpu_ms": 34.47400000000012,
+          "cpu_utilization_percent": 44.988994765843685,
+          "io": {
+            "rchar_bytes": 2755339,
+            "read_bytes": 0,
+            "read_syscalls": 360,
+            "wchar_bytes": 1108636,
+            "write_bytes": 1634304,
+            "write_syscalls": 435
+          },
+          "items": 1,
+          "max_rss_kib": 8336,
+          "rss_delta_kib": 0,
+          "wall_ms": 76.627629
+        },
+        {
+          "bytes": 262144,
+          "cpu_ms": 34.00400000000003,
+          "cpu_utilization_percent": 38.92739481066143,
+          "io": {
+            "rchar_bytes": 2755339,
+            "read_bytes": 0,
+            "read_syscalls": 360,
+            "wchar_bytes": 1108636,
+            "write_bytes": 1634304,
+            "write_syscalls": 435
+          },
+          "items": 1,
+          "max_rss_kib": 8344,
+          "rss_delta_kib": 0,
+          "wall_ms": 87.352365
+        },
+        {
+          "bytes": 262144,
+          "cpu_ms": 40.99000000000008,
+          "cpu_utilization_percent": 43.28453437673252,
+          "io": {
+            "rchar_bytes": 2755339,
+            "read_bytes": 0,
+            "read_syscalls": 360,
+            "wchar_bytes": 1108636,
+            "write_bytes": 1634304,
+            "write_syscalls": 435
+          },
+          "items": 1,
+          "max_rss_kib": 8344,
+          "rss_delta_kib": 0,
+          "wall_ms": 94.698951
+        },
+        {
+          "bytes": 262144,
+          "cpu_ms": 34.0419999999999,
+          "cpu_utilization_percent": 40.37863444776945,
+          "io": {
+            "rchar_bytes": 2755339,
+            "read_bytes": 0,
+            "read_syscalls": 360,
+            "wchar_bytes": 1108636,
+            "write_bytes": 1634304,
+            "write_syscalls": 435
+          },
+          "items": 1,
+          "max_rss_kib": 8344,
+          "rss_delta_kib": 0,
+          "wall_ms": 84.306962
+        },
+        {
+          "bytes": 262144,
+          "cpu_ms": 43.286000000000044,
+          "cpu_utilization_percent": 41.10186419923563,
+          "io": {
+            "rchar_bytes": 2755339,
+            "read_bytes": 0,
+            "read_syscalls": 360,
+            "wchar_bytes": 1108636,
+            "write_bytes": 1634304,
+            "write_syscalls": 435
+          },
+          "items": 1,
+          "max_rss_kib": 8344,
+          "rss_delta_kib": 0,
+          "wall_ms": 105.313958
+        },
+        {
+          "bytes": 262144,
+          "cpu_ms": 42.41099999999997,
+          "cpu_utilization_percent": 34.60055425990778,
+          "io": {
+            "rchar_bytes": 2755340,
+            "read_bytes": 0,
+            "read_syscalls": 360,
+            "wchar_bytes": 1108636,
+            "write_bytes": 1634304,
+            "write_syscalls": 435
+          },
+          "items": 1,
+          "max_rss_kib": 8352,
+          "rss_delta_kib": 0,
+          "wall_ms": 122.573181
+        },
+        {
+          "bytes": 262144,
+          "cpu_ms": 45.324000000000034,
+          "cpu_utilization_percent": 38.26850338371116,
+          "io": {
+            "rchar_bytes": 2755340,
+            "read_bytes": 0,
+            "read_syscalls": 360,
+            "wchar_bytes": 1108636,
+            "write_bytes": 1634304,
+            "write_syscalls": 435
+          },
+          "items": 1,
+          "max_rss_kib": 8352,
+          "rss_delta_kib": 0,
+          "wall_ms": 118.436824
+        },
+        {
+          "bytes": 262144,
+          "cpu_ms": 36.59200000000007,
+          "cpu_utilization_percent": 36.52523479281758,
+          "io": {
+            "rchar_bytes": 2755340,
+            "read_bytes": 0,
+            "read_syscalls": 360,
+            "wchar_bytes": 1108636,
+            "write_bytes": 1634304,
+            "write_syscalls": 435
+          },
+          "items": 1,
+          "max_rss_kib": 8352,
+          "rss_delta_kib": 0,
+          "wall_ms": 100.182792
+        },
+        {
+          "bytes": 262144,
+          "cpu_ms": 49.115999999999936,
+          "cpu_utilization_percent": 39.87656127482689,
+          "io": {
+            "rchar_bytes": 2755340,
+            "read_bytes": 0,
+            "read_syscalls": 360,
+            "wchar_bytes": 1108636,
+            "write_bytes": 1634304,
+            "write_syscalls": 435
+          },
+          "items": 1,
+          "max_rss_kib": 8352,
+          "rss_delta_kib": 0,
+          "wall_ms": 123.170099
+        },
+        {
+          "bytes": 262144,
+          "cpu_ms": 36.10000000000002,
+          "cpu_utilization_percent": 40.443583430552934,
+          "io": {
+            "rchar_bytes": 2755340,
+            "read_bytes": 0,
+            "read_syscalls": 360,
+            "wchar_bytes": 1108636,
+            "write_bytes": 1634304,
+            "write_syscalls": 435
+          },
+          "items": 1,
+          "max_rss_kib": 8352,
+          "rss_delta_kib": 0,
+          "wall_ms": 89.260142
+        },
+        {
+          "bytes": 262144,
+          "cpu_ms": 43.66300000000001,
+          "cpu_utilization_percent": 34.57796259482193,
+          "io": {
+            "rchar_bytes": 2755340,
+            "read_bytes": 0,
+            "read_syscalls": 360,
+            "wchar_bytes": 1108636,
+            "write_bytes": 1634304,
+            "write_syscalls": 435
+          },
+          "items": 1,
+          "max_rss_kib": 8352,
+          "rss_delta_kib": 0,
+          "wall_ms": 126.274068
+        },
+        {
+          "bytes": 262144,
+          "cpu_ms": 37.823999999999856,
+          "cpu_utilization_percent": 36.817167904575335,
+          "io": {
+            "rchar_bytes": 2755340,
+            "read_bytes": 0,
+            "read_syscalls": 360,
+            "wchar_bytes": 1108636,
+            "write_bytes": 1634304,
+            "write_syscalls": 435
+          },
+          "items": 1,
+          "max_rss_kib": 8352,
+          "rss_delta_kib": 0,
+          "wall_ms": 102.734681
+        },
+        {
+          "bytes": 262144,
+          "cpu_ms": 38.11399999999976,
+          "cpu_utilization_percent": 36.61201549596761,
+          "io": {
+            "rchar_bytes": 2755342,
+            "read_bytes": 0,
+            "read_syscalls": 360,
+            "wchar_bytes": 1108636,
+            "write_bytes": 1634304,
+            "write_syscalls": 435
+          },
+          "items": 1,
+          "max_rss_kib": 8352,
+          "rss_delta_kib": 0,
+          "wall_ms": 104.102436
+        },
+        {
+          "bytes": 262144,
+          "cpu_ms": 37.56200000000032,
+          "cpu_utilization_percent": 36.03819277050205,
+          "io": {
+            "rchar_bytes": 2755342,
+            "read_bytes": 0,
+            "read_syscalls": 360,
+            "wchar_bytes": 1108636,
+            "write_bytes": 1634304,
+            "write_syscalls": 435
+          },
+          "items": 1,
+          "max_rss_kib": 8352,
+          "rss_delta_kib": 0,
+          "wall_ms": 104.228312
+        },
+        {
+          "bytes": 262144,
+          "cpu_ms": 44.188000000000116,
+          "cpu_utilization_percent": 37.63104642744415,
+          "io": {
+            "rchar_bytes": 2755342,
+            "read_bytes": 0,
+            "read_syscalls": 360,
+            "wchar_bytes": 1108636,
+            "write_bytes": 1634304,
+            "write_syscalls": 435
+          },
+          "items": 1,
+          "max_rss_kib": 8352,
+          "rss_delta_kib": 0,
+          "wall_ms": 117.424319
+        },
+        {
+          "bytes": 262144,
+          "cpu_ms": 34.78700000000012,
+          "cpu_utilization_percent": 42.307639403380094,
+          "io": {
+            "rchar_bytes": 2755342,
+            "read_bytes": 0,
+            "read_syscalls": 360,
+            "wchar_bytes": 1108636,
+            "write_bytes": 1634304,
+            "write_syscalls": 435
+          },
+          "items": 1,
+          "max_rss_kib": 8352,
+          "rss_delta_kib": 0,
+          "wall_ms": 82.223921
+        }
+      ],
+      "summary": {
+        "cpu_ms": {
+          "mean": 40.49580000000002,
+          "p95": 49.57899999999993,
+          "p99": 55.421000000000056
+        },
+        "cpu_utilization_percent": {
+          "mean": 39.024948019064254,
+          "p95": 44.988994765843685,
+          "p99": 45.34848107831543
+        },
+        "peak_rss_kib": 8352,
+        "throughput_per_second": {
+          "max": 13.050123213390824,
+          "mean": 9.775710396351087,
+          "median": 9.651913302152055,
+          "min": 7.866570503611079,
+          "p95": 12.161910887222222,
+          "p99": 13.050123213390824
+        },
+        "total_kernel_read_bytes": 0,
+        "total_kernel_write_bytes": 49029120,
+        "total_read_syscalls": 10800,
+        "total_write_syscalls": 13050,
+        "wall_ms": {
+          "max": 127.120198,
+          "mean": 104.16786483333335,
+          "median": 102.734681,
+          "min": 76.627629,
+          "p95": 126.274068,
+          "p99": 127.120198
+        }
+      },
+      "unit": "pipelines/s"
+    }
+  ]
+}

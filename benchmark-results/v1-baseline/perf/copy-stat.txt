@@ -1,0 +1,20 @@
+# started on Sun Sep 20 03:35:07 2026
+
+
+ Performance counter stats for './build/bench-release/photobridge_bench --workload copy --repetitions 10 --copy-bytes 67108864':
+
+          3,210.51 msec task-clock                #    0.986 CPUs utilized          
+               337      context-switches          #  104.968 /sec                   
+                 1      cpu-migrations            #    0.311 /sec                   
+               682      page-faults               #  212.428 /sec                   
+   <not supported>      cycles                                                      
+   <not supported>      instructions                                                
+   <not supported>      branches                                                    
+   <not supported>      branch-misses                                               
+
+       3.257467761 seconds time elapsed
+
+       0.829412000 seconds user
+       2.384058000 seconds sys
+
+

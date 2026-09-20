@@ -102,6 +102,7 @@ add_library(photobridge_core STATIC
     src/app/workspace_layout.cpp
     src/app/workspace_service.cpp
     src/app/sqlite_connection.cpp
+    src/app/sqlite_statement.cpp
     src/app/sqlite_schema.cpp
     src/app/task_runtime_repository.cpp
     src/app/migration_attempt_preparer.cpp

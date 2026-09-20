@@ -18,6 +18,7 @@
 #include <limits>
 #include <map>
 #include <nlohmann/json.hpp>
+#include <sqlite3.h>
 #include <optional>
 #include <sstream>
 #include <stdexcept>
@@ -27,6 +28,7 @@
 
 #include "photobridge/app/manifest_builder.h"
 #include "photobridge/app/sqlite_schema.h"
+#include "photobridge/app/sqlite_statement.h"
 #include "photobridge/cli/cli_app.h"
 #include "photobridge/common/digest.h"
 #include "photobridge/filesystem/copy_and_hash.h"
@@ -152,7 +154,7 @@ Options ParseOptions(int argc, char** argv)
         if (argument == "--help" || argument == "-h") {
             std::cout
                 << "Usage: photobridge_bench [options]\n"
-                << "  --workload all|scanner|copy|sqlite|e2e|e2e-large\n"
+                << "  --workload all|scanner|copy|sqlite|sqlite-prepared|sqlite-batch-{10,100,1000,5000}|sqlite-compare|e2e|e2e-large\n"
                 << "  --data-root PATH       benchmark-owned data directory\n"
                 << "  --output PATH          write JSON report\n"
                 << "  --repetitions N        measured samples (default 5)\n"
@@ -197,8 +199,14 @@ Options ParseOptions(int argc, char** argv)
 
     if (options.workload != "all" && options.workload != "scanner"
         && options.workload != "copy" && options.workload != "sqlite"
+        && options.workload != "sqlite-prepared"
+        && options.workload != "sqlite-batch-10"
+        && options.workload != "sqlite-batch-100"
+        && options.workload != "sqlite-batch-1000"
+        && options.workload != "sqlite-batch-5000"
+        && options.workload != "sqlite-compare"
         && options.workload != "e2e" && options.workload != "e2e-large") {
-        Fail("--workload must be all, scanner, copy, sqlite, e2e, or e2e-large");
+        Fail("unknown workload; see --help for supported workloads");
     }
     return options;
 }
@@ -488,13 +496,21 @@ WorkloadResult RunCopy(
     return result;
 }
 
+enum class SqliteMode { kExecAutocommit, kPreparedAutocommit, kPreparedBatch };
+
 WorkloadResult RunSqlite(
     const Options& options,
-    const std::filesystem::path& fixture_root)
+    SqliteMode mode,
+    std::size_t batch_size = 1)
 {
-    static_cast<void>(fixture_root);
+    std::string name = "sqlite_batch_insert"; // V1 baseline report name
+    if (mode == SqliteMode::kPreparedAutocommit) {
+        name = "sqlite_prepared_autocommit";
+    } else if (mode == SqliteMode::kPreparedBatch) {
+        name = "sqlite_prepared_batch_" + std::to_string(batch_size);
+    }
     WorkloadResult result{
-        "sqlite_batch_insert",
+        name,
         "commands/s",
         options.sqlite_commands,
         0,
@@ -517,16 +533,57 @@ WorkloadResult RunSqlite(
                 "CREATE TABLE benchmark_queue(value INTEGER NOT NULL);"),
             "create SQLite benchmark table");
 
-        result.samples.push_back(Measure([&]() {
-            for (std::size_t index = 0; index < options.sqlite_commands;
-                 ++index) {
-                Require(
-                    connection.Execute(
-                        "INSERT INTO benchmark_queue(value) VALUES(1);"),
-                    "SQLite benchmark command");
+        {
+            photobridge::SqliteStatement insert;
+            if (mode != SqliteMode::kExecAutocommit
+                && insert.Prepare(
+                       connection.native_handle(),
+                       "INSERT INTO benchmark_queue(value) VALUES(?1);") != SQLITE_OK) {
+                Fail("prepare SQLite benchmark insert: "
+                    + std::string(sqlite3_errmsg(connection.native_handle())));
             }
-            return RunValues{options.sqlite_commands, 0};
-        }));
+
+            result.samples.push_back(Measure([&]() {
+                for (std::size_t index = 0; index < options.sqlite_commands;
+                     ++index) {
+                    if (mode == SqliteMode::kPreparedBatch
+                        && index % batch_size == 0) {
+                        Require(connection.Execute("BEGIN IMMEDIATE;"),
+                            "begin SQLite benchmark batch");
+                    }
+                    if (mode == SqliteMode::kExecAutocommit) {
+                        Require(connection.Execute(
+                            "INSERT INTO benchmark_queue(value) VALUES(1);"),
+                            "SQLite benchmark command");
+                    } else {
+                        if (insert.Reset() != SQLITE_OK
+                            || sqlite3_bind_int(insert.get(), 1, 1) != SQLITE_OK
+                            || sqlite3_step(insert.get()) != SQLITE_DONE) {
+                            Fail("execute prepared SQLite benchmark insert: "
+                                + std::string(sqlite3_errmsg(connection.native_handle())));
+                        }
+                    }
+                    if (mode == SqliteMode::kPreparedBatch
+                        && ((index + 1) % batch_size == 0
+                            || index + 1 == options.sqlite_commands)) {
+                        Require(connection.Execute("COMMIT;"),
+                            "commit SQLite benchmark batch");
+                    }
+                }
+                return RunValues{options.sqlite_commands, 0};
+            }));
+
+            photobridge::SqliteStatement count(
+                connection.native_handle(), "SELECT COUNT(*) FROM benchmark_queue;");
+            if (count.result() != SQLITE_OK
+                || sqlite3_step(count.get()) != SQLITE_ROW
+                || sqlite3_column_int64(count.get(), 0)
+                    != static_cast<sqlite3_int64>(options.sqlite_commands)) {
+                Fail("SQLite benchmark inserted an unexpected number of rows");
+            }
+            count.Reset();
+        }
+        connection = photobridge::SqliteConnection();
         RemoveDatabaseFiles(database_path);
     }
     return result;
@@ -893,7 +950,27 @@ int main(int argc, char** argv)
         }
         if (options.workload == "all" || options.workload == "sqlite") {
             report["workloads"].push_back(
-                WorkloadJson(RunSqlite(options, run_root)));
+                WorkloadJson(RunSqlite(options, SqliteMode::kExecAutocommit)));
+        }
+        if (options.workload == "sqlite-compare") {
+            report["workloads"].push_back(
+                WorkloadJson(RunSqlite(options, SqliteMode::kExecAutocommit)));
+            report["workloads"].push_back(
+                WorkloadJson(RunSqlite(options, SqliteMode::kPreparedAutocommit)));
+            for (const std::size_t batch_size : {10U, 100U, 1000U, 5000U}) {
+                report["workloads"].push_back(WorkloadJson(
+                    RunSqlite(options, SqliteMode::kPreparedBatch, batch_size)));
+            }
+        }
+        if (options.workload == "sqlite-prepared") {
+            report["workloads"].push_back(
+                WorkloadJson(RunSqlite(options, SqliteMode::kPreparedAutocommit)));
+        }
+        for (const std::size_t batch_size : {10U, 100U, 1000U, 5000U}) {
+            if (options.workload == "sqlite-batch-" + std::to_string(batch_size)) {
+                report["workloads"].push_back(WorkloadJson(
+                    RunSqlite(options, SqliteMode::kPreparedBatch, batch_size)));
+            }
         }
         if (options.workload == "e2e" || options.workload == "e2e-large") {
             report["workloads"].push_back(

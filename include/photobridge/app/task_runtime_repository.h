@@ -3,6 +3,7 @@
 #include <string>
 
 #include "photobridge/app/sqlite_connection.h"
+#include "photobridge/app/sqlite_statement.h"
 #include "photobridge/common/status.h"
 #include "photobridge/common/status_or.h"
 #include "photobridge/filesystem/reconciler.h"
@@ -96,6 +97,13 @@ public:
 
 private:
     SqliteConnection* connection_;
+    SqliteStatement insert_task_;
+    SqliteStatement check_dependency_cycle_;
+    SqliteStatement insert_dependency_;
+    SqliteStatement set_ready_;
+    SqliteStatement insert_event_;
+    SqliteStatement update_attempt_;
+    mutable SqliteStatement read_runtime_;
 };
 
 }  // namespace photobridge

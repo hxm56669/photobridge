@@ -56,28 +56,35 @@ Status CheckEpochAttempt(ExecutionEpoch epoch, std::string_view attempt_id)
     return Status::Ok();
 }
 
-class Statement final {
-public:
-    Statement(sqlite3* database, const char* sql) noexcept
-    {
-        result_ = sqlite3_prepare_v2(database, sql, -1, &statement_, nullptr);
-    }
+using Statement = SqliteStatement;
 
-    ~Statement()
+class ReusableStatement final {
+public:
+    ReusableStatement(
+        SqliteStatement& statement,
+        sqlite3* database,
+        const char* sql) noexcept
+        : statement_(statement)
     {
-        if (statement_ != nullptr) {
-            sqlite3_finalize(statement_);
+        result_ = statement_.Prepare(database, sql);
+        if (result_ == SQLITE_OK) {
+            result_ = statement_.Reset();
         }
     }
 
-    Statement(const Statement&) = delete;
-    Statement& operator=(const Statement&) = delete;
+    ~ReusableStatement()
+    {
+        if (statement_.get() != nullptr) statement_.Reset();
+    }
+
+    ReusableStatement(const ReusableStatement&) = delete;
+    ReusableStatement& operator=(const ReusableStatement&) = delete;
 
     int result() const noexcept { return result_; }
-    sqlite3_stmt* get() const noexcept { return statement_; }
+    sqlite3_stmt* get() const noexcept { return statement_.get(); }
 
 private:
-    sqlite3_stmt* statement_ = nullptr;
+    SqliteStatement& statement_;
     int result_ = SQLITE_ERROR;
 };
 
@@ -191,6 +198,7 @@ Status BindEpoch(
 
 Status AppendTaskEvent(
     SqliteConnection& connection,
+    SqliteStatement& cached_statement,
     std::string_view plan_id,
     std::string_view task_id,
     std::string_view event_type,
@@ -198,7 +206,8 @@ Status AppendTaskEvent(
     std::string_view attempt_id,
     std::string_view detail)
 {
-    Statement statement(
+    ReusableStatement statement(
+        cached_statement,
         connection.native_handle(),
         "INSERT INTO task_event("
         "plan_id, task_id, event_type, owner_epoch, attempt_id, detail, "
@@ -234,6 +243,7 @@ Status AppendTaskEvent(
 
 Status UpdateAttemptState(
     SqliteConnection& connection,
+    SqliteStatement& cached_statement,
     std::string_view plan_id,
     std::string_view task_id,
     std::string_view attempt_id,
@@ -243,7 +253,8 @@ Status UpdateAttemptState(
     const Status* error,
     bool finish)
 {
-    Statement statement(
+    ReusableStatement statement(
+        cached_statement,
         connection.native_handle(),
         "UPDATE task_attempt SET file_state = ?5, finished_at_ns = ?6, "
         "result = ?7, error_code = ?8, error_message = ?9 "
@@ -317,10 +328,12 @@ Status UpdateAttemptState(
 
 StatusOr<TaskRuntime> ReadRuntimeWithStatement(
     sqlite3* database,
+    SqliteStatement& cached_statement,
     std::string_view plan_id,
     std::string_view task_id)
 {
-    Statement statement(
+    ReusableStatement statement(
+        cached_statement,
         database,
         "SELECT task_id, state, owner_epoch, active_attempt_id, "
         "attempt_count, last_error_code, last_error_message "
@@ -392,6 +405,8 @@ StatusOr<ExecutionEpoch> ReadCurrentEpochForPlan(
 
 Status FinishTask(
     SqliteConnection& connection,
+    SqliteStatement& cached_attempt_update,
+    SqliteStatement& cached_event_insert,
     std::string_view plan_id,
     std::string_view task_id,
     ExecutionEpoch epoch,
@@ -470,6 +485,7 @@ Status FinishTask(
         : FileAttemptState::kRetryable;
     status = UpdateAttemptState(
         connection,
+        cached_attempt_update,
         plan_id,
         task_id,
         attempt_id,
@@ -481,6 +497,7 @@ Status FinishTask(
     if (!status.ok()) return Rollback(connection, status);
     status = AppendTaskEvent(
         connection,
+        cached_event_insert,
         plan_id,
         task_id,
         next_state == TaskState::kSucceeded ? "SUCCEEDED" : "RETRYABLE",
@@ -495,6 +512,8 @@ Status FinishTask(
 
 Status RecoverTask(
     SqliteConnection& connection,
+    SqliteStatement& cached_attempt_update,
+    SqliteStatement& cached_event_insert,
     std::string_view plan_id,
     std::string_view task_id,
     ExecutionEpoch recovery_epoch,
@@ -571,6 +590,7 @@ Status RecoverTask(
 
     status = UpdateAttemptState(
         connection,
+        cached_attempt_update,
         plan_id,
         task_id,
         expected_old_attempt_id,
@@ -587,6 +607,7 @@ Status RecoverTask(
         + " reason=" + std::string(reason);
     status = AppendTaskEvent(
         connection,
+        cached_event_insert,
         plan_id,
         task_id,
         event_type,
@@ -608,6 +629,8 @@ Status CheckTaskOwnership(
 
 Status AdvanceAttempt(
     SqliteConnection& connection,
+    SqliteStatement& cached_attempt_update,
+    SqliteStatement& cached_event_insert,
     std::string_view plan_id,
     std::string_view task_id,
     ExecutionEpoch epoch,
@@ -676,6 +699,7 @@ Status AdvanceAttempt(
     }
     status = UpdateAttemptState(
         connection,
+        cached_attempt_update,
         plan_id,
         task_id,
         attempt_id,
@@ -686,7 +710,8 @@ Status AdvanceAttempt(
         false);
     if (!status.ok()) return Rollback(connection, status);
     status = AppendTaskEvent(
-        connection, plan_id, task_id, event_type, epoch, attempt_id, "attempt lifecycle");
+        connection, cached_event_insert, plan_id, task_id,
+        event_type, epoch, attempt_id, "attempt lifecycle");
     if (!status.ok()) return Rollback(connection, status);
     status = connection.Execute("COMMIT;");
     if (!status.ok()) connection.Execute("ROLLBACK;");
@@ -840,7 +865,8 @@ Status TaskRuntimeRepository::AddTask(
         return Invalid("estimated task bytes exceed SQLite integer range");
     }
 
-    Statement statement(
+    ReusableStatement statement(
+        insert_task_,
         connection_->native_handle(),
         "INSERT INTO plan_task("
         "plan_id, task_id, task_key, type, state, attempt_count, "
@@ -916,7 +942,8 @@ Status TaskRuntimeRepository::AddDependency(
         return Invalid("task graph must not contain a self dependency");
     }
 
-    Statement cycle_check(
+    ReusableStatement cycle_check(
+        check_dependency_cycle_,
         connection_->native_handle(),
         "WITH RECURSIVE ancestors(task_id) AS ("
         "SELECT ?3 "
@@ -946,7 +973,8 @@ Status TaskRuntimeRepository::AddDependency(
             "check dependency cycle");
     }
 
-    Statement statement(
+    ReusableStatement statement(
+        insert_dependency_,
         connection_->native_handle(),
         "INSERT INTO task_dependency(plan_id, task_id, depends_on_task_id) "
         "SELECT ?1, ?2, ?3 "
@@ -981,7 +1009,8 @@ Status TaskRuntimeRepository::SetReady(
 {
     Status status = CheckIds(plan_id, task_id);
     if (!status.ok()) return status;
-    Statement statement(
+    ReusableStatement statement(
+        set_ready_,
         connection_->native_handle(),
         "UPDATE plan_task SET state = ?3, owner_epoch = NULL, "
         "active_attempt_id = NULL, last_error_code = NULL, "
@@ -1142,6 +1171,7 @@ StatusOr<ClaimedTask> TaskRuntimeRepository::ClaimNextReady(
     }
     status = AppendTaskEvent(
         *connection_,
+        insert_event_,
         plan_id,
         task_id,
         "RUNNING",
@@ -1150,7 +1180,7 @@ StatusOr<ClaimedTask> TaskRuntimeRepository::ClaimNextReady(
         "claim");
     if (!status.ok()) return Rollback(*connection_, status);
     auto runtime = ReadRuntimeWithStatement(
-        connection_->native_handle(), plan_id, task_id);
+        connection_->native_handle(), read_runtime_, plan_id, task_id);
     if (!runtime.ok()) return Rollback(*connection_, runtime.status());
     status = connection_->Execute("COMMIT;");
     if (!status.ok()) {
@@ -1172,6 +1202,8 @@ Status TaskRuntimeRepository::MarkCommitIntent(
     if (!status.ok()) return status;
     return AdvanceAttempt(
         *connection_,
+        update_attempt_,
+        insert_event_,
         plan_id,
         task_id,
         epoch,
@@ -1192,6 +1224,8 @@ Status TaskRuntimeRepository::MarkTempWritten(
     if (!status.ok()) return status;
     return AdvanceAttempt(
         *connection_,
+        update_attempt_,
+        insert_event_,
         plan_id,
         task_id,
         epoch,
@@ -1212,6 +1246,8 @@ Status TaskRuntimeRepository::MarkSucceeded(
     if (!status.ok()) return status;
     return FinishTask(
         *connection_,
+        update_attempt_,
+        insert_event_,
         plan_id,
         task_id,
         epoch,
@@ -1234,6 +1270,8 @@ Status TaskRuntimeRepository::MarkRetryable(
     if (error.ok()) return Invalid("retryable task result requires an error");
     return FinishTask(
         *connection_,
+        update_attempt_,
+        insert_event_,
         plan_id,
         task_id,
         epoch,
@@ -1259,6 +1297,8 @@ Status TaskRuntimeRepository::RecoverSucceeded(
     if (reason.empty()) return Invalid("recovery reason must not be empty");
     return RecoverTask(
         *connection_,
+        update_attempt_,
+        insert_event_,
         plan_id,
         task_id,
         recovery_epoch,
@@ -1289,6 +1329,8 @@ Status TaskRuntimeRepository::RecoverRetryable(
     const Status error(StatusCode::kIoError, reason);
     return RecoverTask(
         *connection_,
+        update_attempt_,
+        insert_event_,
         plan_id,
         task_id,
         recovery_epoch,
@@ -1319,6 +1361,8 @@ Status TaskRuntimeRepository::RecoverInconsistent(
     const Status error(StatusCode::kInternal, reason);
     return RecoverTask(
         *connection_,
+        update_attempt_,
+        insert_event_,
         plan_id,
         task_id,
         recovery_epoch,
@@ -1439,6 +1483,7 @@ Status TaskRuntimeRepository::PersistVerifiedReceipt(
     }
     status = UpdateAttemptState(
         *connection_,
+        update_attempt_,
         plan_id,
         receipt.task_id,
         receipt.attempt_id,
@@ -1450,6 +1495,7 @@ Status TaskRuntimeRepository::PersistVerifiedReceipt(
     if (!status.ok()) return Rollback(*connection_, status);
     status = AppendTaskEvent(
         *connection_,
+        insert_event_,
         plan_id,
         receipt.task_id,
         "VERIFIED_DURABLE",
@@ -1548,7 +1594,7 @@ StatusOr<TaskRuntime> TaskRuntimeRepository::ReadRuntime(
     Status status = CheckIds(plan_id, task_id);
     if (!status.ok()) return status;
     return ReadRuntimeWithStatement(
-        connection_->native_handle(), plan_id, task_id);
+        connection_->native_handle(), read_runtime_, plan_id, task_id);
 }
 
 }  // namespace photobridge

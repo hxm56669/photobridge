@@ -129,6 +129,49 @@ TEST_F(TaskRuntimeRepositoryTest, ClaimsInStableOrderAndRequiresDependencies)
         photobridge::StatusCode::kNotFound);
 }
 
+TEST_F(TaskRuntimeRepositoryTest, ReusesStatementsAcrossBatchRollbackAndErrors)
+{
+    auto connection = photobridge::SqliteConnection::Open(database_path_);
+    ASSERT_TRUE(connection.ok()) << connection.status().message();
+    ASSERT_TRUE(photobridge::EnsureSchema(connection.value()).ok());
+    CreatePlan(connection.value());
+    photobridge::TaskRuntimeRepository repository(connection.value());
+
+    ASSERT_TRUE(connection.value().Execute("BEGIN IMMEDIATE;").ok());
+    for (int index = 0; index < 32; ++index) {
+        const std::string id = "task-" + std::to_string(index);
+        ASSERT_TRUE(repository.AddTask("plan-1", Task(id.c_str())).ok());
+        ASSERT_TRUE(repository.SetReady("plan-1", id).ok());
+    }
+    ASSERT_TRUE(connection.value().Execute("ROLLBACK;").ok());
+    EXPECT_EQ(
+        repository.ReadRuntime("plan-1", "task-0").status().code(),
+        photobridge::StatusCode::kNotFound);
+
+    ASSERT_TRUE(connection.value().Execute("BEGIN IMMEDIATE;").ok());
+    for (int index = 0; index < 32; ++index) {
+        const std::string id = "task-" + std::to_string(index);
+        ASSERT_TRUE(repository.AddTask("plan-1", Task(id.c_str())).ok());
+        ASSERT_TRUE(repository.SetReady("plan-1", id).ok());
+    }
+    ASSERT_TRUE(connection.value().Execute("COMMIT;").ok());
+
+    EXPECT_EQ(
+        repository.AddTask("plan-1", Task("task-0")).code(),
+        photobridge::StatusCode::kAlreadyExists);
+    ASSERT_TRUE(repository.AddTask("plan-1", Task("extra")).ok());
+    EXPECT_EQ(
+        repository.AddDependency("plan-1", "extra", "missing").code(),
+        photobridge::StatusCode::kNotFound);
+    ASSERT_TRUE(repository.AddDependency("plan-1", "extra", "task-0").ok());
+    EXPECT_EQ(
+        repository.SetReady("plan-1", "extra").code(),
+        photobridge::StatusCode::kInvalidArgument);
+    const auto runtime = repository.ReadRuntime("plan-1", "task-31");
+    ASSERT_TRUE(runtime.ok());
+    EXPECT_EQ(runtime.value().state, photobridge::TaskState::kReady);
+}
+
 TEST_F(TaskRuntimeRepositoryTest, ExecutionEpochRepositoryIsMonotonic)
 {
     auto connection = photobridge::SqliteConnection::Open(database_path_);

@@ -1,0 +1,206 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 1K of event 'cpu-clock:u'
+# Event count (approx.): 289750000
+#
+# Children      Self  Command          Shared Object         Symbol                                                          
+# ........  ........  ...............  ....................  ................................................................
+#
+    78.60%    78.60%  photobridge_ben  photobridge_bench     [.] blake3_hash_many_avx2
+            |          
+            |--73.86%--0
+            |          blake3_hash_many_avx2
+            |          
+             --4.57%--0x4
+                       blake3_hash_many_avx2
+
+    73.86%     0.00%  photobridge_ben  [unknown]             [.] 0000000000000000
+            |
+            ---0
+               blake3_hash_many_avx2
+
+    19.76%    19.76%  photobridge_ben  photobridge_bench     [.] (anonymous namespace)::WriteDeterministicFile
+            |          
+            |--1.73%--0x54535251504f4e4d
+            |          (anonymous namespace)::WriteDeterministicFile
+            |          
+            |--1.47%--0xbab9b8b7b6b5b4b3
+            |          (anonymous namespace)::WriteDeterministicFile
+            |          
+            |--1.21%--0x8c8b8a8988878685
+            |          (anonymous namespace)::WriteDeterministicFile
+            |          
+            |--1.12%--0x84838281807f7e7d
+            |          (anonymous namespace)::WriteDeterministicFile
+            |          
+            |--1.04%--0xbbbab9b8b7b6b5b4
+            |          (anonymous namespace)::WriteDeterministicFile
+            |          
+            |--1.04%--0x262524232221201f
+            |          (anonymous namespace)::WriteDeterministicFile
+            |          
+            |--0.86%--0x6564636261605f5e
+            |          (anonymous namespace)::WriteDeterministicFile
+            |          
+            |--0.69%--0xe1e0dfdedddcdbda
+            |          (anonymous namespace)::WriteDeterministicFile
+            |          
+            |--0.69%--0x4c4b4a4948474645
+            |          (anonymous namespace)::WriteDeterministicFile
+            |          
+            |--0.60%--0xeae9e8e7e6e5e4e3
+            |          (anonymous namespace)::WriteDeterministicFile
+            |          
+            |--0.60%--0x5554535251504f4e
+            |          (anonymous namespace)::WriteDeterministicFile
+            |          
+             --0.52%--0xb3b2b1b0afaeadac
+                       (anonymous namespace)::WriteDeterministicFile
+
+     4.57%     0.00%  photobridge_ben  [unknown]             [.] 0x0000000000000004
+            |
+            ---0x4
+               blake3_hash_many_avx2
+
+     1.73%     0.00%  photobridge_ben  [unknown]             [.] 0x54535251504f4e4d
+            |
+            ---0x54535251504f4e4d
+               (anonymous namespace)::WriteDeterministicFile
+
+     1.47%     0.00%  photobridge_ben  [unknown]             [.] 0xbab9b8b7b6b5b4b3
+            |
+            ---0xbab9b8b7b6b5b4b3
+               (anonymous namespace)::WriteDeterministicFile
+
+     1.21%     0.00%  photobridge_ben  [unknown]             [.] 0x8c8b8a8988878685
+            |
+            ---0x8c8b8a8988878685
+               (anonymous namespace)::WriteDeterministicFile
+
+     1.12%     0.00%  photobridge_ben  [unknown]             [.] 0x84838281807f7e7d
+            |
+            ---0x84838281807f7e7d
+               (anonymous namespace)::WriteDeterministicFile
+
+     1.04%     0.00%  photobridge_ben  [unknown]             [.] 0xbbbab9b8b7b6b5b4
+            |
+            ---0xbbbab9b8b7b6b5b4
+               (anonymous namespace)::WriteDeterministicFile
+
+     1.04%     0.00%  photobridge_ben  [unknown]             [.] 0x262524232221201f
+            |
+            ---0x262524232221201f
+               (anonymous namespace)::WriteDeterministicFile
+
+     0.86%     0.00%  photobridge_ben  [unknown]             [.] 0x6564636261605f5e
+            |
+            ---0x6564636261605f5e
+               (anonymous namespace)::WriteDeterministicFile
+
+     0.78%     0.78%  photobridge_ben  photobridge_bench     [.] blake3_compress_subtree_wide
+            |
+            ---blake3_compress_subtree_wide
+
+     0.69%     0.00%  photobridge_ben  [unknown]             [.] 0xe1e0dfdedddcdbda
+            |
+            ---0xe1e0dfdedddcdbda
+               (anonymous namespace)::WriteDeterministicFile
+
+     0.69%     0.00%  photobridge_ben  [unknown]             [.] 0x4c4b4a4948474645
+            |
+            ---0x4c4b4a4948474645
+               (anonymous namespace)::WriteDeterministicFile
+
+     0.60%     0.00%  photobridge_ben  [unknown]             [.] 0xeae9e8e7e6e5e4e3
+            |
+            ---0xeae9e8e7e6e5e4e3
+               (anonymous namespace)::WriteDeterministicFile
+
+     0.60%     0.00%  photobridge_ben  [unknown]             [.] 0x5554535251504f4e
+            |
+            ---0x5554535251504f4e
+               (anonymous namespace)::WriteDeterministicFile
+
+     0.52%     0.00%  photobridge_ben  [unknown]             [.] 0xb3b2b1b0afaeadac
+            |
+            ---0xb3b2b1b0afaeadac
+               (anonymous namespace)::WriteDeterministicFile
+
+     0.35%     0.00%  photobridge_ben  [unknown]             [.] 0xb2b1b0afaeadacab
+     0.35%     0.00%  photobridge_ben  [unknown]             [.] 0x1d1c1b1a19181716
+     0.35%     0.00%  photobridge_ben  [unknown]             [.] 0x2524232221201f1e
+     0.35%     0.00%  photobridge_ben  [unknown]             [.] 0x7b7a797877767574
+     0.26%     0.26%  photobridge_ben  photobridge_bench     [.] blake3_hash_many
+     0.26%     0.00%  photobridge_ben  [unknown]             [.] 0xc3c2c1c0bfbebdbc
+     0.26%     0.00%  photobridge_ben  [unknown]             [.] 0xcac9c8c7c6c5c4c3
+     0.26%     0.00%  photobridge_ben  [unknown]             [.] 0xe2e1e0dfdedddcdb
+     0.26%     0.00%  photobridge_ben  [unknown]             [.] 0x64636261605f5e5d
+     0.26%     0.00%  photobridge_ben  [unknown]             [.] 0x737271706f6e6d6c
+     0.26%     0.00%  photobridge_ben  [unknown]             [.] 0x838281807f7e7d7c
+     0.26%     0.00%  photobridge_ben  [unknown]             [.] 0x9b9a999897969594
+     0.26%     0.00%  photobridge_ben  [unknown]             [.] 0xa3a2a1a09f9e9d9c
+     0.17%     0.00%  photobridge_ben  [unknown]             [.] 0xcbcac9c8c7c6c5c4
+     0.17%     0.00%  photobridge_ben  [unknown]             [.] 0x06050403020100fa
+     0.17%     0.00%  photobridge_ben  [unknown]             [.] 0x0e0d0c0b0a090807
+     0.17%     0.00%  photobridge_ben  [unknown]             [.] 0x2d2c2b2a29282726
+     0.17%     0.00%  photobridge_ben  [unknown]             [.] 0x363534333231302f
+     0.17%     0.00%  photobridge_ben  [unknown]             [.] 0x3e3d3c3b3a393837
+     0.17%     0.00%  photobridge_ben  [unknown]             [.] 0x44434241403f3e3d
+     0.17%     0.00%  photobridge_ben  [unknown]             [.] 0x4d4c4b4a49484746
+     0.17%     0.00%  photobridge_ben  [unknown]             [.] 0x5c5b5a5958575655
+     0.17%     0.00%  photobridge_ben  [unknown]             [.] 0x6c6b6a6968676665
+     0.17%     0.00%  photobridge_ben  [unknown]             [.] 0x6d6c6b6a69686766
+     0.17%     0.00%  photobridge_ben  [unknown]             [.] 0x74737271706f6e6d
+     0.17%     0.00%  photobridge_ben  [unknown]             [.] 0x939291908f8e8d8c
+     0.17%     0.00%  photobridge_ben  [unknown]             [.] 0x94939291908f8e8d
+     0.17%     0.00%  photobridge_ben  [unknown]             [.] 0xabaaa9a8a7a6a5a4
+     0.17%     0.17%  photobridge_ben  libc.so.6             [.] write
+     0.09%     0.09%  photobridge_ben  ld-linux-x86-64.so.2  [.] 0x00000000000113e6
+     0.09%     0.09%  photobridge_ben  libstdc++.so.6.0.30   [.] std::__timepunct<wchar_t>::_M_initialize_timepunct
+     0.09%     0.00%  photobridge_ben  [unknown]             [.] 0x0000000000000040
+     0.09%     0.00%  photobridge_ben  [unknown]             [.] 0x48fb894853001542
+     0.09%     0.00%  photobridge_ben  ld-linux-x86-64.so.2  [.] 0x00007fb48961a83c
+     0.09%     0.00%  photobridge_ben  libstdc++.so.6.0.30   [.] std::__moneypunct_cache<wchar_t, false>::~__moneypunct_cache
+     0.09%     0.09%  photobridge_ben  libgcc_s.so.1         [.] __popcountdi2
+     0.09%     0.00%  photobridge_ben  ld-linux-x86-64.so.2  [.] 0x00007fb48961ea63
+     0.09%     0.00%  photobridge_ben  [unknown]             [.] 0xc2c1c0bfbebdbcbb
+     0.09%     0.00%  photobridge_ben  [unknown]             [.] 0xc5c74bfc0d2714ea
+     0.09%     0.00%  photobridge_ben  [unknown]             [.] 0xd2d1d0cfcecdcccb
+     0.09%     0.00%  photobridge_ben  [unknown]             [.] 0xd3d2d1d0cfcecdcc
+     0.09%     0.00%  photobridge_ben  [unknown]             [.] 0xd9d8d7d6d5d4d3d2
+     0.09%     0.00%  photobridge_ben  [unknown]             [.] 0xdad9d8d7d6d5d4d3
+     0.09%     0.00%  photobridge_ben  [unknown]             [.] 0xe9e8e7e6e5e4e3e2
+     0.09%     0.00%  photobridge_ben  [unknown]             [.] 0xf1f0efeeedecebea
+     0.09%     0.00%  photobridge_ben  [unknown]             [.] 0xf2f1f0efeeedeceb
+     0.09%     0.00%  photobridge_ben  [unknown]             [.] 0xf9f8f7f6f5f4f3f2
+     0.09%     0.00%  photobridge_ben  [unknown]             [.] 0xfaf9f8f7f6f5f4f3
+     0.09%     0.00%  photobridge_ben  [unknown]             [.] 0x0000000000000001
+     0.09%     0.00%  photobridge_ben  [unknown]             [.] 0x05d532bcca429b1a
+     0.09%     0.00%  photobridge_ben  [unknown]             [.] 0x0706050403020100
+     0.09%     0.00%  photobridge_ben  [unknown]             [.] 0x0f0e0d0c0b0a0908
+     0.09%     0.00%  photobridge_ben  [unknown]             [.] 0x1514131211100f0e
+     0.09%     0.00%  photobridge_ben  [unknown]             [.] 0x161514131211100f
+     0.09%     0.00%  photobridge_ben  [unknown]             [.] 0x18f2e31b38984ee3
+     0.09%     0.00%  photobridge_ben  [unknown]             [.] 0x1e1d1c1b1a191817
+     0.09%     0.00%  photobridge_ben  [unknown]             [.] 0x201aba6bed97f21f
+     0.09%     0.00%  photobridge_ben  [unknown]             [.] 0x2e2d2c2b2a292827
+     0.09%     0.00%  photobridge_ben  [unknown]             [.] 0x3534333231302f2e
+     0.09%     0.00%  photobridge_ben  [unknown]             [.] 0x3d3c3b3a39383736
+     0.09%     0.00%  photobridge_ben  [unknown]             [.] 0x4544434241403f3e
+     0.09%     0.00%  photobridge_ben  [unknown]             [.] 0x5d5c5b5a59585756
+     0.09%     0.00%  photobridge_ben  [unknown]             [.] 0x7c7b7a7978777675
+     0.09%     0.00%  photobridge_ben  [unknown]             [.] 0x8b8a898887868584
+     0.09%     0.00%  photobridge_ben  [unknown]             [.] 0x9c9b9a9998979695
+     0.09%     0.00%  photobridge_ben  [unknown]             [.] 0xa4a3a2a1a09f9e9d
+     0.09%     0.00%  photobridge_ben  [unknown]             [.] 0xaaa9a8a7a6a5a4a3
+     0.09%     0.09%  photobridge_ben  libc.so.6             [.] read
+     0.09%     0.09%  photobridge_ben  photobridge_bench     [.] blake3_hasher_update.part.0
+     0.09%     0.00%  photobridge_ben  ld-linux-x86-64.so.2  [.] 0x00007fb48960c3e6
+
+
+#
+# (Cannot load tips.txt file, please install perf!)
+#

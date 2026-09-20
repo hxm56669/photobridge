@@ -1,0 +1,20 @@
+# started on Sun Sep 20 03:52:22 2026
+
+
+ Performance counter stats for './build/bench-release/photobridge_bench --workload e2e-large --repetitions 3':
+
+         57,188.65 msec task-clock                #    0.928 CPUs utilized          
+             9,943      context-switches          #  173.863 /sec                   
+                65      cpu-migrations            #    1.137 /sec                   
+            10,175      page-faults               #  177.920 /sec                   
+   <not supported>      cycles                                                      
+   <not supported>      instructions                                                
+   <not supported>      branches                                                    
+   <not supported>      branch-misses                                               
+
+      61.604778960 seconds time elapsed
+
+      28.740096000 seconds user
+      28.533009000 seconds sys
+
+
