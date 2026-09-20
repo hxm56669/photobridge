@@ -52,6 +52,7 @@ struct Options {
     std::size_t sqlite_commands = 5'000;
     std::size_t e2e_files = 4;
     std::size_t e2e_file_bytes = 64U * 1024U;
+    std::size_t e2e_workers = 4;
     bool keep_data = false;
 };
 
@@ -163,6 +164,7 @@ Options ParseOptions(int argc, char** argv)
                 << "  --sqlite-commands N    queued commands (default 5000)\n"
                 << "  --e2e-files N          files per local pipeline (default 4)\n"
                 << "  --e2e-file-bytes N     bytes per local file (default 65536)\n"
+                << "  --e2e-workers N        migrate workers, 1-8 (default 4)\n"
                 << "  --keep-data            preserve generated fixture\n";
             std::exit(0);
         }
@@ -192,6 +194,10 @@ Options ParseOptions(int argc, char** argv)
         } else if (argument == "--e2e-file-bytes") {
             options.e2e_file_bytes = static_cast<std::size_t>(
                 ParseUnsigned(value_for(argument), argument));
+        } else if (argument == "--e2e-workers") {
+            const std::uint64_t workers = ParseUnsigned(value_for(argument), argument);
+            if (workers > 8) Fail("--e2e-workers must be between 1 and 8");
+            options.e2e_workers = static_cast<std::size_t>(workers);
         } else {
             Fail("unknown option: " + argument);
         }
@@ -721,18 +727,17 @@ WorkloadResult RunE2e(
                 "e2e plan");
             const std::filesystem::path plan_path =
                 FindPlanArtifact(workspace);
-            for (std::size_t index = 0; index < options.e2e_files; ++index) {
-                RunCliCommand(
-                    {"photobridge", "migrate",
-                        "--workspace", workspace.string(),
-                        "--plan", plan_path.string()},
-                    "e2e migrate");
-                RunCliCommand(
-                    {"photobridge", "resume",
-                        "--workspace", workspace.string(),
-                        "--plan", plan_path.string()},
-                    "e2e resume");
-            }
+            RunCliCommand(
+                {"photobridge", "migrate",
+                    "--workspace", workspace.string(),
+                    "--plan", plan_path.string(),
+                    "--workers", std::to_string(options.e2e_workers)},
+                "e2e migrate");
+            RunCliCommand(
+                {"photobridge", "resume",
+                    "--workspace", workspace.string(),
+                    "--plan", plan_path.string()},
+                "e2e resume");
             const std::string verify_output = RunCliCommand(
                 {"photobridge", "verify",
                     "--workspace", workspace.string(),
@@ -887,7 +892,8 @@ void PrintHumanReport(const Json& report)
     std::cout << std::fixed << std::setprecision(2);
     std::cout << "PhotoBridge Release benchmark\n"
               << "repetitions=" << report.at("repetitions")
-              << ", data_root=" << report.at("data_root") << "\n";
+              << ", data_root=" << report.at("data_root")
+              << ", e2e_workers=" << report.at("e2e_workers") << "\n";
     for (const auto& workload : report.at("workloads")) {
         const auto& summary = workload.at("summary");
         std::cout << "\n[" << workload.at("name") << "]\n"
@@ -945,6 +951,7 @@ int main(int argc, char** argv)
             {"sqlite_commands", options.sqlite_commands},
             {"e2e_files", options.e2e_files},
             {"e2e_file_bytes", options.e2e_file_bytes},
+            {"e2e_workers", options.e2e_workers},
             {"workloads", Json::array()},
         };
         if (options.workload == "all" || options.workload == "scanner") {

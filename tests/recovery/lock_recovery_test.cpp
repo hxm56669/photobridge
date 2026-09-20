@@ -7,6 +7,7 @@
 #include <functional>
 #include <string>
 #include <thread>
+#include <utility>
 #include <vector>
 
 #include <fcntl.h>
@@ -99,6 +100,30 @@ bool HasVerifiedReceipt(const std::filesystem::path& workspace)
     return result;
 }
 
+std::pair<int, int> RunningAndReceiptCounts(
+    const std::filesystem::path& workspace)
+{
+    auto connection = photobridge::SqliteConnection::Open(
+        workspace / "photobridge.db");
+    if (!connection.ok()) return {-1, -1};
+    sqlite3_stmt* statement = nullptr;
+    if (sqlite3_prepare_v2(
+            connection.value().native_handle(),
+            "SELECT (SELECT COUNT(*) FROM plan_task WHERE state = ?1), "
+            "(SELECT COUNT(*) FROM verified_receipt);",
+            -1, &statement, nullptr) != SQLITE_OK) {
+        return {-1, -1};
+    }
+    sqlite3_bind_int(
+        statement, 1, static_cast<int>(photobridge::TaskState::kRunning));
+    const std::pair<int, int> counts = sqlite3_step(statement) == SQLITE_ROW
+        ? std::pair{sqlite3_column_int(statement, 0),
+                    sqlite3_column_int(statement, 1)}
+        : std::pair{-1, -1};
+    sqlite3_finalize(statement);
+    return counts;
+}
+
 int ReadTaskState(const std::filesystem::path& workspace)
 {
     auto connection = photobridge::SqliteConnection::Open(
@@ -166,7 +191,8 @@ struct CrashScenario {
 void PrepareCrashScenario(
     const std::filesystem::path& executable,
     int index,
-    CrashScenario& result)
+    CrashScenario& result,
+    int file_count = 1)
 {
     const auto base = std::filesystem::temp_directory_path()
         / ("photobridge_process_crash_" + std::to_string(getpid())
@@ -189,6 +215,13 @@ void PrepareCrashScenario(
         source_file.write(block.data(), block.size());
     }
     source_file.close();
+    for (int file_index = 1; file_index < file_count; ++file_index) {
+        std::ofstream extra(
+            scenario.source / ("photo-" + std::to_string(file_index) + ".jpg"),
+            std::ios::binary);
+        ASSERT_TRUE(extra);
+        extra << std::string(64 * 1024, 'a');
+    }
 
     ASSERT_EQ(
         RunPhotobridge(
@@ -549,5 +582,60 @@ TEST(ProcessCrashE2ETest, SigkillResumeVerifyCoversAllCommitWindows)
         EXPECT_FALSE(std::filesystem::exists(scenario.target / "photo.jpg"));
         std::error_code error;
         std::filesystem::remove_all(scenario.root, error);
+    }
+}
+
+TEST(ProcessCrashE2ETest, MultipleWorkersRecoverReceiptsAndPartialTemps)
+{
+    const auto self = std::filesystem::read_symlink("/proc/self/exe");
+    const auto executable = self.parent_path() / "photobridge";
+    ASSERT_TRUE(std::filesystem::is_regular_file(executable));
+
+    for (int phase = 0; phase < 2; ++phase) {
+        CrashScenario scenario{};
+        PrepareCrashScenario(executable, 70 + phase, scenario, 12);
+        ASSERT_FALSE(scenario.plan.empty());
+        const char* pause_variable = phase == 0
+            ? "PHOTOBRIDGE_TEST_PAUSE_AFTER_RECEIPT_MS"
+            : "PHOTOBRIDGE_TEST_PAUSE_AFTER_FIRST_COPY_WRITE_MS";
+        ASSERT_EQ(::setenv(pause_variable, "30000", 1), 0);
+        const pid_t child = StartPhotobridge(
+            executable,
+            {"migrate", "--workspace", scenario.workspace.string(),
+             "--plan", scenario.plan.string(), "--workers", "4"});
+        ASSERT_NE(child, -1);
+        const bool reached_crash_window = WaitUntil([&] {
+            const auto [running, receipts] =
+                RunningAndReceiptCounts(scenario.workspace);
+            if (phase == 0) {
+                return running >= 5 && receipts >= 1 && receipts < running;
+            }
+            return running >= 4 && receipts == 0
+                && !FindTemp(scenario.target).empty();
+        }, std::chrono::seconds(10));
+        KillAndReap(child);
+        ::unsetenv(pause_variable);
+        ASSERT_TRUE(reached_crash_window);
+
+        EXPECT_EQ(
+            RunPhotobridge(
+                executable,
+                {"resume", "--workspace", scenario.workspace.string(),
+                 "--plan", scenario.plan.string()}),
+            6);
+        EXPECT_EQ(RunningAndReceiptCounts(scenario.workspace).first, 0);
+        ASSERT_EQ(
+            RunPhotobridge(
+                executable,
+                {"migrate", "--workspace", scenario.workspace.string(),
+                 "--plan", scenario.plan.string(), "--workers", "4"}),
+            0);
+        FinishWithResumeAndVerify(
+            executable, scenario,
+            phase == 0 ? "multiple receipts and queued tasks"
+                       : "multiple partial temporary files");
+        std::error_code error;
+        std::filesystem::remove_all(scenario.root, error);
+        EXPECT_FALSE(error);
     }
 }
