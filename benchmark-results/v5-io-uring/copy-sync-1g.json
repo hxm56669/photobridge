@@ -1,0 +1,140 @@
+{
+  "copy_bytes": 1073741824,
+  "copy_uring_qd": 4,
+  "data_root": "/tmp/photobridge_bench_data",
+  "e2e_file_bytes": 65536,
+  "e2e_files": 4,
+  "e2e_workers": 4,
+  "repetitions": 5,
+  "scanner_files": 100000,
+  "schema_version": 1,
+  "sqlite_commands": 5000,
+  "workloads": [
+    {
+      "configured_bytes": 1073741824,
+      "configured_items": 0,
+      "name": "copy_hash_fdatasync",
+      "samples": [
+        {
+          "bytes": 1073741824,
+          "cpu_ms": 5392.4450000000015,
+          "cpu_utilization_percent": 99.87028359675931,
+          "io": {
+            "rchar_bytes": 1073741939,
+            "read_bytes": 8192,
+            "read_syscalls": 1027,
+            "wchar_bytes": 1073741824,
+            "write_bytes": 1073741824,
+            "write_syscalls": 1024
+          },
+          "items": 1,
+          "max_rss_kib": 6136,
+          "rss_delta_kib": 0,
+          "wall_ms": 5399.448971
+        },
+        {
+          "bytes": 1073741824,
+          "cpu_ms": 4041.473000000002,
+          "cpu_utilization_percent": 99.74440706858736,
+          "io": {
+            "rchar_bytes": 1073741950,
+            "read_bytes": 12288,
+            "read_syscalls": 1027,
+            "wchar_bytes": 1073741824,
+            "write_bytes": 1073741824,
+            "write_syscalls": 1024
+          },
+          "items": 1,
+          "max_rss_kib": 6136,
+          "rss_delta_kib": 0,
+          "wall_ms": 4051.829189
+        },
+        {
+          "bytes": 1073741824,
+          "cpu_ms": 3802.3199999999965,
+          "cpu_utilization_percent": 99.7631479527212,
+          "io": {
+            "rchar_bytes": 1073741951,
+            "read_bytes": 0,
+            "read_syscalls": 1027,
+            "wchar_bytes": 1073741824,
+            "write_bytes": 1073741824,
+            "write_syscalls": 1024
+          },
+          "items": 1,
+          "max_rss_kib": 6136,
+          "rss_delta_kib": 0,
+          "wall_ms": 3811.347254
+        },
+        {
+          "bytes": 1073741824,
+          "cpu_ms": 3826.2490000000007,
+          "cpu_utilization_percent": 99.72866685174021,
+          "io": {
+            "rchar_bytes": 1073741951,
+            "read_bytes": 4096,
+            "read_syscalls": 1027,
+            "wchar_bytes": 1073741824,
+            "write_bytes": 1073741824,
+            "write_syscalls": 1024
+          },
+          "items": 1,
+          "max_rss_kib": 6136,
+          "rss_delta_kib": 0,
+          "wall_ms": 3836.659128
+        },
+        {
+          "bytes": 1073741824,
+          "cpu_ms": 3768.02,
+          "cpu_utilization_percent": 99.77679163106562,
+          "io": {
+            "rchar_bytes": 1073741951,
+            "read_bytes": 4096,
+            "read_syscalls": 1027,
+            "wchar_bytes": 1073741824,
+            "write_bytes": 1073741824,
+            "write_syscalls": 1024
+          },
+          "items": 1,
+          "max_rss_kib": 6136,
+          "rss_delta_kib": 0,
+          "wall_ms": 3776.449351
+        }
+      ],
+      "summary": {
+        "cpu_ms": {
+          "mean": 4166.1014000000005,
+          "p95": 5392.4450000000015,
+          "p99": 5392.4450000000015
+        },
+        "cpu_utilization_percent": {
+          "mean": 99.77665942017475,
+          "p95": 99.87028359675931,
+          "p99": 99.87028359675931
+        },
+        "peak_rss_kib": 6136,
+        "throughput_per_second": {
+          "max": 284325757.92805856,
+          "mean": 261955002.5768767,
+          "median": 279863753.37955225,
+          "min": 198861370.81153646,
+          "p95": 284325757.92805856,
+          "p99": 284325757.92805856
+        },
+        "total_kernel_read_bytes": 28672,
+        "total_kernel_write_bytes": 5368709120,
+        "total_read_syscalls": 5135,
+        "total_write_syscalls": 5120,
+        "wall_ms": {
+          "max": 5399.448971,
+          "mean": 4175.1467786,
+          "median": 3836.659128,
+          "min": 3776.449351,
+          "p95": 5399.448971,
+          "p99": 5399.448971
+        }
+      },
+      "unit": "bytes/s"
+    }
+  ]
+}
