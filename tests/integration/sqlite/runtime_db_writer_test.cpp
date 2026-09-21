@@ -1,10 +1,12 @@
 #include <atomic>
+#include <chrono>
 #include <filesystem>
 #include <string>
 #include <thread>
 #include <vector>
 
 #include <sqlite3.h>
+#include <unistd.h>
 #include <gtest/gtest.h>
 
 #include "photobridge/app/runtime_db_writer.h"
@@ -30,8 +32,8 @@ protected:
     {
         static std::atomic<int> sequence{0};
         path_ = std::filesystem::temp_directory_path()
-            / ("photobridge_runtime_writer_"
-               + std::to_string(++sequence) + ".db");
+            / ("photobridge_runtime_writer_" + std::to_string(::getpid())
+               + "_" + std::to_string(++sequence) + ".db");
         std::error_code error;
         std::filesystem::remove(path_, error);
         auto opened = SqliteConnection::Open(path_);
@@ -200,6 +202,52 @@ TEST_F(RuntimeDbWriterTest, ReceiptAndRetryUseTheWriterConnection)
     ASSERT_TRUE(runtime.ok());
     EXPECT_EQ(runtime.value().state, TaskState::kRetryable);
     writer.Stop();
+}
+
+TEST_F(RuntimeDbWriterTest, StopDrainsAcceptedCommandsAndWakesAllCallers)
+{
+    PrepareTasks(64);
+    auto opened = RuntimeDbWriter::Start(path_);
+    ASSERT_TRUE(opened.ok()) << opened.status().message();
+    auto& writer = *opened.value();
+    constexpr int kCallers = 16;
+    std::atomic<int> entered{0};
+    std::atomic<bool> start{false};
+    std::atomic<int> claimed{0};
+    std::atomic<int> stopped{0};
+    std::atomic<int> unexpected{0};
+    std::vector<std::thread> threads;
+    for (int index = 0; index < kCallers; ++index) {
+        threads.emplace_back([&] {
+            ++entered;
+            while (!start.load()) std::this_thread::yield();
+            auto result = writer.ClaimNextReady("plan-1", {1});
+            if (result.ok()) {
+                ++claimed;
+            } else if (result.status().code() == StatusCode::kInternal
+                       && result.status().message() == "runtime DB writer is stopped") {
+                ++stopped;
+            } else {
+                ++unexpected;
+            }
+        });
+    }
+    while (entered.load() != kCallers) std::this_thread::yield();
+    start = true;
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    writer.Stop();
+    for (auto& thread : threads) thread.join();
+    EXPECT_EQ(unexpected.load(), 0);
+    EXPECT_EQ(claimed.load() + stopped.load(), kCallers);
+
+    TaskRuntimeRepository reader(connection_);
+    int persisted = 0;
+    for (int index = 0; index < 64; ++index) {
+        auto runtime = reader.ReadRuntime("plan-1", MakeTask(index).id);
+        ASSERT_TRUE(runtime.ok());
+        if (runtime.value().state == TaskState::kRunning) ++persisted;
+    }
+    EXPECT_EQ(persisted, claimed.load());
 }
 
 }  // namespace

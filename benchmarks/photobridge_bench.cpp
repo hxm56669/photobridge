@@ -48,6 +48,7 @@ struct Options {
         std::filesystem::temp_directory_path() / "photobridge_bench_data";
     std::filesystem::path output;
     std::size_t repetitions = 5;
+    std::size_t warmup_repetitions = 0;
     std::size_t scanner_files = 100'000;
     std::size_t copy_bytes = 64U * 1024U * 1024U;
     std::size_t copy_uring_qd = 4;
@@ -89,6 +90,8 @@ struct WorkloadResult {
     std::uint64_t configured_items = 0;
     std::uint64_t configured_bytes = 0;
     std::vector<Sample> samples;
+    std::optional<std::size_t> e2e_workers;
+    std::optional<std::string> implementation;
 };
 
 struct RunValues {
@@ -142,6 +145,26 @@ std::uint64_t ParseUnsigned(std::string_view raw, std::string_view option)
     return value;
 }
 
+std::uint64_t ParseNonNegative(std::string_view raw, std::string_view option)
+{
+    if (raw.empty()) {
+        Fail(std::string(option) + " requires a non-negative integer");
+    }
+    std::uint64_t value = 0;
+    for (const char character : raw) {
+        if (character < '0' || character > '9') {
+            Fail(std::string(option) + " requires a non-negative integer");
+        }
+        const std::uint64_t digit =
+            static_cast<std::uint64_t>(character - '0');
+        if (value > (std::numeric_limits<std::uint64_t>::max() - digit) / 10) {
+            Fail(std::string(option) + " is too large");
+        }
+        value = value * 10 + digit;
+    }
+    return value;
+}
+
 Options ParseOptions(int argc, char** argv)
 {
     Options options;
@@ -157,10 +180,11 @@ Options ParseOptions(int argc, char** argv)
         if (argument == "--help" || argument == "-h") {
             std::cout
                 << "Usage: photobridge_bench [options]\n"
-                << "  --workload all|scanner|copy|copy-sync|copy-uring|copy-uring-qd{1,2,4,8,16}|copy-compare|sqlite|sqlite-v1|sqlite-v2|sqlite-prepared|sqlite-batch-{10,100,1000,5000}|sqlite-compare|e2e|e2e-large\n"
+                << "  --workload all|scanner|copy|copy-sync|copy-uring|copy-uring-qd{1,2,4,8,16}|copy-compare|sqlite|sqlite-v1|sqlite-v2|sqlite-prepared|sqlite-batch-{10,100,1000,5000}|sqlite-compare|e2e|e2e-large|e2e-v6a|e2e-v6a-matrix\n"
                 << "  --data-root PATH       benchmark-owned data directory\n"
                 << "  --output PATH          write JSON report\n"
                 << "  --repetitions N        measured samples (default 5)\n"
+                << "  --warmup-repetitions N unmeasured E2E samples (default 0)\n"
                 << "  --scanner-files N      files per scan (default 100000)\n"
                 << "  --copy-bytes N         payload bytes (default 67108864)\n"
                 << "  --copy-uring-qd N      io_uring queue depth, 1-16 (default 4)\n"
@@ -182,6 +206,9 @@ Options ParseOptions(int argc, char** argv)
         } else if (argument == "--repetitions") {
             options.repetitions = static_cast<std::size_t>(
                 ParseUnsigned(value_for(argument), argument));
+        } else if (argument == "--warmup-repetitions") {
+            options.warmup_repetitions = static_cast<std::size_t>(
+                ParseNonNegative(value_for(argument), argument));
         } else if (argument == "--scanner-files") {
             options.scanner_files = static_cast<std::size_t>(
                 ParseUnsigned(value_for(argument), argument));
@@ -228,7 +255,9 @@ Options ParseOptions(int argc, char** argv)
         && options.workload != "sqlite-batch-1000"
         && options.workload != "sqlite-batch-5000"
         && options.workload != "sqlite-compare"
-        && options.workload != "e2e" && options.workload != "e2e-large") {
+        && options.workload != "e2e" && options.workload != "e2e-large"
+        && options.workload != "e2e-v6a"
+        && options.workload != "e2e-v6a-matrix") {
         Fail("unknown workload; see --help for supported workloads");
     }
     return options;
@@ -400,6 +429,8 @@ WorkloadResult RunScanner(
         options.scanner_files,
         0,
         {},
+        {},
+        {},
     };
     photobridge::LinuxFileOps file_ops;
 
@@ -472,6 +503,8 @@ WorkloadResult RunCopy(
         "bytes/s",
         0,
         options.copy_bytes,
+        {},
+        {},
         {},
     };
     const auto source_path = fixture_root / "copy-source.bin";
@@ -559,6 +592,8 @@ WorkloadResult RunSqlite(
         "commands/s",
         options.sqlite_commands,
         0,
+        {},
+        {},
         {},
     };
 
@@ -710,7 +745,11 @@ void CreateE2eFixture(
 
 WorkloadResult RunE2e(
     const Options& options,
-    const std::filesystem::path& run_root)
+    const std::filesystem::path& run_root,
+    std::size_t workers,
+    std::string report_name = {},
+    bool report_bytes_per_second = false,
+    std::string implementation = {})
 {
     if (options.e2e_files > std::numeric_limits<std::size_t>::max()
             / options.e2e_file_bytes) {
@@ -719,31 +758,47 @@ WorkloadResult RunE2e(
     const std::size_t total_bytes =
         options.e2e_files * options.e2e_file_bytes;
     const auto source_root = run_root / "e2e-source";
-    CreateE2eFixture(
-        source_root,
-        options.e2e_files,
-        options.e2e_file_bytes);
+    if (!std::filesystem::exists(source_root)) {
+        CreateE2eFixture(
+            source_root,
+            options.e2e_files,
+            options.e2e_file_bytes);
+    }
 
     WorkloadResult result{
-        options.workload == "e2e-large"
-            ? "e2e_large_local_pipeline"
-            : "e2e_local_pipeline",
-        "pipelines/s",
+        report_name.empty()
+            ? (options.workload == "e2e-large"
+                ? "e2e_large_local_pipeline"
+                : "e2e_local_pipeline")
+            : std::move(report_name),
+        report_bytes_per_second ? "bytes/s" : "pipelines/s",
         1,
         total_bytes,
         {},
+        {},
+        {},
     };
-    for (std::size_t iteration = 0; iteration < options.repetitions;
-         ++iteration) {
+    result.e2e_workers = workers;
+    if (!implementation.empty()) {
+        result.implementation = std::move(implementation);
+    }
+    const std::size_t total_iterations =
+        options.warmup_repetitions + options.repetitions;
+    for (std::size_t iteration = 0; iteration < total_iterations; ++iteration) {
+        const bool warmup = iteration < options.warmup_repetitions;
         const auto workspace = run_root
-            / ("e2e-workspace-" + std::to_string(iteration));
+            / ("e2e-workspace-" + std::to_string(workers) + "w-"
+               + (warmup ? "warmup-" : "sample-")
+               + std::to_string(iteration));
         const auto target = run_root
-            / ("e2e-target-" + std::to_string(iteration));
+            / ("e2e-target-" + std::to_string(workers) + "w-"
+               + (warmup ? "warmup-" : "sample-")
+               + std::to_string(iteration));
         RunCliCommand(
             {"photobridge", "init", "--workspace", workspace.string()},
             "e2e init");
 
-        result.samples.push_back(Measure([&]() {
+        Sample sample = Measure([&]() {
             const std::string scan_output = RunCliCommand(
                 {"photobridge", "scan",
                     "--workspace", workspace.string(),
@@ -763,7 +818,7 @@ WorkloadResult RunE2e(
                 {"photobridge", "migrate",
                     "--workspace", workspace.string(),
                     "--plan", plan_path.string(),
-                    "--workers", std::to_string(options.e2e_workers)},
+                    "--workers", std::to_string(workers)},
                 "e2e migrate");
             RunCliCommand(
                 {"photobridge", "resume",
@@ -780,7 +835,8 @@ WorkloadResult RunE2e(
                 Fail("e2e verify did not report IDENTICAL");
             }
             return RunValues{1, total_bytes};
-        }));
+        });
+        if (!warmup) result.samples.push_back(std::move(sample));
 
         std::error_code error;
         std::filesystem::remove_all(workspace, error);
@@ -876,7 +932,7 @@ Json WorkloadJson(const WorkloadResult& result)
 
     Json samples = Json::array();
     for (const Sample& sample : result.samples) samples.push_back(SampleJson(sample));
-    return Json{
+    Json report = Json{
         {"name", result.name},
         {"unit", result.unit},
         {"configured_items", result.configured_items},
@@ -917,6 +973,13 @@ Json WorkloadJson(const WorkloadResult& result)
             {"total_write_syscalls", total_write_syscalls},
         }},
     };
+    if (result.e2e_workers.has_value()) {
+        report["e2e_workers"] = *result.e2e_workers;
+    }
+    if (result.implementation.has_value()) {
+        report["implementation"] = *result.implementation;
+    }
+    return report;
 }
 
 void PrintHumanReport(const Json& report)
@@ -924,12 +987,20 @@ void PrintHumanReport(const Json& report)
     std::cout << std::fixed << std::setprecision(2);
     std::cout << "PhotoBridge Release benchmark\n"
               << "repetitions=" << report.at("repetitions")
+              << ", warmups=" << report.at("warmup_repetitions")
               << ", data_root=" << report.at("data_root")
               << ", e2e_workers=" << report.at("e2e_workers") << "\n";
     for (const auto& workload : report.at("workloads")) {
         const auto& summary = workload.at("summary");
-        std::cout << "\n[" << workload.at("name") << "]\n"
-                  << "  wall ms: min=" << summary.at("wall_ms").at("min")
+        std::cout << "\n[" << workload.at("name") << "]\n";
+        if (workload.contains("implementation")) {
+            std::cout << "  implementation=" << workload.at("implementation");
+            if (workload.contains("e2e_workers")) {
+                std::cout << ", workers=" << workload.at("e2e_workers");
+            }
+            std::cout << "\n";
+        }
+        std::cout << "  wall ms: min=" << summary.at("wall_ms").at("min")
                   << " mean=" << summary.at("wall_ms").at("mean")
                   << " p95=" << summary.at("wall_ms").at("p95")
                   << " p99=" << summary.at("wall_ms").at("p99")
@@ -960,7 +1031,9 @@ int main(int argc, char** argv)
 {
     try {
         Options options = ParseOptions(argc, argv);
-        if (options.workload == "e2e-large") {
+        if (options.workload == "e2e-large"
+            || options.workload == "e2e-v6a"
+            || options.workload == "e2e-v6a-matrix") {
             options.e2e_files = 64;
             options.e2e_file_bytes = 16U * 1024U * 1024U;
         }
@@ -975,8 +1048,9 @@ int main(int argc, char** argv)
         }
 
         Json report{
-            {"schema_version", 1},
+            {"schema_version", 2},
             {"repetitions", options.repetitions},
+            {"warmup_repetitions", options.warmup_repetitions},
             {"data_root", options.data_root.string()},
             {"scanner_files", options.scanner_files},
             {"copy_bytes", options.copy_bytes},
@@ -1041,7 +1115,30 @@ int main(int argc, char** argv)
         }
         if (options.workload == "e2e" || options.workload == "e2e-large") {
             report["workloads"].push_back(
-                WorkloadJson(RunE2e(options, run_root)));
+                WorkloadJson(RunE2e(
+                    options, run_root, options.e2e_workers)));
+        }
+        if (options.workload == "e2e-v6a") {
+            report["workloads"].push_back(WorkloadJson(RunE2e(
+                options,
+                run_root,
+                options.e2e_workers,
+                "e2e_v6a_dedicated_db_writer_"
+                    + std::to_string(options.e2e_workers) + "w",
+                true,
+                "v6a_dedicated_db_writer")));
+        }
+        if (options.workload == "e2e-v6a-matrix") {
+            for (const std::size_t workers : {1U, 2U, 4U, 8U}) {
+                report["workloads"].push_back(WorkloadJson(RunE2e(
+                    options,
+                    run_root,
+                    workers,
+                    "e2e_v6a_dedicated_db_writer_"
+                        + std::to_string(workers) + "w",
+                    true,
+                    "v6a_dedicated_db_writer")));
+            }
         }
 
         if (!options.output.empty()) {
