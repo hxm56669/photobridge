@@ -1,0 +1,15 @@
+=== total fcntl ===
+3478
+
+=== F_SETLK / F_SETLKW ===
+2925
+
+=== lock types ===
+    756 l_type=F_RDLCK
+   1467 l_type=F_UNLCK
+    714 l_type=F_WRLCK
+
+=== blocking F_SETLKW ===
+0
+
+=== failed fcntl ===

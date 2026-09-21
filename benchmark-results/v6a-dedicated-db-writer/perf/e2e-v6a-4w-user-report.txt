@@ -1,0 +1,510 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 22K of event 'cpu-clock:u'
+# Event count (approx.): 5554000000
+#
+# Children      Self  Command          Shared Object         Symbol                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+# ........  ........  ...............  ....................  ..................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+#
+    85.55%    85.55%  photobridge_ben  photobridge_bench     [.] blake3_hash_many_avx2
+            |          
+            |--80.43%--0
+            |          blake3_hash_many_avx2
+            |          
+             --4.99%--0x4
+                       blake3_hash_many_avx2
+
+    80.63%     0.00%  photobridge_ben  [unknown]             [.] 0000000000000000
+            |
+            ---0
+               |          
+                --80.43%--blake3_hash_many_avx2
+
+    11.61%    11.61%  photobridge_ben  photobridge_bench     [.] (anonymous namespace)::WriteDeterministicFile
+            |          
+            |--0.83%--0x6564636261605f5e
+            |          (anonymous namespace)::WriteDeterministicFile
+            |          
+            |--0.79%--0xcbcac9c8c7c6c5c4
+            |          (anonymous namespace)::WriteDeterministicFile
+            |          
+            |--0.78%--0xd3d2d1d0cfcecdcc
+            |          (anonymous namespace)::WriteDeterministicFile
+            |          
+            |--0.76%--0xc3c2c1c0bfbebdbc
+            |          (anonymous namespace)::WriteDeterministicFile
+            |          
+            |--0.75%--0x5d5c5b5a59585756
+            |          (anonymous namespace)::WriteDeterministicFile
+            |          
+            |--0.75%--0x706050403020100
+            |          (anonymous namespace)::WriteDeterministicFile
+            |          
+            |--0.74%--0x9c9b9a9998979695
+            |          (anonymous namespace)::WriteDeterministicFile
+            |          
+            |--0.74%--0x363534333231302f
+            |          (anonymous namespace)::WriteDeterministicFile
+            |          
+            |--0.73%--0x3e3d3c3b3a393837
+            |          (anonymous namespace)::WriteDeterministicFile
+            |          
+            |--0.72%--0x94939291908f8e8d
+            |          (anonymous namespace)::WriteDeterministicFile
+            |          
+            |--0.72%--0xfaf9f8f7f6f5f4f3
+            |          (anonymous namespace)::WriteDeterministicFile
+            |          
+            |--0.69%--0x6d6c6b6a69686766
+            |          (anonymous namespace)::WriteDeterministicFile
+            |          
+            |--0.68%--0x2e2d2c2b2a292827
+            |          (anonymous namespace)::WriteDeterministicFile
+            |          
+            |--0.67%--0xf2f1f0efeeedeceb
+            |          (anonymous namespace)::WriteDeterministicFile
+            |          
+            |--0.67%--0xa4a3a2a1a09f9e9d
+            |          (anonymous namespace)::WriteDeterministicFile
+            |          
+             --0.58%--0xf0e0d0c0b0a0908
+                       (anonymous namespace)::WriteDeterministicFile
+
+     4.99%     0.00%  photobridge_ben  [unknown]             [.] 0x0000000000000004
+            |
+            ---0x4
+               blake3_hash_many_avx2
+
+     0.83%     0.00%  photobridge_ben  [unknown]             [.] 0x6564636261605f5e
+            |
+            ---0x6564636261605f5e
+               (anonymous namespace)::WriteDeterministicFile
+
+     0.79%     0.79%  photobridge_ben  libc.so.6             [.] 0x00000000001a110a
+            |          
+             --0.56%--0x7f5fd3e1910a
+
+     0.79%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f5fd3e1910a
+            |
+            ---0x7f5fd3e1910a
+
+     0.79%     0.00%  photobridge_ben  [unknown]             [.] 0xcbcac9c8c7c6c5c4
+            |
+            ---0xcbcac9c8c7c6c5c4
+               (anonymous namespace)::WriteDeterministicFile
+
+     0.78%     0.00%  photobridge_ben  [unknown]             [.] 0xd3d2d1d0cfcecdcc
+            |
+            ---0xd3d2d1d0cfcecdcc
+               (anonymous namespace)::WriteDeterministicFile
+
+     0.76%     0.00%  photobridge_ben  [unknown]             [.] 0xc3c2c1c0bfbebdbc
+            |
+            ---0xc3c2c1c0bfbebdbc
+               (anonymous namespace)::WriteDeterministicFile
+
+     0.75%     0.00%  photobridge_ben  [unknown]             [.] 0x5d5c5b5a59585756
+            |
+            ---0x5d5c5b5a59585756
+               (anonymous namespace)::WriteDeterministicFile
+
+     0.75%     0.00%  photobridge_ben  [unknown]             [.] 0x0706050403020100
+            |
+            ---0x706050403020100
+               (anonymous namespace)::WriteDeterministicFile
+
+     0.74%     0.00%  photobridge_ben  [unknown]             [.] 0x9c9b9a9998979695
+            |
+            ---0x9c9b9a9998979695
+               (anonymous namespace)::WriteDeterministicFile
+
+     0.74%     0.00%  photobridge_ben  [unknown]             [.] 0x363534333231302f
+            |
+            ---0x363534333231302f
+               (anonymous namespace)::WriteDeterministicFile
+
+     0.73%     0.00%  photobridge_ben  [unknown]             [.] 0x3e3d3c3b3a393837
+            |
+            ---0x3e3d3c3b3a393837
+               (anonymous namespace)::WriteDeterministicFile
+
+     0.72%     0.00%  photobridge_ben  [unknown]             [.] 0x94939291908f8e8d
+            |
+            ---0x94939291908f8e8d
+               (anonymous namespace)::WriteDeterministicFile
+
+     0.72%     0.00%  photobridge_ben  [unknown]             [.] 0xfaf9f8f7f6f5f4f3
+            |
+            ---0xfaf9f8f7f6f5f4f3
+               (anonymous namespace)::WriteDeterministicFile
+
+     0.69%     0.00%  photobridge_ben  [unknown]             [.] 0x6d6c6b6a69686766
+            |
+            ---0x6d6c6b6a69686766
+               (anonymous namespace)::WriteDeterministicFile
+
+     0.68%     0.00%  photobridge_ben  [unknown]             [.] 0x2e2d2c2b2a292827
+            |
+            ---0x2e2d2c2b2a292827
+               (anonymous namespace)::WriteDeterministicFile
+
+     0.67%     0.00%  photobridge_ben  [unknown]             [.] 0xa4a3a2a1a09f9e9d
+            |
+            ---0xa4a3a2a1a09f9e9d
+               (anonymous namespace)::WriteDeterministicFile
+
+     0.67%     0.00%  photobridge_ben  [unknown]             [.] 0xf2f1f0efeeedeceb
+            |
+            ---0xf2f1f0efeeedeceb
+               (anonymous namespace)::WriteDeterministicFile
+
+     0.58%     0.00%  photobridge_ben  [unknown]             [.] 0x0f0e0d0c0b0a0908
+            |
+            ---0xf0e0d0c0b0a0908
+               (anonymous namespace)::WriteDeterministicFile
+
+     0.52%     0.52%  photobridge_ben  photobridge_bench     [.] blake3_compress_subtree_wide
+            |          
+             --0.51%--blake3_compress_subtree_wide
+
+     0.18%     0.00%  photobridge_ben  libstdc++.so.6.0.30   [.] 0x00007f5fd3f9d253
+     0.18%     0.00%  photobridge_ben  photobridge_bench     [.] photobridge::pipeline::MigrationService::Execute(photobridge::StatusOr<photobridge::WorkspaceLayout> const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, unsigned long, photobridge::CommandContext&)::{lambda()#1}::operator()
+     0.15%     0.15%  photobridge_ben  photobridge_bench     [.] blake3_hash_many
+     0.12%     0.00%  photobridge_ben  photobridge_bench     [.] photobridge::LinuxFileOps::OpenSource
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xd389485355fc8949
+     0.12%     0.12%  photobridge_ben  photobridge_bench     [.] blake3_simd_degree
+     0.10%     0.00%  photobridge_ben  [unknown]             [.] 0x0000000000000045
+     0.09%     0.00%  photobridge_ben  [unknown]             [.] 0x0000000000000200
+     0.08%     0.00%  photobridge_ben  photobridge_bench     [.] photobridge::pipeline::RecoveryService::Execute
+     0.08%     0.00%  photobridge_ben  [unknown]             [.] 0x000055fa7c54a528
+     0.07%     0.07%  photobridge_ben  photobridge_bench     [.] blake3_hasher_update.part.0
+     0.05%     0.05%  photobridge_ben  libc.so.6             [.] malloc
+     0.05%     0.05%  photobridge_ben  photobridge_bench     [.] sqlite3VdbeExec
+     0.04%     0.04%  photobridge_ben  photobridge_bench     [.] photobridge::TryIoUringCopyAndHash
+     0.04%     0.04%  photobridge_ben  libc.so.6             [.] 0x00000000001a0850
+     0.04%     0.04%  photobridge_ben  photobridge_bench     [.] photobridge::Blake3Hasher::Update
+     0.04%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f5fd3e18850
+     0.04%     0.00%  photobridge_ben  [unknown]             [.] 0x0a02000100010500
+     0.04%     0.00%  photobridge_ben  [unknown]             [.] 0x3465623961396130
+     0.03%     0.00%  photobridge_ben  photobridge_bench     [.] CLI::detail::handle_secondary_array
+     0.03%     0.00%  photobridge_ben  photobridge_bench     [.] photobridge::pipeline::RunVerifyService
+     0.03%     0.03%  photobridge_ben  libc.so.6             [.] read
+     0.03%     0.03%  photobridge_ben  photobridge_bench     [.] photobridge::LinuxFileOps::Read
+     0.03%     0.03%  photobridge_ben  photobridge_bench     [.] _blake3_compress_in_place_sse41
+     0.03%     0.00%  photobridge_ben  [unknown]             [.] 0x900000000000841f
+     0.03%     0.00%  photobridge_ben  photobridge_bench     [.] std::_Sp_counted_ptr_inplace<std::__future_base::_State_baseV2, std::allocator<std::__future_base::_State_baseV2>, (__gnu_cxx::_Lock_policy)2>::~_Sp_counted_ptr_inplace
+     0.03%     0.00%  photobridge_ben  [unknown]             [.] 0x6135633938386133
+     0.03%     0.03%  photobridge_ben  photobridge_bench     [.] photobridge::VerifyBinary
+     0.03%     0.00%  photobridge_ben  [unknown]             [.] 0x0000000100000001
+     0.03%     0.00%  photobridge_ben  [unknown]             [.] 0x00007ffe63f18ce0
+     0.02%     0.02%  photobridge_ben  libc.so.6             [.] cfree
+     0.02%     0.01%  photobridge_ben  photobridge_bench     [.] photobridge::pipeline::(anonymous namespace)::ExecuteClaimedTask
+     0.02%     0.00%  photobridge_ben  [unknown]             [.] 0x3639613035636538
+     0.02%     0.02%  photobridge_ben  libc.so.6             [.] pthread_mutex_unlock
+     0.02%     0.02%  photobridge_ben  photobridge_bench     [.] io_uring_submit
+     0.02%     0.02%  photobridge_ben  photobridge_bench     [.] pcache1Fetch
+     0.02%     0.01%  photobridge_ben  photobridge_bench     [.] photobridge::pipeline::RecoveryService::Execute(photobridge::StatusOr<photobridge::WorkspaceLayout> const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, photobridge::CommandContext&)::{lambda(unsigned long)#1}::operator()
+     0.02%     0.02%  photobridge_ben  photobridge_bench     [.] photobridge::pipeline::VerifyService::Execute
+     0.02%     0.02%  photobridge_ben  photobridge_bench     [.] sqlite3RunParser
+     0.02%     0.02%  photobridge_ben  photobridge_bench     [.] sqlite3BtreeIndexMoveto
+     0.02%     0.00%  photobridge_ben  [unknown]             [.] 0x00007f5fd1381040
+     0.01%     0.01%  photobridge_ben  libc.so.6             [.] syscall
+     0.01%     0.01%  photobridge_ben  libc.so.6             [.] pthread_mutex_lock
+     0.01%     0.01%  photobridge_ben  libc.so.6             [.] 0x00000000000909c7
+     0.01%     0.00%  photobridge_ben  [unknown]             [.] 0x201aba6bed97f21f
+     0.01%     0.00%  photobridge_ben  [unknown]             [.] 0x54a4e513327a2a23
+     0.01%     0.01%  photobridge_ben  libc.so.6             [.] 0x00000000000a1806
+     0.01%     0.01%  photobridge_ben  libc.so.6             [.] 0x00000000001a0947
+     0.01%     0.01%  photobridge_ben  photobridge_bench     [.] sqlite3BtreeTableMoveto
+     0.01%     0.01%  photobridge_ben  photobridge_bench     [.] walChecksumBytes
+     0.01%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f5fd3d089c7
+     0.01%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f5fd3d19806
+     0.01%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f5fd3e18947
+     0.01%     0.00%  photobridge_ben  [unknown]             [.] 0x000055faabbbdc90
+     0.01%     0.00%  photobridge_ben  [unknown]             [.] 0x00007f5fd0f7d040
+     0.01%     0.00%  photobridge_ben  [unknown]             [.] 0x00007f5fd137d040
+     0.01%     0.00%  photobridge_ben  [unknown]             [.] 0x00007f5fd137f040
+     0.01%     0.01%  photobridge_ben  libc.so.6             [.] __madvise
+     0.01%     0.01%  photobridge_ben  libc.so.6             [.] fstatat64
+     0.01%     0.01%  photobridge_ben  libc.so.6             [.] 0x0000000000119ab4
+     0.01%     0.01%  photobridge_ben  libc.so.6             [.] 0x0000000000199e3d
+     0.01%     0.01%  photobridge_ben  photobridge_bench     [.] sqlite3PagerSharedLock
+     0.01%     0.01%  photobridge_ben  libc.so.6             [.] 0x00000000000909db
+     0.01%     0.01%  photobridge_ben  libc.so.6             [.] 0x0000000000199b56
+     0.01%     0.01%  photobridge_ben  photobridge_bench     [.] photobridge::Digest::ToHex[abi:cxx11]
+     0.01%     0.01%  photobridge_ben  photobridge_bench     [.] sqlite3BtreeInsert
+     0.01%     0.01%  photobridge_ben  libc.so.6             [.] 0x00000000000a180c
+     0.01%     0.01%  photobridge_ben  libc.so.6             [.] 0x00000000000a320b
+     0.01%     0.01%  photobridge_ben  libgcc_s.so.1         [.] __popcountdi2
+     0.01%     0.01%  photobridge_ben  libstdc++.so.6.0.30   [.] operator new
+     0.01%     0.01%  photobridge_ben  photobridge_bench     [.] _io_uring_get_cqe
+     0.01%     0.01%  photobridge_ben  photobridge_bench     [.] btreeBeginTrans
+     0.01%     0.01%  photobridge_ben  photobridge_bench     [.] getPageNormal
+     0.01%     0.01%  photobridge_ben  photobridge_bench     [.] photobridge::RuntimeDbWriter::PersistVerifiedReceipt
+     0.01%     0.01%  photobridge_ben  photobridge_bench     [.] photobridge::Status::Ok
+     0.01%     0.01%  photobridge_ben  photobridge_bench     [.] sqlite3GetVdbe.part.0
+     0.01%     0.01%  photobridge_ben  photobridge_bench     [.] sqlite3VdbeDelete
+     0.01%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f5fd3d089db
+     0.01%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f5fd3d1980c
+     0.01%     0.00%  photobridge_ben  [unknown]             [.] 0x07830aae1e8399f2
+     0.01%     0.00%  photobridge_ben  [unknown]             [.] 0x00007f5fd0771040
+     0.01%     0.00%  photobridge_ben  [unknown]             [.] 0x00007f5fd1a7f1d0
+     0.01%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f5fd3d1b20b
+     0.01%     0.00%  photobridge_ben  photobridge_bench     [.] photobridge::pipeline::RecoveryService::Execute(photobridge::StatusOr<photobridge::WorkspaceLayout> const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, photobridge::CommandContext&)::{lambda(unsigned long)#1}::operator()(unsigned long) const::{lambda(std::basic_string_view<char, std::char_traits<char> >)#3}::operator()
+     0.01%     0.00%  photobridge_ben  [unknown]             [.] 0x0000000067706a2e
+     0.01%     0.00%  photobridge_ben  [unknown]             [.] 0x00007f5fcc007aa8
+     0.01%     0.00%  photobridge_ben  [unknown]             [.] 0x18ce0301358d3c4d
+     0.01%     0.00%  photobridge_ben  [unknown]             [.] 0x3665332e65676469
+     0.01%     0.00%  photobridge_ben  [unknown]             [.] 0x4592a4d1c7abe32b
+     0.01%     0.00%  photobridge_ben  photobridge_bench     [.] photobridge::TaskRuntimeRepository::RecoverSucceeded
+     0.01%     0.00%  photobridge_ben  [unknown]             [.] 0xeaa9a31340283600
+     0.01%     0.00%  photobridge_ben  [unknown]             [.] 0x0000000000000053
+     0.01%     0.00%  photobridge_ben  [unknown]             [.] 0x0000000100000000
+     0.01%     0.00%  photobridge_ben  [unknown]             [.] 0x00007ffe63f18310
+     0.01%     0.00%  photobridge_ben  [unknown]             [.] 0x00007ffe63f18560
+     0.01%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f5fd3d91ab4
+     0.01%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f5fd3e11b56
+     0.01%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f5fd3e11e3d
+     0.01%     0.00%  photobridge_ben  photobridge_bench     [.] std::__detail::__variant::__gen_vtable_impl<std::__detail::__variant::_Multi_array<std::__detail::__variant::__deduce_visit_result<void> (*)(photobridge::RuntimeDbWriter::Execute(std::variant<photobridge::RuntimeDbWriter::Claim, photobridge::RuntimeDbWriter::CommitIntent, photobridge::RuntimeDbWriter::TempWritten, photobridge::RuntimeDbWriter::Receipt, photobridge::RuntimeDbWriter::Retryable>&)::{lambda(auto:1&)#1}&&, std::variant<photobridge::RuntimeDbWriter::Claim, photobridge::RuntimeDbWriter::CommitIntent, photobridge::RuntimeDbWriter::TempWritten, photobridge::RuntimeDbWriter::Receipt, photobridge::RuntimeDbWriter::Retryable>&)>, std::integer_sequence<unsigned long, 3ul> >::__visit_invoke
+     0.01%     0.00%  photobridge_ben  [unknown]             [.] 0x0000000000000006
+     0.01%     0.00%  photobridge_ben  [unknown]             [.] 0x000055faabb7c098
+     0.01%     0.00%  photobridge_ben  [unknown]             [.] 0x00007f5fc8000eb0
+     0.01%     0.00%  photobridge_ben  [unknown]             [.] 0x00007f5fc8001b70
+     0.01%     0.00%  photobridge_ben  [unknown]             [.] 0x00007f5fc8001f60
+     0.01%     0.00%  photobridge_ben  [unknown]             [.] 0x00007f5fcc003ae8
+     0.01%     0.00%  photobridge_ben  [unknown]             [.] 0x00007f5fcc008cd8
+     0.01%     0.00%  photobridge_ben  [unknown]             [.] 0xa54ff53a3c6ef372
+     0.01%     0.00%  photobridge_ben  [unknown]             [.] 0x00007f5fd0b77040
+     0.01%     0.00%  photobridge_ben  [unknown]             [.] 0x00007f5fd32822e0
+     0.01%     0.00%  photobridge_ben  [unknown]             [.] 0x16c98ad4ccad6d81
+     0.01%     0.00%  photobridge_ben  [unknown]             [.] 0x365d353c7d5f2785
+     0.01%     0.00%  photobridge_ben  [unknown]             [.] 0x5675897f86ba2b1e
+     0.01%     0.00%  photobridge_ben  [unknown]             [.] 0xcdbf7c28c4dbe0e6
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] photobridge::SqliteConnection::Execute
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_replace
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x0000000000000021
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] nlohmann::json_abi_v3_12_0::detail::output_string_adapter<char, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >::write_character
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] photobridge::CurrentTimeNanoseconds
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x000055faabb8d3e0
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x5554415541f68941
+     0.00%     0.00%  photobridge_ben  libc.so.6             [.] __fstat64
+     0.00%     0.00%  photobridge_ben  libc.so.6             [.] __close
+     0.00%     0.00%  photobridge_ben  libc.so.6             [.] clock_gettime
+     0.00%     0.00%  photobridge_ben  libc.so.6             [.] __libc_pwrite
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] photobridge::RelativePath::bytes
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] photobridge::Status::ok
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] sqlite3ExprCodeGetColumnOfTable
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] sqlite3VdbeHalt
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] std::_Sp_counted_ptr_inplace<std::__future_base::_State_baseV2, std::allocator<std::__future_base::_State_baseV2>, (__gnu_cxx::_Lock_policy)2>::_M_dispose
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] nlohmann::json_abi_v3_12_0::detail::output_string_adapter<char, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >::write_characters
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x0000000000000591
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x00007f5fd3e92d00
+     0.00%     0.00%  photobridge_ben  libc.so.6             [.] 0x00000000000a2754
+     0.00%     0.00%  photobridge_ben  libstdc++.so.6.0.30   [.] operator delete
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] nlohmann::json_abi_v3_12_0::detail::lexer<nlohmann::json_abi_v3_12_0::basic_json<std::map, std::vector, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, bool, long, unsigned long, double, std::allocator, nlohmann::json_abi_v3_12_0::adl_serializer, std::vector<unsigned char, std::allocator<unsigned char> >, void>, nlohmann::json_abi_v3_12_0::detail::iterator_input_adapter<char const*> >::scan_string
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] photobridge::MutationGuard::Open
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] photobridge::UniqueFd::~UniqueFd
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] sqlite3Close
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] sqlite3SrcListDelete
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::operator=
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] walFrames
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] walTryBeginRead
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x000000000000003c
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x000055faabb82ff8
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x000055faabbab510
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x00007f5fcc008ce8
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x00007f5fd3e92d10
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x00007ffe64018f80
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x0b32dfb32bf6a5db
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x3033393030313336
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x3237626461303335
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x5e17f62b39f2ffae
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x6c8b8dc9627d2343
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x799526db8fbd0662
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0xc2e642cba5851f76
+     0.00%     0.00%  photobridge_ben  libc.so.6             [.] pthread_cond_broadcast
+     0.00%     0.00%  photobridge_ben  libc.so.6             [.] 0x0000000000199c2e
+     0.00%     0.00%  photobridge_ben  libc.so.6             [.] 0x000000000019d8c5
+     0.00%     0.00%  photobridge_ben  libc.so.6             [.] 0x00000000001a0857
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] nlohmann::json_abi_v3_12_0::detail::parser<nlohmann::json_abi_v3_12_0::basic_json<std::map, std::vector, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, bool, long, unsigned long, double, std::allocator, nlohmann::json_abi_v3_12_0::adl_serializer, std::vector<unsigned char, std::allocator<unsigned char> >, void>, nlohmann::json_abi_v3_12_0::detail::iterator_input_adapter<char const*> >::sax_parse_internal<nlohmann::json_abi_v3_12_0::detail::json_sax_dom_parser<nlohmann::json_abi_v3_12_0::basic_json<std::map, std::vector, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, bool, long, unsigned long, double, std::allocator, nlohmann::json_abi_v3_12_0::adl_serializer, std::vector<unsigned char, std::allocator<unsigned char> >, void>, nlohmann::json_abi_v3_12_0::detail::iterator_input_adapter<char const*> > >
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] photobridge::(anonymous namespace)::RequiredString
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] photobridge::PhysicalAssetIdFor[abi:cxx11]
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char*>
+     0.00%     0.00%  photobridge_ben  ld-linux-x86-64.so.2  [.] 0x000000000000ab62
+     0.00%     0.00%  photobridge_ben  libc.so.6             [.] __errno_location
+     0.00%     0.00%  photobridge_ben  libc.so.6             [.] __openat_2
+     0.00%     0.00%  photobridge_ben  libc.so.6             [.] unlinkat
+     0.00%     0.00%  photobridge_ben  libc.so.6             [.] 0x00000000000909e7
+     0.00%     0.00%  photobridge_ben  libc.so.6             [.] 0x00000000000a2d73
+     0.00%     0.00%  photobridge_ben  libc.so.6             [.] 0x00000000000a39c9
+     0.00%     0.00%  photobridge_ben  libc.so.6             [.] 0x00000000000a3cbd
+     0.00%     0.00%  photobridge_ben  libc.so.6             [.] 0x00000000000a3da8
+     0.00%     0.00%  photobridge_ben  libc.so.6             [.] 0x00000000000a3ed6
+     0.00%     0.00%  photobridge_ben  libc.so.6             [.] 0x0000000000119a90
+     0.00%     0.00%  photobridge_ben  libc.so.6             [.] 0x000000000019d8a0
+     0.00%     0.00%  photobridge_ben  libstdc++.so.6.0.30   [.] operator delete
+     0.00%     0.00%  photobridge_ben  libstdc++.so.6.0.30   [.] std::__atomic_futex_unsigned_base::_M_futex_notify_all
+     0.00%     0.00%  photobridge_ben  libstdc++.so.6.0.30   [.] std::basic_ios<char, std::char_traits<char> >::_M_cache_locale
+     0.00%     0.00%  photobridge_ben  libstdc++.so.6.0.30   [.] std::condition_variable::notify_all
+     0.00%     0.00%  photobridge_ben  libstdc++.so.6.0.30   [.] 0x000000000009ecb0
+     0.00%     0.00%  photobridge_ben  libstdc++.so.6.0.30   [.] 0x000000000009f2e0
+     0.00%     0.00%  photobridge_ben  libstdc++.so.6.0.30   [.] 0x00000000000a0cf0
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] blake3_hasher_update
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] btreeParseCellPtr
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] btreeParseCellPtrIndex
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] dbReallocFinish
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] findElementWithHash.constprop.0
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] keywordCode.constprop.0
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] lengthFunc
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] moveToLeftmost
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] photobridge::(anonymous namespace)::TimespecToNanoseconds
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] photobridge::LinuxFileOps::StatFd
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] pthreadMutexEnter
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] sqlite3MemSize
+     0.00%     0.00%  photobridge_ben  libstdc++.so.6.0.30   [.] 0x00000000000dbf60
+     0.00%     0.00%  photobridge_ben  libstdc++.so.6.0.30   [.] 0x000000000012e931
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] blake3_compress_in_place
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] nlohmann::json_abi_v3_12_0::basic_json<std::map, std::vector, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, bool, long, unsigned long, double, std::allocator, nlohmann::json_abi_v3_12_0::adl_serializer, std::vector<unsigned char, std::allocator<unsigned char> >, void>::json_value::destroy
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] nlohmann::json_abi_v3_12_0::detail::serializer<nlohmann::json_abi_v3_12_0::basic_json<std::map, std::vector, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, bool, long, unsigned long, double, std::allocator, nlohmann::json_abi_v3_12_0::adl_serializer, std::vector<unsigned char, std::allocator<unsigned char> >, void> >::dump_escaped
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] pcache1FetchStage2
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] pcacheSortDirtyList
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] photobridge::(anonymous namespace)::Base64Decode
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] photobridge::(anonymous namespace)::BindEpoch
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] photobridge::(anonymous namespace)::CheckIds
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] photobridge::Blake3Hasher::Finalize
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] photobridge::RuntimeDbWriter::MarkTempWritten
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] sqlite3Insert
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] sqlite3VdbeRecordCompareWithSkip
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] photobridge::StatusFromErrno
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] sqlite3FinishCoding
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] sqlite3GetToken
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] sqlite3ParseObjectReset
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] sqlite3VdbeSerialGet
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] sqlite3WhereCodeOneLoopStart
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] sqlite3_changes
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char const*>
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] sqlite3BtreeCursor
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] sqlite3VdbeFreeCursorNN
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] sqlite3VdbeMemSetText
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::push_back
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] std::vector<std::byte, std::allocator<std::byte> >::_M_default_append
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] unixShmBarrier
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] walIndexAppend
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] vdbeMemClear
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] walWriteToLog
+     0.00%     0.00%  photobridge_ben  ld-linux-x86-64.so.2  [.] 0x00007f5fd4101b62
+     0.00%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f5fd3d089e7
+     0.00%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f5fd3d1a754
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x00007f5fd412e040
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x2d0203258c935448
+     0.00%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f5fd3d1ad73
+     0.00%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f5fd3d1b9c9
+     0.00%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f5fd3d1bcbd
+     0.00%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f5fd3d1bda8
+     0.00%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f5fd3d1bed6
+     0.00%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f5fd3d91a90
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] unixShmLock
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0xd3d2d1d0cfcecdcc
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0xf8cc500c5e07e0b2
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x000000000000000c
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x0000000000000031
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x0000000000000061
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x0000000c00000001
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x000055fa00000000
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x000055faabb785d0
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x000055faabb79210
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x000055faabb84678
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x000055faabb91e08
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x000055faabb9d9f8
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x000055faabba4bc2
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x000055faabba57b8
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x000055faabbaab90
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x000055faabbab100
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x000055faabbb7260
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x000055faabbb74d8
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x00007ffe63f18e18
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x00007ffe64019e48
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x0000818000000000
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x003436625f687461
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x0074736566696e61
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x050a13a2d8ae155b
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x0937820901081781
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x1000000100000026
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x100000550067706a
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x1e2a88cee0a4f678
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x2339849fe0b12d71
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x2409000001081781
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x296a9a2aa5fadead
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x3e11f589010a2157
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x4145504143534544
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x41546d51227d9fbe
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x564ed05c367f03bb
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x58491d977c74d75b
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x58fe1794a214b6b9
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x6165726300656d69
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x6254e8f9a2c76b5f
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x6566696e616d2820
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x66eba64c3be57272
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x6947421a2e4fcb50
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x6f725f656372756f
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x79bedf7763fbab61
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x8013e70f8cbc81ce
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x8b514bba214e3bd4
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0xa000007ffe64019f
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0xb63e562b7f91677f
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0xbe22700df2137c15
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0xc4f328065430a3b4
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0xce94e50459e136f0
+     0.00%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f5fd3e11c2e
+     0.00%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f5fd3e158a0
+     0.00%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f5fd3e158c5
+     0.00%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f5fd3e18857
+     0.00%     0.00%  photobridge_ben  libstdc++.so.6.0.30   [.] virtual thunk to std::__cxx11::basic_ostringstream<char, std::char_traits<char>, std::allocator<char> >::~basic_ostringstream()
+     0.00%     0.00%  photobridge_ben  libstdc++.so.6.0.30   [.] std::ostream::_M_insert<unsigned long>
+     0.00%     0.00%  photobridge_ben  libstdc++.so.6.0.30   [.] 0x00007f5fd3f5fcb0
+     0.00%     0.00%  photobridge_ben  libstdc++.so.6.0.30   [.] 0x00007f5fd3f602e0
+     0.00%     0.00%  photobridge_ben  libstdc++.so.6.0.30   [.] 0x00007f5fd3f61cf0
+     0.00%     0.00%  photobridge_ben  libstdc++.so.6.0.30   [.] 0x00007f5fd3f9cf60
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x48e8580348fb8948
+     0.00%     0.00%  photobridge_ben  libstdc++.so.6.0.30   [.] 0x00007f5fd3fef931
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] std::__detail::__variant::__gen_vtable_impl<std::__detail::__variant::_Multi_array<std::__detail::__variant::__deduce_visit_result<void> (*)(photobridge::RuntimeDbWriter::Execute(std::variant<photobridge::RuntimeDbWriter::Claim, photobridge::RuntimeDbWriter::CommitIntent, photobridge::RuntimeDbWriter::TempWritten, photobridge::RuntimeDbWriter::Receipt, photobridge::RuntimeDbWriter::Retryable>&)::{lambda(auto:1&)#1}&&, std::variant<photobridge::RuntimeDbWriter::Claim, photobridge::RuntimeDbWriter::CommitIntent, photobridge::RuntimeDbWriter::TempWritten, photobridge::RuntimeDbWriter::Receipt, photobridge::RuntimeDbWriter::Retryable>&)>, std::integer_sequence<unsigned long, 2ul> >::__visit_invoke
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] photobridge::TaskRuntimeRepository::ClaimNextReady
+     0.00%     0.00%  photobridge_ben  photobridge_bench     [.] photobridge::TaskRuntimeRepository::MarkTempWritten
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x65d7130d114bbafb
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0xdad47e43f7a5eb98
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x000055faabbec1b8
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x000000000000ef0f
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x000055faabba4318
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x00007f5fcc0102b8
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x00007f5fd3b83e48
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x000055faabbb98e8
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x000055faabbe1bf8
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x000055faabbe5438
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x00007f5fbc001030
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x283fa159ea895212
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x00007f5fc0000eb0
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x00007f5fc4001528
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x00007f5fc80015f0
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x00007f5fcc011778
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x00007f5fd3b84200
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x10000001000000b8
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x1246ae89df471d84
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x1c0ab30a4a0b6205
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x3b4554414944454d
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x3d00280d1b0e0d0f
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x410ed60e6b0fda07
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x496ffda984106c30
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x6266393263393536
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x6432622d6e616c70
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x6c71732000000000
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x70ee499c9d404810
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x746e657600000000
+     0.00%     0.00%  photobridge_ben  [unknown]             [.] 0x97d04a235a5c1e04
+
+
+#
+# (Cannot load tips.txt file, please install perf!)
+#

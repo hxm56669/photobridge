@@ -1,0 +1,20 @@
+# started on Mon Sep 21 03:50:45 2026
+
+
+ Performance counter stats for './build/bench-release/photobridge_bench --workload e2e-v6a --repetitions 3 --e2e-workers 4 --output benchmark-results/v6a-dedicated-db-writer/perf/e2e-v6a-4w.json':
+
+         50,878.13 msec task-clock                #    1.597 CPUs utilized          
+            18,602      context-switches          #  365.619 /sec                   
+             1,301      cpu-migrations            #   25.571 /sec                   
+           194,750      page-faults               #    3.828 K/sec                  
+   <not supported>      cycles                                                      
+   <not supported>      instructions                                                
+   <not supported>      branches                                                    
+   <not supported>      branch-misses                                               
+
+      31.856556555 seconds time elapsed
+
+      22.319631000 seconds user
+      28.685400000 seconds sys
+
+

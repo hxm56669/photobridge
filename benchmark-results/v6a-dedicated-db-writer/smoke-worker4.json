@@ -1,0 +1,75 @@
+{
+  "copy_bytes": 67108864,
+  "copy_uring_qd": 4,
+  "data_root": "/tmp/photobridge_bench_data",
+  "e2e_file_bytes": 16777216,
+  "e2e_files": 64,
+  "e2e_workers": 4,
+  "repetitions": 1,
+  "scanner_files": 100000,
+  "schema_version": 2,
+  "sqlite_commands": 5000,
+  "warmup_repetitions": 0,
+  "workloads": [
+    {
+      "configured_bytes": 1073741824,
+      "configured_items": 1,
+      "e2e_workers": 4,
+      "implementation": "v6a_dedicated_db_writer",
+      "name": "e2e_v6a_dedicated_db_writer_4w",
+      "samples": [
+        {
+          "bytes": 1073741824,
+          "cpu_ms": 20630.369,
+          "cpu_utilization_percent": 187.141313389408,
+          "io": {
+            "rchar_bytes": 5370105169,
+            "read_bytes": 244318208,
+            "read_syscalls": 5785,
+            "wchar_bytes": 9371131,
+            "write_bytes": 1084624896,
+            "write_syscalls": 4410
+          },
+          "items": 1,
+          "max_rss_kib": 29104,
+          "rss_delta_kib": 21588,
+          "wall_ms": 11023.952235
+        }
+      ],
+      "summary": {
+        "cpu_ms": {
+          "mean": 20630.369,
+          "p95": 20630.369,
+          "p99": 20630.369
+        },
+        "cpu_utilization_percent": {
+          "mean": 187.141313389408,
+          "p95": 187.141313389408,
+          "p99": 187.141313389408
+        },
+        "peak_rss_kib": 29104,
+        "throughput_per_second": {
+          "max": 97400805.18409465,
+          "mean": 97400805.18409465,
+          "median": 97400805.18409465,
+          "min": 97400805.18409465,
+          "p95": 97400805.18409465,
+          "p99": 97400805.18409465
+        },
+        "total_kernel_read_bytes": 244318208,
+        "total_kernel_write_bytes": 1084624896,
+        "total_read_syscalls": 5785,
+        "total_write_syscalls": 4410,
+        "wall_ms": {
+          "max": 11023.952235,
+          "mean": 11023.952235,
+          "median": 11023.952235,
+          "min": 11023.952235,
+          "p95": 11023.952235,
+          "p99": 11023.952235
+        }
+      },
+      "unit": "bytes/s"
+    }
+  ]
+}
