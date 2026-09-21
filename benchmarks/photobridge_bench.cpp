@@ -3,6 +3,7 @@
 #include <unistd.h>
 
 #include <algorithm>
+#include <atomic>
 #include <array>
 #include <cerrno>
 #include <chrono>
@@ -17,6 +18,7 @@
 #include <iostream>
 #include <limits>
 #include <map>
+#include <mutex>
 #include <nlohmann/json.hpp>
 #include <sqlite3.h>
 #include <optional>
@@ -24,9 +26,11 @@
 #include <stdexcept>
 #include <string>
 #include <string_view>
+#include <thread>
 #include <vector>
 
 #include "photobridge/app/manifest_builder.h"
+#include "photobridge/app/runtime_db_writer.h"
 #include "photobridge/app/sqlite_schema.h"
 #include "photobridge/app/sqlite_statement.h"
 #include "photobridge/cli/cli_app.h"
@@ -53,9 +57,13 @@ struct Options {
     std::size_t copy_bytes = 64U * 1024U * 1024U;
     std::size_t copy_uring_qd = 4;
     std::size_t sqlite_commands = 5'000;
+    std::size_t runtime_commands = 1'000;
+    std::size_t runtime_workers = 8;
+    std::size_t runtime_db_batch_size = 8;
     std::size_t e2e_files = 4;
     std::size_t e2e_file_bytes = 64U * 1024U;
     std::size_t e2e_workers = 4;
+    std::size_t e2e_db_batch_size = 8;
     bool keep_data = false;
 };
 
@@ -82,6 +90,7 @@ struct Sample {
     IoCounters io;
     std::uint64_t items = 0;
     std::uint64_t bytes = 0;
+    photobridge::RuntimeDbWriterStats db_writer;
 };
 
 struct WorkloadResult {
@@ -91,7 +100,9 @@ struct WorkloadResult {
     std::uint64_t configured_bytes = 0;
     std::vector<Sample> samples;
     std::optional<std::size_t> e2e_workers;
+    std::optional<std::size_t> db_batch_size;
     std::optional<std::string> implementation;
+    std::vector<double> ack_latency_ms;
 };
 
 struct RunValues {
@@ -180,18 +191,22 @@ Options ParseOptions(int argc, char** argv)
         if (argument == "--help" || argument == "-h") {
             std::cout
                 << "Usage: photobridge_bench [options]\n"
-                << "  --workload all|scanner|copy|copy-sync|copy-uring|copy-uring-qd{1,2,4,8,16}|copy-compare|sqlite|sqlite-v1|sqlite-v2|sqlite-prepared|sqlite-batch-{10,100,1000,5000}|sqlite-compare|e2e|e2e-large|e2e-v6a|e2e-v6a-matrix\n"
+                << "  --workload all|scanner|copy|copy-sync|copy-uring|copy-uring-qd{1,2,4,8,16}|copy-compare|sqlite|sqlite-v1|sqlite-v2|sqlite-prepared|sqlite-batch-{10,100,1000,5000}|sqlite-compare|runtime-state-write|runtime-state-compare|e2e|e2e-large|e2e-v6a|e2e-v6a-matrix|e2e-v6b|e2e-v6b-compare\n"
                 << "  --data-root PATH       benchmark-owned data directory\n"
                 << "  --output PATH          write JSON report\n"
                 << "  --repetitions N        measured samples (default 5)\n"
-                << "  --warmup-repetitions N unmeasured E2E samples (default 0)\n"
+                << "  --warmup-repetitions N unmeasured E2E/runtime samples (default 0)\n"
                 << "  --scanner-files N      files per scan (default 100000)\n"
                 << "  --copy-bytes N         payload bytes (default 67108864)\n"
                 << "  --copy-uring-qd N      io_uring queue depth, 1-16 (default 4)\n"
                 << "  --sqlite-commands N    queued commands (default 5000)\n"
+                << "  --runtime-commands N   runtime state commands (default 1000)\n"
+                << "  --runtime-workers N    runtime submitters, 1-64 (default 8)\n"
+                << "  --runtime-db-batch-size N runtime DB batch size, 1-16 (default 8)\n"
                 << "  --e2e-files N          files per local pipeline (default 4)\n"
                 << "  --e2e-file-bytes N     bytes per local file (default 65536)\n"
                 << "  --e2e-workers N        migrate workers, 1-8 (default 4)\n"
+                << "  --e2e-db-batch-size N  runtime DB batch size, 1-16 (default 8)\n"
                 << "  --keep-data            preserve generated fixture\n";
             std::exit(0);
         }
@@ -222,6 +237,17 @@ Options ParseOptions(int argc, char** argv)
         } else if (argument == "--sqlite-commands") {
             options.sqlite_commands = static_cast<std::size_t>(
                 ParseUnsigned(value_for(argument), argument));
+        } else if (argument == "--runtime-commands") {
+            options.runtime_commands = static_cast<std::size_t>(
+                ParseUnsigned(value_for(argument), argument));
+        } else if (argument == "--runtime-workers") {
+            const std::uint64_t workers = ParseUnsigned(value_for(argument), argument);
+            if (workers > 64) Fail("--runtime-workers must be between 1 and 64");
+            options.runtime_workers = static_cast<std::size_t>(workers);
+        } else if (argument == "--runtime-db-batch-size") {
+            const std::uint64_t size = ParseUnsigned(value_for(argument), argument);
+            if (size > 16) Fail("--runtime-db-batch-size must be between 1 and 16");
+            options.runtime_db_batch_size = static_cast<std::size_t>(size);
         } else if (argument == "--e2e-files") {
             options.e2e_files = static_cast<std::size_t>(
                 ParseUnsigned(value_for(argument), argument));
@@ -232,6 +258,10 @@ Options ParseOptions(int argc, char** argv)
             const std::uint64_t workers = ParseUnsigned(value_for(argument), argument);
             if (workers > 8) Fail("--e2e-workers must be between 1 and 8");
             options.e2e_workers = static_cast<std::size_t>(workers);
+        } else if (argument == "--e2e-db-batch-size") {
+            const std::uint64_t size = ParseUnsigned(value_for(argument), argument);
+            if (size > 16) Fail("--e2e-db-batch-size must be between 1 and 16");
+            options.e2e_db_batch_size = static_cast<std::size_t>(size);
         } else {
             Fail("unknown option: " + argument);
         }
@@ -255,9 +285,13 @@ Options ParseOptions(int argc, char** argv)
         && options.workload != "sqlite-batch-1000"
         && options.workload != "sqlite-batch-5000"
         && options.workload != "sqlite-compare"
+        && options.workload != "runtime-state-write"
+        && options.workload != "runtime-state-compare"
         && options.workload != "e2e" && options.workload != "e2e-large"
         && options.workload != "e2e-v6a"
-        && options.workload != "e2e-v6a-matrix") {
+        && options.workload != "e2e-v6a-matrix"
+        && options.workload != "e2e-v6b"
+        && options.workload != "e2e-v6b-compare") {
         Fail("unknown workload; see --help for supported workloads");
     }
     return options;
@@ -431,6 +465,8 @@ WorkloadResult RunScanner(
         {},
         {},
         {},
+        {},
+        {},
     };
     photobridge::LinuxFileOps file_ops;
 
@@ -503,6 +539,8 @@ WorkloadResult RunCopy(
         "bytes/s",
         0,
         options.copy_bytes,
+        {},
+        {},
         {},
         {},
         {},
@@ -595,6 +633,8 @@ WorkloadResult RunSqlite(
         {},
         {},
         {},
+        {},
+        {},
     };
 
     for (std::size_t iteration = 0; iteration < options.repetitions;
@@ -664,6 +704,125 @@ WorkloadResult RunSqlite(
             count.Reset();
         }
         connection = photobridge::SqliteConnection();
+        RemoveDatabaseFiles(database_path);
+    }
+    return result;
+}
+
+void PrepareRuntimeStateFixture(
+    photobridge::SqliteConnection& connection,
+    std::size_t commands)
+{
+    Require(connection.Execute(
+        "INSERT INTO migration(migration_id, source_manifest_id, target_root, "
+        "state, current_epoch, created_at_ns) VALUES("
+        "'migration-1', 'manifest-1', X'2F', 0, 1, 1);"
+        "INSERT INTO migration_plan(plan_id, migration_id, plan_path, "
+        "artifact_digest, semantic_digest, semantic_profile_version, "
+        "format_version, state, created_at_ns) VALUES("
+        "'plan-1', 'migration-1', X'70', zeroblob(32), zeroblob(32), "
+        "1, 1, 0, 1);"
+        "BEGIN IMMEDIATE;"), "begin runtime state fixture");
+    for (std::size_t index = 0; index < commands; ++index) {
+        const std::string suffix = std::to_string(index);
+        Require(connection.Execute(
+            "INSERT INTO plan_task(plan_id, task_id, task_key, type, state, "
+            "owner_epoch, active_attempt_id, attempt_count, target_path, "
+            "expected_size) VALUES('plan-1', 'task-" + suffix
+            + "', 'key-" + suffix + "', 0, 2, 1, 'attempt-" + suffix
+            + "', 1, X'61', 1);"
+            "INSERT INTO task_attempt(attempt_id, plan_id, task_id, "
+            "owner_epoch, file_state, started_at_ns) VALUES('attempt-"
+            + suffix + "', 'plan-1', 'task-" + suffix
+            + "', 1, 2, 1);"), "insert runtime state fixture task");
+    }
+    Require(connection.Execute("COMMIT;"), "commit runtime state fixture");
+}
+
+WorkloadResult RunRuntimeStateWrites(
+    const Options& options,
+    std::size_t batch_size)
+{
+    WorkloadResult result{
+        "runtime_state_write_batch_" + std::to_string(batch_size),
+        "commands/s",
+        options.runtime_commands,
+        0,
+        {}, {}, {}, {}, {},
+    };
+    result.db_batch_size = batch_size;
+    result.implementation = batch_size == 1
+        ? "v6a_dedicated_db_writer_control"
+        : "v6b_opportunistic_db_batching";
+
+    const std::size_t total_iterations =
+        options.warmup_repetitions + options.repetitions;
+    for (std::size_t iteration = 0; iteration < total_iterations; ++iteration) {
+        const bool warmup = iteration < options.warmup_repetitions;
+        const auto database_path = options.data_root
+            / ("runtime-state-" + std::to_string(batch_size) + "-"
+               + (warmup ? "warmup-" : "sample-")
+               + std::to_string(iteration) + ".db");
+        RemoveDatabaseFiles(database_path);
+        auto connection = Require(
+            photobridge::SqliteConnection::Open(database_path),
+            "open runtime state benchmark database");
+        Require(photobridge::EnsureSchema(connection),
+                "create runtime state benchmark schema");
+        PrepareRuntimeStateFixture(connection, options.runtime_commands);
+        auto writer = Require(
+            photobridge::RuntimeDbWriter::Start(database_path, batch_size),
+            "start runtime DB writer benchmark");
+
+        std::vector<double> latencies(options.runtime_commands);
+        std::atomic<std::size_t> next{0};
+        std::atomic<std::size_t> completed{0};
+        std::mutex error_mutex;
+        std::optional<photobridge::Status> first_error;
+        Sample sample = Measure([&] {
+            std::vector<std::thread> threads;
+            threads.reserve(options.runtime_workers);
+            for (std::size_t worker = 0; worker < options.runtime_workers;
+                 ++worker) {
+                threads.emplace_back([&] {
+                    while (true) {
+                        const std::size_t index = next.fetch_add(1);
+                        if (index >= options.runtime_commands) return;
+                        const auto started = Clock::now();
+                        const photobridge::Status status = writer->MarkCommitIntent(
+                            "plan-1",
+                            "task-" + std::to_string(index),
+                            {1},
+                            "attempt-" + std::to_string(index));
+                        const auto finished = Clock::now();
+                        latencies[index] = std::chrono::duration<double, std::milli>(
+                            finished - started).count();
+                        if (!status.ok()) {
+                            std::lock_guard lock(error_mutex);
+                            if (!first_error.has_value()) first_error = status;
+                            return;
+                        }
+                        completed.fetch_add(1);
+                    }
+                });
+            }
+            for (auto& thread : threads) thread.join();
+            if (first_error.has_value()) {
+                Fail("runtime state command failed: " + first_error->message());
+            }
+            return RunValues{completed.load(), 0};
+        });
+        writer->Stop();
+        sample.db_writer = writer->stats();
+        if (completed.load() != options.runtime_commands) {
+            Fail("runtime state benchmark completed an unexpected command count");
+        }
+        if (!warmup) {
+            result.samples.push_back(sample);
+            result.ack_latency_ms.insert(
+                result.ack_latency_ms.end(), latencies.begin(), latencies.end());
+        }
+        connection = photobridge::SqliteConnection{};
         RemoveDatabaseFiles(database_path);
     }
     return result;
@@ -747,6 +906,7 @@ WorkloadResult RunE2e(
     const Options& options,
     const std::filesystem::path& run_root,
     std::size_t workers,
+    std::size_t db_batch_size,
     std::string report_name = {},
     bool report_bytes_per_second = false,
     std::string implementation = {})
@@ -777,8 +937,11 @@ WorkloadResult RunE2e(
         {},
         {},
         {},
+        {},
+        {},
     };
     result.e2e_workers = workers;
+    result.db_batch_size = db_batch_size;
     if (!implementation.empty()) {
         result.implementation = std::move(implementation);
     }
@@ -818,7 +981,8 @@ WorkloadResult RunE2e(
                 {"photobridge", "migrate",
                     "--workspace", workspace.string(),
                     "--plan", plan_path.string(),
-                    "--workers", std::to_string(workers)},
+                    "--workers", std::to_string(workers),
+                    "--db-batch-size", std::to_string(db_batch_size)},
                 "e2e migrate");
             RunCliCommand(
                 {"photobridge", "resume",
@@ -882,6 +1046,13 @@ Json SampleJson(const Sample& sample)
         {"io", IoJson(sample.io)},
         {"items", sample.items},
         {"bytes", sample.bytes},
+        {"db_writer", {
+            {"accepted_commands", sample.db_writer.accepted_commands},
+            {"commands", sample.db_writer.commands},
+            {"transaction_groups", sample.db_writer.transaction_groups},
+            {"batched_commands", sample.db_writer.batched_commands},
+            {"largest_batch", sample.db_writer.largest_batch},
+        }},
     };
 }
 
@@ -932,6 +1103,17 @@ Json WorkloadJson(const WorkloadResult& result)
 
     Json samples = Json::array();
     for (const Sample& sample : result.samples) samples.push_back(SampleJson(sample));
+    std::uint64_t db_commands = 0;
+    std::uint64_t db_transaction_groups = 0;
+    std::uint64_t db_batched_commands = 0;
+    std::size_t db_largest_batch = 0;
+    for (const Sample& sample : result.samples) {
+        db_commands += sample.db_writer.commands;
+        db_transaction_groups += sample.db_writer.transaction_groups;
+        db_batched_commands += sample.db_writer.batched_commands;
+        db_largest_batch = std::max(
+            db_largest_batch, sample.db_writer.largest_batch);
+    }
     Json report = Json{
         {"name", result.name},
         {"unit", result.unit},
@@ -971,13 +1153,31 @@ Json WorkloadJson(const WorkloadResult& result)
             {"total_kernel_write_bytes", total_write_bytes},
             {"total_read_syscalls", total_read_syscalls},
             {"total_write_syscalls", total_write_syscalls},
+            {"db_writer", {
+                {"commands", db_commands},
+                {"transaction_groups", db_transaction_groups},
+                {"batched_commands", db_batched_commands},
+                {"largest_batch", db_largest_batch},
+            }},
         }},
     };
     if (result.e2e_workers.has_value()) {
         report["e2e_workers"] = *result.e2e_workers;
     }
+    if (result.db_batch_size.has_value()) {
+        report["db_batch_size"] = *result.db_batch_size;
+    }
     if (result.implementation.has_value()) {
         report["implementation"] = *result.implementation;
+    }
+    if (!result.ack_latency_ms.empty()) {
+        report["summary"]["ack_latency_ms"] = {
+            {"mean", average(result.ack_latency_ms)},
+            {"median", Percentile(result.ack_latency_ms, 0.50)},
+            {"p95", Percentile(result.ack_latency_ms, 0.95)},
+            {"p99", Percentile(result.ack_latency_ms, 0.99)},
+            {"max", max_value(result.ack_latency_ms)},
+        };
     }
     return report;
 }
@@ -997,6 +1197,10 @@ void PrintHumanReport(const Json& report)
             std::cout << "  implementation=" << workload.at("implementation");
             if (workload.contains("e2e_workers")) {
                 std::cout << ", workers=" << workload.at("e2e_workers");
+            }
+            if (workload.contains("db_batch_size")) {
+                std::cout << ", db_batch_size="
+                          << workload.at("db_batch_size");
             }
             std::cout << "\n";
         }
@@ -1022,6 +1226,19 @@ void PrintHumanReport(const Json& report)
                   << ", read/write syscalls="
                   << summary.at("total_read_syscalls") << "/"
                   << summary.at("total_write_syscalls") << "\n";
+        if (summary.contains("ack_latency_ms")) {
+            const auto& ack = summary.at("ack_latency_ms");
+            std::cout << "  ACK ms: mean=" << ack.at("mean")
+                      << " median=" << ack.at("median")
+                      << " p95=" << ack.at("p95")
+                      << " p99=" << ack.at("p99")
+                      << " max=" << ack.at("max") << "\n";
+            const auto& db = summary.at("db_writer");
+            std::cout << "  DB commands/groups=" << db.at("commands")
+                      << "/" << db.at("transaction_groups")
+                      << ", batched=" << db.at("batched_commands")
+                      << ", largest batch=" << db.at("largest_batch") << "\n";
+        }
     }
 }
 
@@ -1033,7 +1250,9 @@ int main(int argc, char** argv)
         Options options = ParseOptions(argc, argv);
         if (options.workload == "e2e-large"
             || options.workload == "e2e-v6a"
-            || options.workload == "e2e-v6a-matrix") {
+            || options.workload == "e2e-v6a-matrix"
+            || options.workload == "e2e-v6b"
+            || options.workload == "e2e-v6b-compare") {
             options.e2e_files = 64;
             options.e2e_file_bytes = 16U * 1024U * 1024U;
         }
@@ -1056,9 +1275,13 @@ int main(int argc, char** argv)
             {"copy_bytes", options.copy_bytes},
             {"copy_uring_qd", options.copy_uring_qd},
             {"sqlite_commands", options.sqlite_commands},
+            {"runtime_commands", options.runtime_commands},
+            {"runtime_workers", options.runtime_workers},
+            {"runtime_db_batch_size", options.runtime_db_batch_size},
             {"e2e_files", options.e2e_files},
             {"e2e_file_bytes", options.e2e_file_bytes},
             {"e2e_workers", options.e2e_workers},
+            {"e2e_db_batch_size", options.e2e_db_batch_size},
             {"workloads", Json::array()},
         };
         if (options.workload == "all" || options.workload == "scanner") {
@@ -1113,16 +1336,28 @@ int main(int argc, char** argv)
                     RunSqlite(options, SqliteMode::kPreparedBatch, batch_size)));
             }
         }
+        if (options.workload == "runtime-state-write") {
+            report["workloads"].push_back(WorkloadJson(
+                RunRuntimeStateWrites(options, options.runtime_db_batch_size)));
+        }
+        if (options.workload == "runtime-state-compare") {
+            for (const std::size_t batch_size : {1U, 4U, 8U, 16U}) {
+                report["workloads"].push_back(WorkloadJson(
+                    RunRuntimeStateWrites(options, batch_size)));
+            }
+        }
         if (options.workload == "e2e" || options.workload == "e2e-large") {
             report["workloads"].push_back(
                 WorkloadJson(RunE2e(
-                    options, run_root, options.e2e_workers)));
+                    options, run_root, options.e2e_workers,
+                    options.e2e_db_batch_size)));
         }
         if (options.workload == "e2e-v6a") {
             report["workloads"].push_back(WorkloadJson(RunE2e(
                 options,
                 run_root,
                 options.e2e_workers,
+                1,
                 "e2e_v6a_dedicated_db_writer_"
                     + std::to_string(options.e2e_workers) + "w",
                 true,
@@ -1134,10 +1369,36 @@ int main(int argc, char** argv)
                     options,
                     run_root,
                     workers,
+                    1,
                     "e2e_v6a_dedicated_db_writer_"
                         + std::to_string(workers) + "w",
                     true,
                     "v6a_dedicated_db_writer")));
+            }
+        }
+        if (options.workload == "e2e-v6b") {
+            report["workloads"].push_back(WorkloadJson(RunE2e(
+                options,
+                run_root,
+                options.e2e_workers,
+                options.e2e_db_batch_size,
+                "e2e_v6b_db_batch_"
+                    + std::to_string(options.e2e_db_batch_size),
+                true,
+                "v6b_opportunistic_db_batching")));
+        }
+        if (options.workload == "e2e-v6b-compare") {
+            for (const std::size_t batch_size : {1U, 4U, 8U, 16U}) {
+                report["workloads"].push_back(WorkloadJson(RunE2e(
+                    options,
+                    run_root,
+                    options.e2e_workers,
+                    batch_size,
+                    "e2e_v6b_db_batch_" + std::to_string(batch_size),
+                    true,
+                    batch_size == 1
+                        ? "v6a_dedicated_db_writer_control"
+                        : "v6b_opportunistic_db_batching")));
             }
         }
 

@@ -250,4 +250,113 @@ TEST_F(RuntimeDbWriterTest, StopDrainsAcceptedCommandsAndWakesAllCallers)
     EXPECT_EQ(persisted, claimed.load());
 }
 
+TEST_F(RuntimeDbWriterTest, OpportunisticallyBatchesQueuedIndependentTasks)
+{
+    constexpr int kTasks = 16;
+    PrepareTasks(kTasks);
+    TaskRuntimeRepository repository(connection_);
+    std::vector<ClaimedTask> claims;
+    for (int index = 0; index < kTasks; ++index) {
+        auto claim = repository.ClaimNextReady("plan-1", {1});
+        ASSERT_TRUE(claim.ok()) << claim.status().message();
+        claims.push_back(std::move(claim.value()));
+    }
+
+    auto opened = RuntimeDbWriter::Start(path_, 8);
+    ASSERT_TRUE(opened.ok()) << opened.status().message();
+    auto& writer = *opened.value();
+    ASSERT_TRUE(connection_.Execute("BEGIN IMMEDIATE;").ok());
+    std::atomic<int> ready{0};
+    std::atomic<bool> start{false};
+    std::atomic<int> failures{0};
+    std::vector<std::thread> threads;
+    for (const auto& claim : claims) {
+        threads.emplace_back([&writer, &ready, &start, &failures, claim] {
+            ++ready;
+            while (!start.load()) std::this_thread::yield();
+            if (!writer.MarkCommitIntent(
+                    "plan-1", claim.id, {1}, *claim.runtime.attempt_id).ok()) {
+                ++failures;
+            }
+        });
+    }
+    while (ready.load() != kTasks) std::this_thread::yield();
+    start = true;
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    ASSERT_TRUE(connection_.Execute("COMMIT;").ok());
+    for (auto& thread : threads) thread.join();
+    writer.Stop();
+
+    EXPECT_EQ(failures.load(), 0);
+    const RuntimeDbWriterStats stats = writer.stats();
+    EXPECT_EQ(stats.commands, kTasks);
+    EXPECT_GT(stats.batched_commands, 0U);
+    EXPECT_GT(stats.largest_batch, 1U);
+    EXPECT_LT(stats.transaction_groups, stats.commands);
+    for (const auto& claim : claims) {
+        EXPECT_EQ(AttemptState(*claim.runtime.attempt_id),
+                  static_cast<int>(FileAttemptState::kCommitIntent));
+    }
+}
+
+TEST_F(RuntimeDbWriterTest, FailedCommandRollsBackItsEntireBatch)
+{
+    constexpr int kTasks = 16;
+    PrepareTasks(kTasks);
+    TaskRuntimeRepository repository(connection_);
+    std::vector<ClaimedTask> claims;
+    for (int index = 0; index < kTasks; ++index) {
+        auto claim = repository.ClaimNextReady("plan-1", {1});
+        ASSERT_TRUE(claim.ok()) << claim.status().message();
+        claims.push_back(std::move(claim.value()));
+    }
+
+    auto opened = RuntimeDbWriter::Start(path_, 8);
+    ASSERT_TRUE(opened.ok()) << opened.status().message();
+    auto& writer = *opened.value();
+    ASSERT_TRUE(connection_.Execute("BEGIN IMMEDIATE;").ok());
+
+    std::optional<Status> first_result;
+    std::thread first([&] {
+        first_result = writer.MarkCommitIntent(
+            "plan-1", claims[0].id, {1}, *claims[0].runtime.attempt_id);
+    });
+    while (writer.stats().accepted_commands != 1) std::this_thread::yield();
+    while (writer.stats().transaction_groups != 1) std::this_thread::yield();
+
+    std::vector<std::optional<Status>> results(kTasks);
+    std::vector<std::thread> threads;
+    for (int index = 1; index < kTasks; ++index) {
+        threads.emplace_back([&, index] {
+            const std::string attempt = index == 1
+                ? *claims[index].runtime.attempt_id
+                : "wrong-attempt-" + std::to_string(index);
+            results[index] = writer.MarkCommitIntent(
+                "plan-1", claims[index].id, {1}, attempt);
+        });
+        while (writer.stats().accepted_commands
+               != static_cast<std::uint64_t>(index + 1)) {
+            std::this_thread::yield();
+        }
+    }
+    ASSERT_TRUE(connection_.Execute("COMMIT;").ok());
+    first.join();
+    for (auto& thread : threads) thread.join();
+    writer.Stop();
+
+    ASSERT_TRUE(first_result.has_value());
+    EXPECT_TRUE(first_result->ok());
+    ASSERT_TRUE(results[1].has_value());
+    EXPECT_FALSE(results[1]->ok());
+    EXPECT_NE(results[1]->message().find("batch rolled back"),
+              std::string::npos);
+    EXPECT_EQ(AttemptState(*claims[0].runtime.attempt_id),
+              static_cast<int>(FileAttemptState::kCommitIntent));
+    EXPECT_EQ(AttemptState(*claims[1].runtime.attempt_id),
+              static_cast<int>(FileAttemptState::kRunning));
+    const RuntimeDbWriterStats stats = writer.stats();
+    EXPECT_GT(stats.batched_commands, 0U);
+    EXPECT_GT(stats.largest_batch, 1U);
+}
+
 }  // namespace

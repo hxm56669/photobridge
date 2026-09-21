@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <string_view>
 
 #include "photobridge/app/sqlite_connection.h"
 #include "photobridge/app/sqlite_statement.h"
@@ -11,6 +12,8 @@
 #include "photobridge/model/task.h"
 
 namespace photobridge {
+
+class RuntimeDbWriter;
 
 class TaskRuntimeRepository final : public MigrationRuntimeStore {
 public:
@@ -95,6 +98,16 @@ public:
         const TaskId& task_id) const;
 
 private:
+    friend class RuntimeDbWriter;
+
+    Status BeginWriteBatch(
+        const std::string& plan_id,
+        ExecutionEpoch epoch);
+    Status CommitWriteBatch();
+    Status RollbackWriteBatch();
+    const ExecutionEpoch* BatchedEpochFor(
+        std::string_view plan_id) const noexcept;
+
     StatusOr<ClaimedTask> ClaimNextReadyImpl(
         const std::string& plan_id,
         ExecutionEpoch epoch,
@@ -118,6 +131,9 @@ private:
     SqliteStatement recover_task_;
     SqliteStatement insert_receipt_;
     mutable SqliteStatement read_receipt_;
+    bool write_batch_active_ = false;
+    std::string write_batch_plan_id_;
+    ExecutionEpoch write_batch_epoch_;
 };
 
 }  // namespace photobridge

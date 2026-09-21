@@ -1,6 +1,7 @@
 #include "photobridge/app/manifest_builder.h"
 
 #include <sqlite3.h>
+#include <unistd.h>
 
 #include <filesystem>
 #include <cstdint>
@@ -19,6 +20,7 @@ protected:
     {
         database_path_ = std::filesystem::temp_directory_path()
             / ("photobridge_manifest_builder_"
+                + std::to_string(::getpid()) + "_"
                 + std::to_string(++sequence_)
                 + ".db");
         std::error_code error;

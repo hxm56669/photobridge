@@ -414,7 +414,8 @@ TEST(RunCliTest, MigratesAndResumesMoreTasksThanQueueCapacity)
     ASSERT_EQ(
         RunCliWithArgs(
             {"photobridge", "migrate", "--workspace", workspace.string(),
-             "--plan", plan_path.string(), "--workers", "2"}, out, err),
+             "--plan", plan_path.string(), "--workers", "2",
+             "--db-batch-size", "4"}, out, err),
         0);
     const std::string migrated_output = out.str();
     EXPECT_EQ(std::count(migrated_output.begin(), migrated_output.end(), '\n'), 12);

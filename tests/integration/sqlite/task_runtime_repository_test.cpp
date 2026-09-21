@@ -4,6 +4,7 @@
 #include <utility>
 
 #include <sqlite3.h>
+#include <unistd.h>
 #include <gtest/gtest.h>
 
 #include "photobridge/app/sqlite_schema.h"
@@ -76,7 +77,8 @@ protected:
     void SetUp() override
     {
         database_path_ = std::filesystem::temp_directory_path()
-            / ("photobridge_task_runtime_" + std::to_string(++sequence_) + ".db");
+            / ("photobridge_task_runtime_" + std::to_string(::getpid())
+               + "_" + std::to_string(++sequence_) + ".db");
         std::error_code error;
         std::filesystem::remove(database_path_, error);
     }

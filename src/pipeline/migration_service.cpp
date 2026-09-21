@@ -90,11 +90,16 @@ public:
         const StatusOr<WorkspaceLayout>& layout,
         const std::string& input_path,
         std::size_t workers,
+        std::size_t db_batch_size,
         CommandContext& context)
     {
         if (workers == 0 || workers > 8) {
             return Status(StatusCode::kInvalidArgument,
                           "migration worker count must be between 1 and 8");
+        }
+        if (db_batch_size == 0 || db_batch_size > 16) {
+            return Status(StatusCode::kInvalidArgument,
+                          "runtime DB batch size must be between 1 and 16");
         }
         auto plan_bytes = ReadPlanFile(std::filesystem::path(input_path));
         if (!plan_bytes.ok()) return plan_bytes.status();
@@ -155,7 +160,8 @@ public:
             connection.value(), artifact.value().plan.source_manifest_id());
         if (!source_root.ok()) return source_root.status();
 
-        auto writer = RuntimeDbWriter::Start(layout.value().database);
+        auto writer = RuntimeDbWriter::Start(
+            layout.value().database, db_batch_size);
         if (!writer.ok()) return writer.status();
 
         constexpr std::size_t queue_capacity = 8;
@@ -249,9 +255,11 @@ Status RunMigrationService(
     const StatusOr<WorkspaceLayout>& layout,
     const std::string& input_path,
     std::size_t workers,
+    std::size_t db_batch_size,
     CommandContext& context)
 {
-    return MigrationService::Execute(layout, input_path, workers, context);
+    return MigrationService::Execute(
+        layout, input_path, workers, db_batch_size, context);
 }
 
 }  // namespace photobridge::pipeline

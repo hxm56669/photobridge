@@ -129,6 +129,7 @@ Status RunMigrationService(
     const StatusOr<WorkspaceLayout>& layout,
     const std::string& input_path,
     std::size_t workers,
+    std::size_t db_batch_size,
     CommandContext& context);
 Status RunRecoveryService(
     const StatusOr<WorkspaceLayout>& layout,

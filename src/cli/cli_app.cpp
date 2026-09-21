@@ -78,6 +78,7 @@ int RunCli(
     std::string bind_address;
     std::uint16_t port = 8787;
     std::size_t workers = 4;
+    std::size_t db_batch_size = 8;
     bool bootstrap_only = false;
     init_command->add_option(
         "--workspace",
@@ -128,6 +129,11 @@ int RunCli(
     migrate_command->add_option(
         "--workers", workers, "number of migration workers (1-8)")
         ->check(CLI::Range(1, 8))
+        ->capture_default_str();
+    migrate_command->add_option(
+        "--db-batch-size", db_batch_size,
+        "maximum opportunistic runtime DB batch size (1-16)")
+        ->check(CLI::Range(1, 16))
         ->capture_default_str();
     add_pipeline_options(
         resume_command,
@@ -209,7 +215,8 @@ int RunCli(
                 workspace_path,
                 input_path,
                 std::string{},
-                workers));
+                workers,
+                db_batch_size));
     } else if (resume_command->parsed()) {
         selected_command = "resume";
         dispatcher.Register(

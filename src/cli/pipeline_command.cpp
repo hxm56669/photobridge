@@ -11,12 +11,14 @@ PipelineCommand::PipelineCommand(
     std::string workspace_path,
     std::string input_path,
     std::string target_path,
-    std::size_t workers)
+    std::size_t workers,
+    std::size_t db_batch_size)
     : stage_(stage),
       workspace_path_(std::move(workspace_path)),
       input_path_(std::move(input_path)),
       target_path_(std::move(target_path)),
-      workers_(workers)
+      workers_(workers),
+      db_batch_size_(db_batch_size)
 {
 }
 
@@ -28,6 +30,7 @@ Status PipelineCommand::Execute(CommandContext& context)
         input_path_,
         target_path_,
         workers_,
+        db_batch_size_,
         context);
 }
 

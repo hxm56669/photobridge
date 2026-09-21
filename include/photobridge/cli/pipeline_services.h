@@ -13,6 +13,7 @@ Status RunPipelineStage(
     std::string input_path,
     std::string target_path,
     std::size_t workers,
+    std::size_t db_batch_size,
     CommandContext& context);
 
 }  // namespace photobridge

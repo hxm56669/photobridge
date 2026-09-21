@@ -1,6 +1,7 @@
 #include "photobridge/app/sqlite_schema.h"
 
 #include <sqlite3.h>
+#include <unistd.h>
 
 #include <filesystem>
 #include <string>
@@ -15,6 +16,7 @@ protected:
     {
         database_path_ = std::filesystem::temp_directory_path()
             / ("photobridge_sqlite_schema_"
+                + std::to_string(::getpid()) + "_"
                 + std::to_string(++sequence_)
                 + ".db");
         std::error_code error;

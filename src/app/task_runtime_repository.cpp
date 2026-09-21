@@ -413,14 +413,24 @@ Status FinishTask(
     ExecutionEpoch epoch,
     std::string_view attempt_id,
     TaskState next_state,
-    const Status* error)
+    const Status* error,
+    const ExecutionEpoch* batched_epoch)
 {
-    Status status = connection.Execute("BEGIN IMMEDIATE;");
+    const bool owns_transaction = batched_epoch == nullptr;
+    Status status = owns_transaction
+        ? connection.Execute("BEGIN IMMEDIATE;")
+        : Status::Ok();
     if (!status.ok()) return status;
-    const auto current = ReadCurrentEpochForPlan(
-        connection.native_handle(), cached_epoch_read, plan_id);
-    if (!current.ok()) return Rollback(connection, current.status());
-    if (current.value() != epoch) {
+    ExecutionEpoch current_epoch;
+    if (batched_epoch == nullptr) {
+        const auto current = ReadCurrentEpochForPlan(
+            connection.native_handle(), cached_epoch_read, plan_id);
+        if (!current.ok()) return Rollback(connection, current.status());
+        current_epoch = current.value();
+    } else {
+        current_epoch = *batched_epoch;
+    }
+    if (current_epoch != epoch) {
         return Rollback(connection, Invalid(
             "stale executor epoch cannot finish a task"));
     }
@@ -507,6 +517,7 @@ Status FinishTask(
         attempt_id,
         error == nullptr ? "completed" : error->message());
     if (!status.ok()) return Rollback(connection, status);
+    if (!owns_transaction) return Status::Ok();
     status = connection.Execute("COMMIT;");
     if (!status.ok()) connection.Execute("ROLLBACK;");
     return status;
@@ -645,14 +656,24 @@ Status AdvanceAttempt(
     ExecutionEpoch epoch,
     std::string_view attempt_id,
     FileAttemptState next_state,
-    std::string_view event_type)
+    std::string_view event_type,
+    const ExecutionEpoch* batched_epoch)
 {
-    Status status = connection.Execute("BEGIN IMMEDIATE;");
+    const bool owns_transaction = batched_epoch == nullptr;
+    Status status = owns_transaction
+        ? connection.Execute("BEGIN IMMEDIATE;")
+        : Status::Ok();
     if (!status.ok()) return status;
-    const auto current = ReadCurrentEpochForPlan(
-        connection.native_handle(), cached_epoch_read, plan_id);
-    if (!current.ok()) return Rollback(connection, current.status());
-    if (current.value() != epoch) {
+    ExecutionEpoch current_epoch;
+    if (batched_epoch == nullptr) {
+        const auto current = ReadCurrentEpochForPlan(
+            connection.native_handle(), cached_epoch_read, plan_id);
+        if (!current.ok()) return Rollback(connection, current.status());
+        current_epoch = current.value();
+    } else {
+        current_epoch = *batched_epoch;
+    }
+    if (current_epoch != epoch) {
         return Rollback(connection, Invalid(
             "stale executor epoch cannot advance an attempt"));
     }
@@ -700,6 +721,7 @@ Status AdvanceAttempt(
     }
     const auto previous = static_cast<FileAttemptState>(persisted);
     if (previous == next_state) {
+        if (!owns_transaction) return Status::Ok();
         status = connection.Execute("COMMIT;");
         if (!status.ok()) connection.Execute("ROLLBACK;");
         return status;
@@ -724,6 +746,7 @@ Status AdvanceAttempt(
         connection, cached_event_insert, plan_id, task_id,
         event_type, epoch, attempt_id, "attempt lifecycle");
     if (!status.ok()) return Rollback(connection, status);
+    if (!owns_transaction) return Status::Ok();
     status = connection.Execute("COMMIT;");
     if (!status.ok()) connection.Execute("ROLLBACK;");
     return status;
@@ -815,6 +838,67 @@ TaskRuntimeRepository::TaskRuntimeRepository(
     SqliteConnection& connection) noexcept
     : connection_(&connection)
 {
+}
+
+Status TaskRuntimeRepository::BeginWriteBatch(
+    const std::string& plan_id,
+    ExecutionEpoch epoch)
+{
+    if (write_batch_active_) {
+        return Status(StatusCode::kInternal,
+                      "runtime write batch is already active");
+    }
+    Status status = CheckIds(plan_id, "batch");
+    if (!status.ok()) return status;
+    status = CheckEpochAttempt(epoch, "batch");
+    if (!status.ok()) return status;
+    status = connection_->Execute("BEGIN IMMEDIATE;");
+    if (!status.ok()) return status;
+    const auto current = ReadCurrentEpochForPlan(
+        connection_->native_handle(), read_current_epoch_, plan_id);
+    if (!current.ok()) return Rollback(*connection_, current.status());
+    if (current.value() != epoch) {
+        return Rollback(*connection_, Invalid(
+            "stale executor epoch cannot start a runtime write batch"));
+    }
+    write_batch_active_ = true;
+    write_batch_plan_id_ = plan_id;
+    write_batch_epoch_ = epoch;
+    return Status::Ok();
+}
+
+Status TaskRuntimeRepository::CommitWriteBatch()
+{
+    if (!write_batch_active_) {
+        return Status(StatusCode::kInternal,
+                      "runtime write batch is not active");
+    }
+    Status status = connection_->Execute("COMMIT;");
+    if (!status.ok()) connection_->Execute("ROLLBACK;");
+    write_batch_active_ = false;
+    write_batch_plan_id_.clear();
+    write_batch_epoch_ = {};
+    return status;
+}
+
+Status TaskRuntimeRepository::RollbackWriteBatch()
+{
+    if (!write_batch_active_) return Status::Ok();
+    Status status = sqlite3_get_autocommit(connection_->native_handle()) == 0
+        ? connection_->Execute("ROLLBACK;")
+        : Status::Ok();
+    write_batch_active_ = false;
+    write_batch_plan_id_.clear();
+    write_batch_epoch_ = {};
+    return status;
+}
+
+const ExecutionEpoch* TaskRuntimeRepository::BatchedEpochFor(
+    std::string_view plan_id) const noexcept
+{
+    return write_batch_active_ && write_batch_plan_id_ == plan_id
+        ? &write_batch_epoch_
+        : nullptr;
 }
 
 StatusOr<ExecutionEpoch> TaskRuntimeRepository::AcquireNextExecutionEpoch(
@@ -1258,7 +1342,8 @@ Status TaskRuntimeRepository::MarkCommitIntent(
         epoch,
         attempt_id,
         FileAttemptState::kCommitIntent,
-        "COMMIT_INTENT");
+        "COMMIT_INTENT",
+        BatchedEpochFor(plan_id));
 }
 
 Status TaskRuntimeRepository::MarkTempWritten(
@@ -1283,7 +1368,8 @@ Status TaskRuntimeRepository::MarkTempWritten(
         epoch,
         attempt_id,
         FileAttemptState::kTempWritten,
-        "TEMP_WRITTEN");
+        "TEMP_WRITTEN",
+        BatchedEpochFor(plan_id));
 }
 
 Status TaskRuntimeRepository::MarkSucceeded(
@@ -1307,7 +1393,8 @@ Status TaskRuntimeRepository::MarkSucceeded(
         epoch,
         attempt_id,
         TaskState::kSucceeded,
-        nullptr);
+        nullptr,
+        BatchedEpochFor(plan_id));
 }
 
 Status TaskRuntimeRepository::MarkRetryable(
@@ -1333,7 +1420,8 @@ Status TaskRuntimeRepository::MarkRetryable(
         epoch,
         attempt_id,
         TaskState::kRetryable,
-        &error);
+        &error,
+        BatchedEpochFor(plan_id));
 }
 
 Status TaskRuntimeRepository::RecoverSucceeded(
@@ -1456,12 +1544,22 @@ Status TaskRuntimeRepository::PersistVerifiedReceipt(
     }
 
     const auto identity = EncodeIdentity(receipt.source_identity.value());
-    status = connection_->Execute("BEGIN IMMEDIATE;");
+    const ExecutionEpoch* batched_epoch = BatchedEpochFor(plan_id);
+    const bool owns_transaction = batched_epoch == nullptr;
+    status = owns_transaction
+        ? connection_->Execute("BEGIN IMMEDIATE;")
+        : Status::Ok();
     if (!status.ok()) return status;
-    const auto current = ReadCurrentEpochForPlan(
-        connection_->native_handle(), read_current_epoch_, plan_id);
-    if (!current.ok()) return Rollback(*connection_, current.status());
-    if (current.value() != receipt.owner_epoch) {
+    ExecutionEpoch current_epoch;
+    if (batched_epoch == nullptr) {
+        const auto current = ReadCurrentEpochForPlan(
+            connection_->native_handle(), read_current_epoch_, plan_id);
+        if (!current.ok()) return Rollback(*connection_, current.status());
+        current_epoch = current.value();
+    } else {
+        current_epoch = *batched_epoch;
+    }
+    if (current_epoch != receipt.owner_epoch) {
         return Rollback(*connection_, Invalid(
             "stale executor epoch cannot persist a verified receipt"));
     }
@@ -1536,6 +1634,7 @@ Status TaskRuntimeRepository::PersistVerifiedReceipt(
                 StatusCode::kInternal,
                 "verified receipt conflicts with existing evidence"));
         }
+        if (!owns_transaction) return Status::Ok();
         status = connection_->Execute("COMMIT;");
         if (!status.ok()) connection_->Execute("ROLLBACK;");
         return status;
@@ -1567,6 +1666,7 @@ Status TaskRuntimeRepository::PersistVerifiedReceipt(
         receipt.attempt_id,
         "receipt persisted before publish");
     if (!status.ok()) return Rollback(*connection_, status);
+    if (!owns_transaction) return Status::Ok();
     status = connection_->Execute("COMMIT;");
     if (!status.ok()) connection_->Execute("ROLLBACK;");
     return status;
