@@ -1,0 +1,11 @@
+=== branch ===
+main
+
+=== commit ===
+7fe956f (HEAD -> main, origin/main)  V6B
+
+=== status ===
+?? benchmark-results/v6b-opportunistic-batching/
+
+=== v6 tags ===
+v6a-dedicated-db-writer

@@ -1,0 +1,339 @@
+{
+  "copy_bytes": 67108864,
+  "copy_uring_qd": 4,
+  "data_root": "/tmp/photobridge_bench_data",
+  "e2e_db_batch_size": 8,
+  "e2e_file_bytes": 65536,
+  "e2e_files": 4,
+  "e2e_workers": 4,
+  "repetitions": 1,
+  "runtime_commands": 1000,
+  "runtime_db_batch_size": 8,
+  "runtime_workers": 8,
+  "scanner_files": 100000,
+  "schema_version": 2,
+  "sqlite_commands": 5000,
+  "warmup_repetitions": 0,
+  "workloads": [
+    {
+      "configured_bytes": 0,
+      "configured_items": 1000,
+      "db_batch_size": 1,
+      "implementation": "v6a_dedicated_db_writer_control",
+      "name": "runtime_state_write_batch_1",
+      "samples": [
+        {
+          "bytes": 0,
+          "cpu_ms": 510.17199999999997,
+          "cpu_utilization_percent": 31.757825588197107,
+          "db_writer": {
+            "accepted_commands": 1000,
+            "batched_commands": 0,
+            "commands": 1000,
+            "largest_batch": 0,
+            "transaction_groups": 1000
+          },
+          "io": {
+            "rchar_bytes": 188527,
+            "read_bytes": 0,
+            "read_syscalls": 49,
+            "wchar_bytes": 17056808,
+            "write_bytes": 21172224,
+            "write_syscalls": 8288
+          },
+          "items": 1000,
+          "max_rss_kib": 7412,
+          "rss_delta_kib": 1340,
+          "wall_ms": 1606.444996
+        }
+      ],
+      "summary": {
+        "ack_latency_ms": {
+          "max": 20.202084,
+          "mean": 12.798764617999977,
+          "median": 12.802833,
+          "p95": 16.110091,
+          "p99": 17.723527
+        },
+        "cpu_ms": {
+          "mean": 510.17199999999997,
+          "p95": 510.17199999999997,
+          "p99": 510.17199999999997
+        },
+        "cpu_utilization_percent": {
+          "mean": 31.757825588197107,
+          "p95": 31.757825588197107,
+          "p99": 31.757825588197107
+        },
+        "db_writer": {
+          "batched_commands": 0,
+          "commands": 1000,
+          "largest_batch": 0,
+          "transaction_groups": 1000
+        },
+        "peak_rss_kib": 7412,
+        "throughput_per_second": {
+          "max": 622.4925238585636,
+          "mean": 622.4925238585636,
+          "median": 622.4925238585636,
+          "min": 622.4925238585636,
+          "p95": 622.4925238585636,
+          "p99": 622.4925238585636
+        },
+        "total_kernel_read_bytes": 0,
+        "total_kernel_write_bytes": 21172224,
+        "total_read_syscalls": 49,
+        "total_write_syscalls": 8288,
+        "wall_ms": {
+          "max": 1606.444996,
+          "mean": 1606.444996,
+          "median": 1606.444996,
+          "min": 1606.444996,
+          "p95": 1606.444996,
+          "p99": 1606.444996
+        }
+      },
+      "unit": "commands/s"
+    },
+    {
+      "configured_bytes": 0,
+      "configured_items": 1000,
+      "db_batch_size": 4,
+      "implementation": "v6b_opportunistic_db_batching",
+      "name": "runtime_state_write_batch_4",
+      "samples": [
+        {
+          "bytes": 0,
+          "cpu_ms": 200.45100000000005,
+          "cpu_utilization_percent": 47.94913884996193,
+          "db_writer": {
+            "accepted_commands": 1000,
+            "batched_commands": 999,
+            "commands": 1000,
+            "largest_batch": 4,
+            "transaction_groups": 251
+          },
+          "io": {
+            "rchar_bytes": 553077,
+            "read_bytes": 0,
+            "read_syscalls": 137,
+            "wchar_bytes": 5139656,
+            "write_bytes": 6168576,
+            "write_syscalls": 2408
+          },
+          "items": 1000,
+          "max_rss_kib": 7456,
+          "rss_delta_kib": 0,
+          "wall_ms": 418.049218
+        }
+      ],
+      "summary": {
+        "ack_latency_ms": {
+          "max": 8.811883,
+          "mean": 3.3337709230000017,
+          "median": 3.440013,
+          "p95": 5.059116,
+          "p99": 6.567989
+        },
+        "cpu_ms": {
+          "mean": 200.45100000000005,
+          "p95": 200.45100000000005,
+          "p99": 200.45100000000005
+        },
+        "cpu_utilization_percent": {
+          "mean": 47.94913884996193,
+          "p95": 47.94913884996193,
+          "p99": 47.94913884996193
+        },
+        "db_writer": {
+          "batched_commands": 999,
+          "commands": 1000,
+          "largest_batch": 4,
+          "transaction_groups": 251
+        },
+        "peak_rss_kib": 7456,
+        "throughput_per_second": {
+          "max": 2392.06284079211,
+          "mean": 2392.06284079211,
+          "median": 2392.06284079211,
+          "min": 2392.06284079211,
+          "p95": 2392.06284079211,
+          "p99": 2392.06284079211
+        },
+        "total_kernel_read_bytes": 0,
+        "total_kernel_write_bytes": 6168576,
+        "total_read_syscalls": 137,
+        "total_write_syscalls": 2408,
+        "wall_ms": {
+          "max": 418.049218,
+          "mean": 418.049218,
+          "median": 418.049218,
+          "min": 418.049218,
+          "p95": 418.049218,
+          "p99": 418.049218
+        }
+      },
+      "unit": "commands/s"
+    },
+    {
+      "configured_bytes": 0,
+      "configured_items": 1000,
+      "db_batch_size": 8,
+      "implementation": "v6b_opportunistic_db_batching",
+      "name": "runtime_state_write_batch_8",
+      "samples": [
+        {
+          "bytes": 0,
+          "cpu_ms": 167.73300000000003,
+          "cpu_utilization_percent": 45.70532834485206,
+          "db_writer": {
+            "accepted_commands": 1000,
+            "batched_commands": 998,
+            "commands": 1000,
+            "largest_batch": 8,
+            "transaction_groups": 201
+          },
+          "io": {
+            "rchar_bytes": 569463,
+            "read_bytes": 0,
+            "read_syscalls": 141,
+            "wchar_bytes": 4315560,
+            "write_bytes": 5140480,
+            "write_syscalls": 2004
+          },
+          "items": 1000,
+          "max_rss_kib": 7456,
+          "rss_delta_kib": 0,
+          "wall_ms": 366.987846
+        }
+      ],
+      "summary": {
+        "ack_latency_ms": {
+          "max": 7.288665,
+          "mean": 2.927228893000005,
+          "median": 3.052598,
+          "p95": 4.57675,
+          "p99": 5.995784
+        },
+        "cpu_ms": {
+          "mean": 167.73300000000003,
+          "p95": 167.73300000000003,
+          "p99": 167.73300000000003
+        },
+        "cpu_utilization_percent": {
+          "mean": 45.70532834485206,
+          "p95": 45.70532834485206,
+          "p99": 45.70532834485206
+        },
+        "db_writer": {
+          "batched_commands": 998,
+          "commands": 1000,
+          "largest_batch": 8,
+          "transaction_groups": 201
+        },
+        "peak_rss_kib": 7456,
+        "throughput_per_second": {
+          "max": 2724.885880825601,
+          "mean": 2724.885880825601,
+          "median": 2724.885880825601,
+          "min": 2724.885880825601,
+          "p95": 2724.885880825601,
+          "p99": 2724.885880825601
+        },
+        "total_kernel_read_bytes": 0,
+        "total_kernel_write_bytes": 5140480,
+        "total_read_syscalls": 141,
+        "total_write_syscalls": 2004,
+        "wall_ms": {
+          "max": 366.987846,
+          "mean": 366.987846,
+          "median": 366.987846,
+          "min": 366.987846,
+          "p95": 366.987846,
+          "p99": 366.987846
+        }
+      },
+      "unit": "commands/s"
+    },
+    {
+      "configured_bytes": 0,
+      "configured_items": 1000,
+      "db_batch_size": 16,
+      "implementation": "v6b_opportunistic_db_batching",
+      "name": "runtime_state_write_batch_16",
+      "samples": [
+        {
+          "bytes": 0,
+          "cpu_ms": 153.53799999999995,
+          "cpu_utilization_percent": 42.91461084467236,
+          "db_writer": {
+            "accepted_commands": 1000,
+            "batched_commands": 998,
+            "commands": 1000,
+            "largest_batch": 8,
+            "transaction_groups": 202
+          },
+          "io": {
+            "rchar_bytes": 569465,
+            "read_bytes": 0,
+            "read_syscalls": 141,
+            "wchar_bytes": 4340280,
+            "write_bytes": 5169152,
+            "write_syscalls": 2016
+          },
+          "items": 1000,
+          "max_rss_kib": 7464,
+          "rss_delta_kib": 0,
+          "wall_ms": 357.775585
+        }
+      ],
+      "summary": {
+        "ack_latency_ms": {
+          "max": 8.078292,
+          "mean": 2.8549968919999986,
+          "median": 2.97455,
+          "p95": 4.949672,
+          "p99": 6.264523
+        },
+        "cpu_ms": {
+          "mean": 153.53799999999995,
+          "p95": 153.53799999999995,
+          "p99": 153.53799999999995
+        },
+        "cpu_utilization_percent": {
+          "mean": 42.91461084467236,
+          "p95": 42.91461084467236,
+          "p99": 42.91461084467236
+        },
+        "db_writer": {
+          "batched_commands": 998,
+          "commands": 1000,
+          "largest_batch": 8,
+          "transaction_groups": 202
+        },
+        "peak_rss_kib": 7464,
+        "throughput_per_second": {
+          "max": 2795.0481864211056,
+          "mean": 2795.0481864211056,
+          "median": 2795.0481864211056,
+          "min": 2795.0481864211056,
+          "p95": 2795.0481864211056,
+          "p99": 2795.0481864211056
+        },
+        "total_kernel_read_bytes": 0,
+        "total_kernel_write_bytes": 5169152,
+        "total_read_syscalls": 141,
+        "total_write_syscalls": 2016,
+        "wall_ms": {
+          "max": 357.775585,
+          "mean": 357.775585,
+          "median": 357.775585,
+          "min": 357.775585,
+          "p95": 357.775585,
+          "p99": 357.775585
+        }
+      },
+      "unit": "commands/s"
+    }
+  ]
+}

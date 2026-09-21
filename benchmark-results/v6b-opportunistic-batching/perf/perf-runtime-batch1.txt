@@ -1,0 +1,24 @@
+# started on Mon Sep 21 06:29:50 2026
+
+
+ Performance counter stats for './build/bench-release/photobridge_bench --workload runtime-state-write --repetitions 1 --runtime-commands 1000 --runtime-workers 4 --runtime-db-batch-size 1':
+
+            520.59 msec task-clock                #    0.332 CPUs utilized          
+             3,997      context-switches          #    7.678 K/sec                  
+                45      cpu-migrations            #   86.440 /sec                   
+               442      page-faults               #  849.030 /sec                   
+   <not supported>      cycles                                                      
+   <not supported>      instructions                                                
+   <not supported>      branches                                                    
+   <not supported>      branch-misses                                               
+   <not supported>      L1-dcache-loads                                             
+   <not supported>      L1-dcache-load-misses                                       
+   <not supported>      LLC-loads                                                   
+   <not supported>      LLC-load-misses                                             
+
+       1.568718311 seconds time elapsed
+
+       0.054411000 seconds user
+       0.546171000 seconds sys
+
+

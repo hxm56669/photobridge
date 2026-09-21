@@ -1,0 +1,92 @@
+{
+  "copy_bytes": 67108864,
+  "copy_uring_qd": 4,
+  "data_root": "/tmp/photobridge_bench_data",
+  "e2e_db_batch_size": 4,
+  "e2e_file_bytes": 65536,
+  "e2e_files": 4,
+  "e2e_workers": 4,
+  "repetitions": 1,
+  "runtime_commands": 1000,
+  "runtime_db_batch_size": 8,
+  "runtime_workers": 8,
+  "scanner_files": 100000,
+  "schema_version": 2,
+  "sqlite_commands": 5000,
+  "warmup_repetitions": 0,
+  "workloads": [
+    {
+      "configured_bytes": 262144,
+      "configured_items": 1,
+      "db_batch_size": 4,
+      "e2e_workers": 4,
+      "name": "e2e_local_pipeline",
+      "samples": [
+        {
+          "bytes": 262144,
+          "cpu_ms": 46.811,
+          "cpu_utilization_percent": 67.1869947358155,
+          "db_writer": {
+            "accepted_commands": 0,
+            "batched_commands": 0,
+            "commands": 0,
+            "largest_batch": 0,
+            "transaction_groups": 0
+          },
+          "io": {
+            "rchar_bytes": 1780312,
+            "read_bytes": 344064,
+            "read_syscalls": 166,
+            "wchar_bytes": 624935,
+            "write_bytes": 1167360,
+            "write_syscalls": 317
+          },
+          "items": 1,
+          "max_rss_kib": 14972,
+          "rss_delta_kib": 7628,
+          "wall_ms": 69.67271
+        }
+      ],
+      "summary": {
+        "cpu_ms": {
+          "mean": 46.811,
+          "p95": 46.811,
+          "p99": 46.811
+        },
+        "cpu_utilization_percent": {
+          "mean": 67.1869947358155,
+          "p95": 67.1869947358155,
+          "p99": 67.1869947358155
+        },
+        "db_writer": {
+          "batched_commands": 0,
+          "commands": 0,
+          "largest_batch": 0,
+          "transaction_groups": 0
+        },
+        "peak_rss_kib": 14972,
+        "throughput_per_second": {
+          "max": 14.352821929848862,
+          "mean": 14.352821929848862,
+          "median": 14.352821929848862,
+          "min": 14.352821929848862,
+          "p95": 14.352821929848862,
+          "p99": 14.352821929848862
+        },
+        "total_kernel_read_bytes": 344064,
+        "total_kernel_write_bytes": 1167360,
+        "total_read_syscalls": 166,
+        "total_write_syscalls": 317,
+        "wall_ms": {
+          "max": 69.67271,
+          "mean": 69.67271,
+          "median": 69.67271,
+          "min": 69.67271,
+          "p95": 69.67271,
+          "p99": 69.67271
+        }
+      },
+      "unit": "pipelines/s"
+    }
+  ]
+}

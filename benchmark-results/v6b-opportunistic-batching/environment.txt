@@ -1,0 +1,238 @@
+=== Git ===
+7fe956ff34b332ba2690184b162ae5bdf3e40a25
+?? benchmark-results/v6b-opportunistic-batching/
+
+=== Current Commit ===
+7fe956f (HEAD -> main, origin/main)  V6B
+
+=== Branch ===
+main
+
+=== V6 Tags ===
+v6a-dedicated-db-writer
+
+=== System ===
+Linux hxmserver 5.15.0-185-generic #195-Ubuntu SMP Fri Jun 19 17:11:50 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
+
+=== CPU ===
+Architecture:                            x86_64
+CPU op-mode(s):                          32-bit, 64-bit
+Address sizes:                           45 bits physical, 48 bits virtual
+Byte Order:                              Little Endian
+CPU(s):                                  8
+On-line CPU(s) list:                     0-7
+Vendor ID:                               GenuineIntel
+Model name:                              13th Gen Intel(R) Core(TM) i7-13700F
+CPU family:                              6
+Model:                                   183
+Thread(s) per core:                      1
+Core(s) per socket:                      4
+Socket(s):                               2
+Stepping:                                1
+BogoMIPS:                                4224.00
+Flags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss ht syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon rep_good nopl xtopology tsc_reliable nonstop_tsc cpuid tsc_known_freq pni pclmulqdq ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch invpcid_single ssbd ibrs ibpb stibp ibrs_enhanced fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid rdseed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 xsaves avx_vnni arat umip pku ospke gfni vaes vpclmulqdq rdpid movdiri movdir64b fsrm md_clear serialize flush_l1d arch_capabilities
+Hypervisor vendor:                       VMware
+Virtualization type:                     full
+L1d cache:                               384 KiB (8 instances)
+L1i cache:                               256 KiB (8 instances)
+L2 cache:                                16 MiB (8 instances)
+L3 cache:                                60 MiB (2 instances)
+NUMA node(s):                            1
+NUMA node0 CPU(s):                       0-7
+Vulnerability Gather data sampling:      Not affected
+Vulnerability Indirect target selection: Not affected
+Vulnerability Itlb multihit:             KVM: Mitigation: VMX unsupported
+Vulnerability L1tf:                      Not affected
+Vulnerability Mds:                       Not affected
+Vulnerability Meltdown:                  Not affected
+Vulnerability Mmio stale data:           Unknown: No mitigations
+Vulnerability Reg file data sampling:    Vulnerable: No microcode
+Vulnerability Retbleed:                  Not affected
+Vulnerability Spec rstack overflow:      Not affected
+Vulnerability Spec store bypass:         Mitigation; Speculative Store Bypass disabled via prctl and seccomp
+Vulnerability Spectre v1:                Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerability Spectre v2:                Mitigation; Enhanced / Automatic IBRS; IBPB conditional; PBRSB-eIBRS SW sequence; BHI BHI_DIS_S
+Vulnerability Srbds:                     Not affected
+Vulnerability Tsa:                       Not affected
+Vulnerability Tsx async abort:           Not affected
+Vulnerability Vmscape:                   Not affected
+
+=== Memory ===
+               total        used        free      shared  buff/cache   available
+Mem:           7.7Gi       1.7Gi       909Mi        13Mi       5.1Gi       5.7Gi
+Swap:          4.0Gi        21Mi       4.0Gi
+
+=== Disk ===
+NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
+loop0    7:0    0  63.9M  1 loop /snap/core20/2318
+loop1    7:1    0    74M  1 loop /snap/core22/2411
+loop3    7:3    0 115.3M  1 loop /snap/lxd/40338
+loop4    7:4    0  50.3M  1 loop /snap/snapd/27738
+loop5    7:5    0  78.6M  1 loop /snap/powershell/389
+loop6    7:6    0    74M  1 loop /snap/core22/2955
+loop7    7:7    0  50.1M  1 loop /snap/snapd/27406
+loop8    7:8    0  75.7M  1 loop /snap/powershell/405
+loop9    7:9    0  63.8M  1 loop /snap/core20/2922
+loop10   7:10   0 115.3M  1 loop /snap/lxd/40575
+sda      8:0    0   100G  0 disk 
+├─sda1   8:1    0     1M  0 part 
+└─sda2   8:2    0   100G  0 part /
+sr0     11:0    1  1024M  0 rom  
+Filesystem     Type  1K-blocks     Used Available Use% Mounted on
+tmpfs          tmpfs    809144    13664    795480   2% /run
+/dev/sda2      ext4  102623160 24504296  72859756  26% /
+tmpfs          tmpfs   4045704        4   4045700   1% /dev/shm
+tmpfs          tmpfs      5120        0      5120   0% /run/lock
+tmpfs          tmpfs    809140        4    809136   1% /run/user/1000
+
+=== Compiler ===
+g++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0
+Copyright (C) 2021 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+
+=== CMake ===
+cmake version 3.22.1
+
+CMake suite maintained and supported by Kitware (kitware.com/cmake).
+
+=== Benchmark Build ===
+Preset CMake variables:
+
+  CMAKE_BUILD_TYPE="Release"
+  CMAKE_EXPORT_COMPILE_COMMANDS:BOOL="TRUE"
+  CMAKE_TOOLCHAIN_FILE="/home/hxm/share/project/photobridge/third_party/vcpkg/scripts/buildsystems/vcpkg.cmake"
+  VCPKG_TARGET_TRIPLET="x64-linux"
+
+-- Running vcpkg install
+Detecting compiler hash for triplet x64-linux...
+Compiler found: /usr/bin/c++
+The following packages are already installed:
+    blake3:x64-linux@1.8.5
+  * brotli:x64-linux@1.2.0
+    cli11:x64-linux@2.6.2
+    cpp-httplib:x64-linux@0.51.0
+    exiv2[core,xmp,bmff]:x64-linux@0.28.8
+  * expat:x64-linux@2.8.2
+  * fmt:x64-linux@12.2.0#1
+    gtest:x64-linux@1.17.0#3
+  * inih[core,cpp]:x64-linux@62#1
+  * libiconv:x64-linux@1.19
+    liburing:x64-linux@2.15
+    nayuki-qr-code-generator:x64-linux@1.8.0#1
+    nlohmann-json:x64-linux@3.12.0#2
+    spdlog[core,tz-offset,fmt]:x64-linux@1.17.0#1
+    sqlite3:x64-linux@3.53.4
+  * vcpkg-cmake:x64-linux@2024-04-23
+  * vcpkg-cmake-config:x64-linux@2026-07-21
+  * vcpkg-cmake-get-vars:x64-linux@2025-05-29
+  * vcpkg-make:x64-linux@2026-07-09
+  * vcpkg-tool-meson:x64-linux@1.9.0#10
+    xxhash:x64-linux@0.8.3
+blake3 provides CMake targets:
+
+  # this is heuristically generated, and may not be correct
+  find_package(blake3 CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE BLAKE3::blake3)
+
+blake3 provides pkg-config modules:
+
+  # BLAKE3 C implementation
+  libblake3
+
+cli11 provides CMake targets:
+
+  # this is heuristically generated, and may not be correct
+  find_package(CLI11 CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE CLI11::CLI11)
+
+cli11 provides pkg-config modules:
+
+  # C++ command line parser
+  CLI11
+
+cpp-httplib provides CMake targets:
+
+    find_package(httplib CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE httplib::httplib)
+
+exiv2 provides CMake targets:
+
+  # this is heuristically generated, and may not be correct
+  find_package(exiv2 CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE Exiv2::exiv2lib)
+
+exiv2 provides pkg-config modules:
+
+  # Exif/IPTC/Xmp C++ metadata library and tools plus ICC Profiles, Previews and more.
+  exiv2
+
+The package gtest is compatible with built-in CMake targets:
+
+    enable_testing()
+    
+    find_package(GTest CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE GTest::gtest GTest::gtest_main GTest::gmock GTest::gmock_main)
+    
+    add_test(AllTestsInMain main)
+
+liburing provides pkg-config modules:
+
+  # io_uring FFI library
+  liburing-ffi
+
+  # io_uring library
+  liburing
+
+nayuki-qr-code-generator provides CMake targets:
+
+  # this is heuristically generated, and may not be correct
+  find_package(unofficial-nayuki-qr-code-generator CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE unofficial::nayuki-qr-code-generator::nayuki-qr-code-generator)
+
+The package nlohmann-json provides CMake targets:
+
+    find_package(nlohmann_json CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE nlohmann_json::nlohmann_json)
+
+The package nlohmann-json can be configured to not provide implicit conversions via a custom triplet file:
+
+    set(nlohmann-json_IMPLICIT_CONVERSIONS OFF)
+
+For more information, see the docs here:
+    
+    https://json.nlohmann.me/api/macros/json_use_implicit_conversions/
+
+The package spdlog provides CMake targets:
+
+    find_package(spdlog CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE spdlog::spdlog)
+
+    # Or use the header-only version
+    find_package(spdlog CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE spdlog::spdlog_header_only)
+
+sqlite3 provides pkgconfig bindings.
+sqlite3 provides CMake targets:
+
+    find_package(unofficial-sqlite3 CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::sqlite3::sqlite3)
+
+xxhash provides CMake targets:
+
+  # this is heuristically generated, and may not be correct
+  find_package(xxHash CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE xxHash::xxhash)
+
+xxhash provides pkg-config modules:
+
+  # extremely fast hash algorithm
+  libxxhash
+
+All requested installations completed successfully in: 327 us
+-- Running vcpkg install - done
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/hxm/share/project/photobridge/build/bench-release
+ninja: no work to do.

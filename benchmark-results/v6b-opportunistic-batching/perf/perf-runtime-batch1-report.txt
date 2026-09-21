@@ -1,0 +1,2757 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 1K of event 'cpu-clock'
+# Event count (approx.): 425250000
+#
+# Children      Self  Command          Shared Object         Symbol                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+# ........  ........  ...............  ....................  ..................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+#
+    93.53%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa5400124
+            |
+            ---0xffffffffa5400124
+               |          
+                --93.12%--0xffffffffa53d4c26
+                          |          
+                          |--72.49%--0xffffffffa46045f2
+                          |          0xffffffffa49e6378
+                          |          0xffffffffa49e62b6
+                          |          |          
+                          |          |--58.50%--0xffffffffa4a7656b
+                          |          |          |          
+                          |          |          |--56.67%--0xffffffffa48c18fd
+                          |          |          |          0xffffffffa48bfc89
+                          |          |          |          0xffffffffa48cecd4
+                          |          |          |          |          
+                          |          |          |          |--53.62%--0xffffffffa4a8919e
+                          |          |          |          |          0xffffffffa4bfbaed
+                          |          |          |          |          0xffffffffa4bfba8d
+                          |          |          |          |          0xffffffffa4c088d3
+                          |          |          |          |          |          
+                          |          |          |          |           --53.26%--0xffffffffa4c0e9e9
+                          |          |          |          |                     |          
+                          |          |          |          |                      --53.20%--0xffffffffa4c05ca7
+                          |          |          |          |                                0xffffffffa4c05ae2
+                          |          |          |          |                                0xffffffffa4c054d4
+                          |          |          |          |                                0xffffffffa4c0e689
+                          |          |          |          |                                0xffffffffa4c0e525
+                          |          |          |          |                                0xffffffffa4c0e1d0
+                          |          |          |          |                                |          
+                          |          |          |          |                                 --53.09%--0xffffffffa4c0defa
+                          |          |          |          |                                           |          
+                          |          |          |          |                                            --53.03%--0xffffffffa4c07fcc
+                          |          |          |          |                                                      |          
+                          |          |          |          |                                                       --52.67%--0xffffffffa4f21ac4
+                          |          |          |          |                                                                 0xffffffffa4f1f7d3
+                          |          |          |          |                                                                 0xffffffffc0383291
+                          |          |          |          |                                                                 |          
+                          |          |          |          |                                                                  --52.56%--0xffffffffc035fc9d
+                          |          |          |          |                                                                            |          
+                          |          |          |          |                                                                             --52.50%--0xffffffffc0152a73
+                          |          |          |          |          
+                          |          |          |           --2.00%--0xffffffffa4a890f0
+                          |          |          |                     |          
+                          |          |          |                      --1.59%--0xffffffffa4a88653
+                          |          |          |                                |          
+                          |          |          |                                 --1.41%--0xffffffffa4a84c54
+                          |          |          |                                           |          
+                          |          |          |                                           |--0.65%--0xffffffffa4a6e7bb
+                          |          |          |                                           |          0xffffffffa4a6b645
+                          |          |          |                                           |          |          
+                          |          |          |                                           |           --0.53%--0xffffffffa4a67c4a
+                          |          |          |                                           |          
+                          |          |          |                                            --0.53%--0xffffffffa4a6e976
+                          |          |          |          
+                          |          |           --1.82%--0xffffffffa48c1920
+                          |          |                     |          
+                          |          |                      --1.65%--0xffffffffa48bf807
+                          |          |                                |          
+                          |          |                                 --1.47%--0xffffffffa48cb7b6
+                          |          |                                           0xffffffffa48c22bf
+                          |          |                                           |          
+                          |          |                                           |--0.76%--0xffffffffa48c2262
+                          |          |                                           |          0xffffffffa472f1eb
+                          |          |                                           |          0xffffffffa53e7da5
+                          |          |                                           |          
+                          |          |                                            --0.65%--0xffffffffa48c1fbc
+                          |          |                                                      0xffffffffa53e2606
+                          |          |                                                      0xffffffffa53e24e9
+                          |          |                                                      0xffffffffa53e2146
+                          |          |                                                      0xffffffffa47041c5
+                          |          |          
+                          |           --13.99%--0xffffffffa4a767f4
+                          |                     |          
+                          |                      --13.93%--0xffffffffa4ad3c4f
+                          |                                |          
+                          |                                |--10.76%--0xffffffffa4ae407e
+                          |                                |          0xffffffffa4ae3678
+                          |                                |          0xffffffffa472f003
+                          |                                |          0xffffffffa472efba
+                          |                                |          0xffffffffa53e7da5
+                          |                                |          
+                          |                                 --3.12%--0xffffffffa4ae4044
+                          |                                           |          
+                          |                                            --2.59%--0xffffffffa4ae1850
+                          |                                                      0xffffffffa472f3b5
+                          |                                                      0xffffffffa53e7da5
+                          |          
+                          |--15.87%--0xffffffffa46036a2
+                          |          |          
+                          |           --15.81%--0xffffffffa4798678
+                          |                     |          
+                          |                     |--14.52%--0xffffffffa4797fd2
+                          |                     |          |          
+                          |                     |           --14.29%--0xffffffffa4795689
+                          |                     |                     0xffffffffa470b590
+                          |                     |                     0xffffffffa470b1a6
+                          |                     |                     0xffffffffa53e7da5
+                          |                     |          
+                          |                      --1.29%--0xffffffffa4797fb9
+                          |                                |          
+                          |                                 --1.12%--0xffffffffa4794fe5
+                          |                                           |          
+                          |                                            --1.00%--0xffffffffa4794e77
+                          |                                                      0xffffffffa53e24e9
+                          |                                                      |          
+                          |                                                       --0.94%--0xffffffffa53e2146
+                          |                                                                 0xffffffffa47041c5
+                          |          
+                          |--3.76%--0xffffffffa46029e7
+                          |          0xffffffffa499f846
+                          |          0xffffffffa499f718
+                          |          0xffffffffa499eb21
+                          |          0xffffffffa4a74c03
+                          |          |          
+                          |           --3.47%--0xffffffffa4a746a4
+                          |                     |          
+                          |                      --2.65%--0xffffffffa48bf643
+                          |                                |          
+                          |                                |--1.94%--0xffffffffa4a8ac3c
+                          |                                |          0xffffffffa48c3c51
+                          |                                |          |          
+                          |                                |          |--1.18%--0xffffffffa48c3362
+                          |                                |          |          0xffffffffa48bf4fe
+                          |                                |          |          0xffffffffa4954a5e
+                          |                                |          |          0xffffffffa49325be
+                          |                                |          |          |          
+                          |                                |          |           --0.94%--0xffffffffa4931216
+                          |                                |          |                     0xffffffffa4cbd897
+                          |                                |          |          
+                          |                                |           --0.71%--0xffffffffa48c33a2
+                          |                                |                     0xffffffffa48c2b0d
+                          |                                |          
+                          |                                 --0.71%--0xffffffffa4a8ac65
+                          |          
+                           --0.59%--0xffffffffa46045dc
+                                     0xffffffffa49b9629
+
+    93.12%     0.06%  photobridge_ben  [unknown]             [.] 0xffffffffa53d4c26
+            |          
+             --93.06%--0xffffffffa53d4c26
+                       |          
+                       |--72.49%--0xffffffffa46045f2
+                       |          0xffffffffa49e6378
+                       |          0xffffffffa49e62b6
+                       |          |          
+                       |          |--58.50%--0xffffffffa4a7656b
+                       |          |          |          
+                       |          |          |--56.67%--0xffffffffa48c18fd
+                       |          |          |          0xffffffffa48bfc89
+                       |          |          |          0xffffffffa48cecd4
+                       |          |          |          |          
+                       |          |          |          |--53.62%--0xffffffffa4a8919e
+                       |          |          |          |          0xffffffffa4bfbaed
+                       |          |          |          |          0xffffffffa4bfba8d
+                       |          |          |          |          0xffffffffa4c088d3
+                       |          |          |          |          |          
+                       |          |          |          |           --53.26%--0xffffffffa4c0e9e9
+                       |          |          |          |                     |          
+                       |          |          |          |                      --53.20%--0xffffffffa4c05ca7
+                       |          |          |          |                                0xffffffffa4c05ae2
+                       |          |          |          |                                0xffffffffa4c054d4
+                       |          |          |          |                                0xffffffffa4c0e689
+                       |          |          |          |                                0xffffffffa4c0e525
+                       |          |          |          |                                0xffffffffa4c0e1d0
+                       |          |          |          |                                |          
+                       |          |          |          |                                 --53.09%--0xffffffffa4c0defa
+                       |          |          |          |                                           |          
+                       |          |          |          |                                            --53.03%--0xffffffffa4c07fcc
+                       |          |          |          |                                                      |          
+                       |          |          |          |                                                       --52.67%--0xffffffffa4f21ac4
+                       |          |          |          |                                                                 0xffffffffa4f1f7d3
+                       |          |          |          |                                                                 0xffffffffc0383291
+                       |          |          |          |                                                                 |          
+                       |          |          |          |                                                                  --52.56%--0xffffffffc035fc9d
+                       |          |          |          |                                                                            |          
+                       |          |          |          |                                                                             --52.50%--0xffffffffc0152a73
+                       |          |          |          |          
+                       |          |          |           --2.00%--0xffffffffa4a890f0
+                       |          |          |                     |          
+                       |          |          |                      --1.59%--0xffffffffa4a88653
+                       |          |          |                                |          
+                       |          |          |                                 --1.41%--0xffffffffa4a84c54
+                       |          |          |                                           |          
+                       |          |          |                                           |--0.65%--0xffffffffa4a6e7bb
+                       |          |          |                                           |          0xffffffffa4a6b645
+                       |          |          |                                           |          |          
+                       |          |          |                                           |           --0.53%--0xffffffffa4a67c4a
+                       |          |          |                                           |          
+                       |          |          |                                            --0.53%--0xffffffffa4a6e976
+                       |          |          |          
+                       |          |           --1.82%--0xffffffffa48c1920
+                       |          |                     |          
+                       |          |                      --1.65%--0xffffffffa48bf807
+                       |          |                                |          
+                       |          |                                 --1.47%--0xffffffffa48cb7b6
+                       |          |                                           0xffffffffa48c22bf
+                       |          |                                           |          
+                       |          |                                           |--0.76%--0xffffffffa48c2262
+                       |          |                                           |          0xffffffffa472f1eb
+                       |          |                                           |          0xffffffffa53e7da5
+                       |          |                                           |          
+                       |          |                                            --0.65%--0xffffffffa48c1fbc
+                       |          |                                                      0xffffffffa53e2606
+                       |          |                                                      0xffffffffa53e24e9
+                       |          |                                                      0xffffffffa53e2146
+                       |          |                                                      0xffffffffa47041c5
+                       |          |          
+                       |           --13.99%--0xffffffffa4a767f4
+                       |                     |          
+                       |                      --13.93%--0xffffffffa4ad3c4f
+                       |                                |          
+                       |                                |--10.76%--0xffffffffa4ae407e
+                       |                                |          0xffffffffa4ae3678
+                       |                                |          0xffffffffa472f003
+                       |                                |          0xffffffffa472efba
+                       |                                |          0xffffffffa53e7da5
+                       |                                |          
+                       |                                 --3.12%--0xffffffffa4ae4044
+                       |                                           |          
+                       |                                            --2.59%--0xffffffffa4ae1850
+                       |                                                      0xffffffffa472f3b5
+                       |                                                      0xffffffffa53e7da5
+                       |          
+                       |--15.87%--0xffffffffa46036a2
+                       |          |          
+                       |           --15.81%--0xffffffffa4798678
+                       |                     |          
+                       |                     |--14.52%--0xffffffffa4797fd2
+                       |                     |          |          
+                       |                     |           --14.29%--0xffffffffa4795689
+                       |                     |                     0xffffffffa470b590
+                       |                     |                     0xffffffffa470b1a6
+                       |                     |                     0xffffffffa53e7da5
+                       |                     |          
+                       |                      --1.29%--0xffffffffa4797fb9
+                       |                                |          
+                       |                                 --1.12%--0xffffffffa4794fe5
+                       |                                           |          
+                       |                                            --1.00%--0xffffffffa4794e77
+                       |                                                      0xffffffffa53e24e9
+                       |                                                      |          
+                       |                                                       --0.94%--0xffffffffa53e2146
+                       |                                                                 0xffffffffa47041c5
+                       |          
+                       |--3.76%--0xffffffffa46029e7
+                       |          0xffffffffa499f846
+                       |          0xffffffffa499f718
+                       |          0xffffffffa499eb21
+                       |          0xffffffffa4a74c03
+                       |          |          
+                       |           --3.47%--0xffffffffa4a746a4
+                       |                     |          
+                       |                      --2.65%--0xffffffffa48bf643
+                       |                                |          
+                       |                                |--1.94%--0xffffffffa4a8ac3c
+                       |                                |          0xffffffffa48c3c51
+                       |                                |          |          
+                       |                                |          |--1.18%--0xffffffffa48c3362
+                       |                                |          |          0xffffffffa48bf4fe
+                       |                                |          |          0xffffffffa4954a5e
+                       |                                |          |          0xffffffffa49325be
+                       |                                |          |          |          
+                       |                                |          |           --0.94%--0xffffffffa4931216
+                       |                                |          |                     0xffffffffa4cbd897
+                       |                                |          |          
+                       |                                |           --0.71%--0xffffffffa48c33a2
+                       |                                |                     0xffffffffa48c2b0d
+                       |                                |          
+                       |                                 --0.71%--0xffffffffa4a8ac65
+                       |          
+                        --0.59%--0xffffffffa46045dc
+                                  0xffffffffa49b9629
+
+    73.49%     0.00%  photobridge_ben  [unknown]             [.] 0x0000000000000200
+            |
+            ---0x200
+               |          
+                --72.13%--0x558c5ad743e0
+                          |          
+                           --71.78%--fsync
+                                     0xffffffffa5400124
+                                     0xffffffffa53d4c26
+                                     0xffffffffa46045f2
+                                     0xffffffffa49e6378
+                                     0xffffffffa49e62b6
+                                     |          
+                                     |--57.85%--0xffffffffa4a7656b
+                                     |          |          
+                                     |          |--56.03%--0xffffffffa48c18fd
+                                     |          |          0xffffffffa48bfc89
+                                     |          |          0xffffffffa48cecd4
+                                     |          |          |          
+                                     |          |          |--53.09%--0xffffffffa4a8919e
+                                     |          |          |          0xffffffffa4bfbaed
+                                     |          |          |          0xffffffffa4bfba8d
+                                     |          |          |          0xffffffffa4c088d3
+                                     |          |          |          |          
+                                     |          |          |           --52.73%--0xffffffffa4c0e9e9
+                                     |          |          |                     |          
+                                     |          |          |                      --52.67%--0xffffffffa4c05ca7
+                                     |          |          |                                0xffffffffa4c05ae2
+                                     |          |          |                                0xffffffffa4c054d4
+                                     |          |          |                                0xffffffffa4c0e689
+                                     |          |          |                                0xffffffffa4c0e525
+                                     |          |          |                                0xffffffffa4c0e1d0
+                                     |          |          |                                |          
+                                     |          |          |                                 --52.56%--0xffffffffa4c0defa
+                                     |          |          |                                           |          
+                                     |          |          |                                            --52.50%--0xffffffffa4c07fcc
+                                     |          |          |                                                      |          
+                                     |          |          |                                                       --52.15%--0xffffffffa4f21ac4
+                                     |          |          |                                                                 0xffffffffa4f1f7d3
+                                     |          |          |                                                                 0xffffffffc0383291
+                                     |          |          |                                                                 |          
+                                     |          |          |                                                                  --52.03%--0xffffffffc035fc9d
+                                     |          |          |                                                                            |          
+                                     |          |          |                                                                             --51.97%--0xffffffffc0152a73
+                                     |          |          |          
+                                     |          |           --1.94%--0xffffffffa4a890f0
+                                     |          |                     |          
+                                     |          |                      --1.53%--0xffffffffa4a88653
+                                     |          |                                |          
+                                     |          |                                 --1.35%--0xffffffffa4a84c54
+                                     |          |                                           |          
+                                     |          |                                            --0.65%--0xffffffffa4a6e7bb
+                                     |          |                                                      0xffffffffa4a6b645
+                                     |          |                                                      |          
+                                     |          |                                                       --0.53%--0xffffffffa4a67c4a
+                                     |          |          
+                                     |           --1.82%--0xffffffffa48c1920
+                                     |                     |          
+                                     |                      --1.65%--0xffffffffa48bf807
+                                     |                                |          
+                                     |                                 --1.47%--0xffffffffa48cb7b6
+                                     |                                           0xffffffffa48c22bf
+                                     |                                           |          
+                                     |                                           |--0.76%--0xffffffffa48c2262
+                                     |                                           |          0xffffffffa472f1eb
+                                     |                                           |          0xffffffffa53e7da5
+                                     |                                           |          
+                                     |                                            --0.65%--0xffffffffa48c1fbc
+                                     |                                                      0xffffffffa53e2606
+                                     |                                                      0xffffffffa53e24e9
+                                     |                                                      0xffffffffa53e2146
+                                     |                                                      0xffffffffa47041c5
+                                     |          
+                                      --13.93%--0xffffffffa4a767f4
+                                                |          
+                                                 --13.87%--0xffffffffa4ad3c4f
+                                                           |          
+                                                           |--10.70%--0xffffffffa4ae407e
+                                                           |          0xffffffffa4ae3678
+                                                           |          0xffffffffa472f003
+                                                           |          0xffffffffa472efba
+                                                           |          0xffffffffa53e7da5
+                                                           |          
+                                                            --3.12%--0xffffffffa4ae4044
+                                                                      |          
+                                                                       --2.59%--0xffffffffa4ae1850
+                                                                                 0xffffffffa472f3b5
+                                                                                 0xffffffffa53e7da5
+
+    72.49%     0.00%  photobridge_ben  libc.so.6             [.] fsync
+            |
+            ---fsync
+               0xffffffffa5400124
+               0xffffffffa53d4c26
+               0xffffffffa46045f2
+               0xffffffffa49e6378
+               0xffffffffa49e62b6
+               |          
+               |--58.50%--0xffffffffa4a7656b
+               |          |          
+               |          |--56.67%--0xffffffffa48c18fd
+               |          |          0xffffffffa48bfc89
+               |          |          0xffffffffa48cecd4
+               |          |          |          
+               |          |          |--53.62%--0xffffffffa4a8919e
+               |          |          |          0xffffffffa4bfbaed
+               |          |          |          0xffffffffa4bfba8d
+               |          |          |          0xffffffffa4c088d3
+               |          |          |          |          
+               |          |          |           --53.26%--0xffffffffa4c0e9e9
+               |          |          |                     |          
+               |          |          |                      --53.20%--0xffffffffa4c05ca7
+               |          |          |                                0xffffffffa4c05ae2
+               |          |          |                                0xffffffffa4c054d4
+               |          |          |                                0xffffffffa4c0e689
+               |          |          |                                0xffffffffa4c0e525
+               |          |          |                                0xffffffffa4c0e1d0
+               |          |          |                                |          
+               |          |          |                                 --53.09%--0xffffffffa4c0defa
+               |          |          |                                           |          
+               |          |          |                                            --53.03%--0xffffffffa4c07fcc
+               |          |          |                                                      |          
+               |          |          |                                                       --52.67%--0xffffffffa4f21ac4
+               |          |          |                                                                 0xffffffffa4f1f7d3
+               |          |          |                                                                 0xffffffffc0383291
+               |          |          |                                                                 |          
+               |          |          |                                                                  --52.56%--0xffffffffc035fc9d
+               |          |          |                                                                            |          
+               |          |          |                                                                             --52.50%--0xffffffffc0152a73
+               |          |          |          
+               |          |           --2.00%--0xffffffffa4a890f0
+               |          |                     |          
+               |          |                      --1.59%--0xffffffffa4a88653
+               |          |                                |          
+               |          |                                 --1.41%--0xffffffffa4a84c54
+               |          |                                           |          
+               |          |                                           |--0.65%--0xffffffffa4a6e7bb
+               |          |                                           |          0xffffffffa4a6b645
+               |          |                                           |          |          
+               |          |                                           |           --0.53%--0xffffffffa4a67c4a
+               |          |                                           |          
+               |          |                                            --0.53%--0xffffffffa4a6e976
+               |          |          
+               |           --1.82%--0xffffffffa48c1920
+               |                     |          
+               |                      --1.65%--0xffffffffa48bf807
+               |                                |          
+               |                                 --1.47%--0xffffffffa48cb7b6
+               |                                           0xffffffffa48c22bf
+               |                                           |          
+               |                                           |--0.76%--0xffffffffa48c2262
+               |                                           |          0xffffffffa472f1eb
+               |                                           |          0xffffffffa53e7da5
+               |                                           |          
+               |                                            --0.65%--0xffffffffa48c1fbc
+               |                                                      0xffffffffa53e2606
+               |                                                      0xffffffffa53e24e9
+               |                                                      0xffffffffa53e2146
+               |                                                      0xffffffffa47041c5
+               |          
+                --13.99%--0xffffffffa4a767f4
+                          |          
+                           --13.93%--0xffffffffa4ad3c4f
+                                     |          
+                                     |--10.76%--0xffffffffa4ae407e
+                                     |          0xffffffffa4ae3678
+                                     |          0xffffffffa472f003
+                                     |          0xffffffffa472efba
+                                     |          0xffffffffa53e7da5
+                                     |          
+                                      --3.12%--0xffffffffa4ae4044
+                                                |          
+                                                 --2.59%--0xffffffffa4ae1850
+                                                           0xffffffffa472f3b5
+                                                           0xffffffffa53e7da5
+
+    72.49%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa46045f2
+            |
+            ---0xffffffffa46045f2
+               0xffffffffa49e6378
+               0xffffffffa49e62b6
+               |          
+               |--58.50%--0xffffffffa4a7656b
+               |          |          
+               |          |--56.67%--0xffffffffa48c18fd
+               |          |          0xffffffffa48bfc89
+               |          |          0xffffffffa48cecd4
+               |          |          |          
+               |          |          |--53.62%--0xffffffffa4a8919e
+               |          |          |          0xffffffffa4bfbaed
+               |          |          |          0xffffffffa4bfba8d
+               |          |          |          0xffffffffa4c088d3
+               |          |          |          |          
+               |          |          |           --53.26%--0xffffffffa4c0e9e9
+               |          |          |                     |          
+               |          |          |                      --53.20%--0xffffffffa4c05ca7
+               |          |          |                                0xffffffffa4c05ae2
+               |          |          |                                0xffffffffa4c054d4
+               |          |          |                                0xffffffffa4c0e689
+               |          |          |                                0xffffffffa4c0e525
+               |          |          |                                0xffffffffa4c0e1d0
+               |          |          |                                |          
+               |          |          |                                 --53.09%--0xffffffffa4c0defa
+               |          |          |                                           |          
+               |          |          |                                            --53.03%--0xffffffffa4c07fcc
+               |          |          |                                                      |          
+               |          |          |                                                       --52.67%--0xffffffffa4f21ac4
+               |          |          |                                                                 0xffffffffa4f1f7d3
+               |          |          |                                                                 0xffffffffc0383291
+               |          |          |                                                                 |          
+               |          |          |                                                                  --52.56%--0xffffffffc035fc9d
+               |          |          |                                                                            |          
+               |          |          |                                                                             --52.50%--0xffffffffc0152a73
+               |          |          |          
+               |          |           --2.00%--0xffffffffa4a890f0
+               |          |                     |          
+               |          |                      --1.59%--0xffffffffa4a88653
+               |          |                                |          
+               |          |                                 --1.41%--0xffffffffa4a84c54
+               |          |                                           |          
+               |          |                                           |--0.65%--0xffffffffa4a6e7bb
+               |          |                                           |          0xffffffffa4a6b645
+               |          |                                           |          |          
+               |          |                                           |           --0.53%--0xffffffffa4a67c4a
+               |          |                                           |          
+               |          |                                            --0.53%--0xffffffffa4a6e976
+               |          |          
+               |           --1.82%--0xffffffffa48c1920
+               |                     |          
+               |                      --1.65%--0xffffffffa48bf807
+               |                                |          
+               |                                 --1.47%--0xffffffffa48cb7b6
+               |                                           0xffffffffa48c22bf
+               |                                           |          
+               |                                           |--0.76%--0xffffffffa48c2262
+               |                                           |          0xffffffffa472f1eb
+               |                                           |          0xffffffffa53e7da5
+               |                                           |          
+               |                                            --0.65%--0xffffffffa48c1fbc
+               |                                                      0xffffffffa53e2606
+               |                                                      0xffffffffa53e24e9
+               |                                                      0xffffffffa53e2146
+               |                                                      0xffffffffa47041c5
+               |          
+                --13.99%--0xffffffffa4a767f4
+                          |          
+                           --13.93%--0xffffffffa4ad3c4f
+                                     |          
+                                     |--10.76%--0xffffffffa4ae407e
+                                     |          0xffffffffa4ae3678
+                                     |          0xffffffffa472f003
+                                     |          0xffffffffa472efba
+                                     |          0xffffffffa53e7da5
+                                     |          
+                                      --3.12%--0xffffffffa4ae4044
+                                                |          
+                                                 --2.59%--0xffffffffa4ae1850
+                                                           0xffffffffa472f3b5
+                                                           0xffffffffa53e7da5
+
+    72.49%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa49e6378
+            |
+            ---0xffffffffa49e6378
+               0xffffffffa49e62b6
+               |          
+               |--58.50%--0xffffffffa4a7656b
+               |          |          
+               |          |--56.67%--0xffffffffa48c18fd
+               |          |          0xffffffffa48bfc89
+               |          |          0xffffffffa48cecd4
+               |          |          |          
+               |          |          |--53.62%--0xffffffffa4a8919e
+               |          |          |          0xffffffffa4bfbaed
+               |          |          |          0xffffffffa4bfba8d
+               |          |          |          0xffffffffa4c088d3
+               |          |          |          |          
+               |          |          |           --53.26%--0xffffffffa4c0e9e9
+               |          |          |                     |          
+               |          |          |                      --53.20%--0xffffffffa4c05ca7
+               |          |          |                                0xffffffffa4c05ae2
+               |          |          |                                0xffffffffa4c054d4
+               |          |          |                                0xffffffffa4c0e689
+               |          |          |                                0xffffffffa4c0e525
+               |          |          |                                0xffffffffa4c0e1d0
+               |          |          |                                |          
+               |          |          |                                 --53.09%--0xffffffffa4c0defa
+               |          |          |                                           |          
+               |          |          |                                            --53.03%--0xffffffffa4c07fcc
+               |          |          |                                                      |          
+               |          |          |                                                       --52.67%--0xffffffffa4f21ac4
+               |          |          |                                                                 0xffffffffa4f1f7d3
+               |          |          |                                                                 0xffffffffc0383291
+               |          |          |                                                                 |          
+               |          |          |                                                                  --52.56%--0xffffffffc035fc9d
+               |          |          |                                                                            |          
+               |          |          |                                                                             --52.50%--0xffffffffc0152a73
+               |          |          |          
+               |          |           --2.00%--0xffffffffa4a890f0
+               |          |                     |          
+               |          |                      --1.59%--0xffffffffa4a88653
+               |          |                                |          
+               |          |                                 --1.41%--0xffffffffa4a84c54
+               |          |                                           |          
+               |          |                                           |--0.65%--0xffffffffa4a6e7bb
+               |          |                                           |          0xffffffffa4a6b645
+               |          |                                           |          |          
+               |          |                                           |           --0.53%--0xffffffffa4a67c4a
+               |          |                                           |          
+               |          |                                            --0.53%--0xffffffffa4a6e976
+               |          |          
+               |           --1.82%--0xffffffffa48c1920
+               |                     |          
+               |                      --1.65%--0xffffffffa48bf807
+               |                                |          
+               |                                 --1.47%--0xffffffffa48cb7b6
+               |                                           0xffffffffa48c22bf
+               |                                           |          
+               |                                           |--0.76%--0xffffffffa48c2262
+               |                                           |          0xffffffffa472f1eb
+               |                                           |          0xffffffffa53e7da5
+               |                                           |          
+               |                                            --0.65%--0xffffffffa48c1fbc
+               |                                                      0xffffffffa53e2606
+               |                                                      0xffffffffa53e24e9
+               |                                                      0xffffffffa53e2146
+               |                                                      0xffffffffa47041c5
+               |          
+                --13.99%--0xffffffffa4a767f4
+                          |          
+                           --13.93%--0xffffffffa4ad3c4f
+                                     |          
+                                     |--10.76%--0xffffffffa4ae407e
+                                     |          0xffffffffa4ae3678
+                                     |          0xffffffffa472f003
+                                     |          0xffffffffa472efba
+                                     |          0xffffffffa53e7da5
+                                     |          
+                                      --3.12%--0xffffffffa4ae4044
+                                                |          
+                                                 --2.59%--0xffffffffa4ae1850
+                                                           0xffffffffa472f3b5
+                                                           0xffffffffa53e7da5
+
+    72.49%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa49e62b6
+            |
+            ---0xffffffffa49e62b6
+               |          
+               |--58.50%--0xffffffffa4a7656b
+               |          |          
+               |          |--56.67%--0xffffffffa48c18fd
+               |          |          0xffffffffa48bfc89
+               |          |          0xffffffffa48cecd4
+               |          |          |          
+               |          |          |--53.62%--0xffffffffa4a8919e
+               |          |          |          0xffffffffa4bfbaed
+               |          |          |          0xffffffffa4bfba8d
+               |          |          |          0xffffffffa4c088d3
+               |          |          |          |          
+               |          |          |           --53.26%--0xffffffffa4c0e9e9
+               |          |          |                     |          
+               |          |          |                      --53.20%--0xffffffffa4c05ca7
+               |          |          |                                0xffffffffa4c05ae2
+               |          |          |                                0xffffffffa4c054d4
+               |          |          |                                0xffffffffa4c0e689
+               |          |          |                                0xffffffffa4c0e525
+               |          |          |                                0xffffffffa4c0e1d0
+               |          |          |                                |          
+               |          |          |                                 --53.09%--0xffffffffa4c0defa
+               |          |          |                                           |          
+               |          |          |                                            --53.03%--0xffffffffa4c07fcc
+               |          |          |                                                      |          
+               |          |          |                                                       --52.67%--0xffffffffa4f21ac4
+               |          |          |                                                                 0xffffffffa4f1f7d3
+               |          |          |                                                                 0xffffffffc0383291
+               |          |          |                                                                 |          
+               |          |          |                                                                  --52.56%--0xffffffffc035fc9d
+               |          |          |                                                                            |          
+               |          |          |                                                                             --52.50%--0xffffffffc0152a73
+               |          |          |          
+               |          |           --2.00%--0xffffffffa4a890f0
+               |          |                     |          
+               |          |                      --1.59%--0xffffffffa4a88653
+               |          |                                |          
+               |          |                                 --1.41%--0xffffffffa4a84c54
+               |          |                                           |          
+               |          |                                           |--0.65%--0xffffffffa4a6e7bb
+               |          |                                           |          0xffffffffa4a6b645
+               |          |                                           |          |          
+               |          |                                           |           --0.53%--0xffffffffa4a67c4a
+               |          |                                           |          
+               |          |                                            --0.53%--0xffffffffa4a6e976
+               |          |          
+               |           --1.82%--0xffffffffa48c1920
+               |                     |          
+               |                      --1.65%--0xffffffffa48bf807
+               |                                |          
+               |                                 --1.47%--0xffffffffa48cb7b6
+               |                                           0xffffffffa48c22bf
+               |                                           |          
+               |                                           |--0.76%--0xffffffffa48c2262
+               |                                           |          0xffffffffa472f1eb
+               |                                           |          0xffffffffa53e7da5
+               |                                           |          
+               |                                            --0.65%--0xffffffffa48c1fbc
+               |                                                      0xffffffffa53e2606
+               |                                                      0xffffffffa53e24e9
+               |                                                      0xffffffffa53e2146
+               |                                                      0xffffffffa47041c5
+               |          
+                --13.99%--0xffffffffa4a767f4
+                          |          
+                           --13.93%--0xffffffffa4ad3c4f
+                                     |          
+                                     |--10.76%--0xffffffffa4ae407e
+                                     |          0xffffffffa4ae3678
+                                     |          0xffffffffa472f003
+                                     |          0xffffffffa472efba
+                                     |          0xffffffffa53e7da5
+                                     |          
+                                      --3.12%--0xffffffffa4ae4044
+                                                |          
+                                                 --2.59%--0xffffffffa4ae1850
+                                                           0xffffffffa472f3b5
+                                                           0xffffffffa53e7da5
+
+    72.13%     0.00%  photobridge_ben  [unknown]             [k] 0x0000558c5ad743e0
+            |
+            ---0x558c5ad743e0
+               |          
+                --71.78%--fsync
+                          0xffffffffa5400124
+                          0xffffffffa53d4c26
+                          0xffffffffa46045f2
+                          0xffffffffa49e6378
+                          0xffffffffa49e62b6
+                          |          
+                          |--57.85%--0xffffffffa4a7656b
+                          |          |          
+                          |          |--56.03%--0xffffffffa48c18fd
+                          |          |          0xffffffffa48bfc89
+                          |          |          0xffffffffa48cecd4
+                          |          |          |          
+                          |          |          |--53.09%--0xffffffffa4a8919e
+                          |          |          |          0xffffffffa4bfbaed
+                          |          |          |          0xffffffffa4bfba8d
+                          |          |          |          0xffffffffa4c088d3
+                          |          |          |          |          
+                          |          |          |           --52.73%--0xffffffffa4c0e9e9
+                          |          |          |                     |          
+                          |          |          |                      --52.67%--0xffffffffa4c05ca7
+                          |          |          |                                0xffffffffa4c05ae2
+                          |          |          |                                0xffffffffa4c054d4
+                          |          |          |                                0xffffffffa4c0e689
+                          |          |          |                                0xffffffffa4c0e525
+                          |          |          |                                0xffffffffa4c0e1d0
+                          |          |          |                                |          
+                          |          |          |                                 --52.56%--0xffffffffa4c0defa
+                          |          |          |                                           |          
+                          |          |          |                                            --52.50%--0xffffffffa4c07fcc
+                          |          |          |                                                      |          
+                          |          |          |                                                       --52.15%--0xffffffffa4f21ac4
+                          |          |          |                                                                 0xffffffffa4f1f7d3
+                          |          |          |                                                                 0xffffffffc0383291
+                          |          |          |                                                                 |          
+                          |          |          |                                                                  --52.03%--0xffffffffc035fc9d
+                          |          |          |                                                                            |          
+                          |          |          |                                                                             --51.97%--0xffffffffc0152a73
+                          |          |          |          
+                          |          |           --1.94%--0xffffffffa4a890f0
+                          |          |                     |          
+                          |          |                      --1.53%--0xffffffffa4a88653
+                          |          |                                |          
+                          |          |                                 --1.35%--0xffffffffa4a84c54
+                          |          |                                           |          
+                          |          |                                            --0.65%--0xffffffffa4a6e7bb
+                          |          |                                                      0xffffffffa4a6b645
+                          |          |                                                      |          
+                          |          |                                                       --0.53%--0xffffffffa4a67c4a
+                          |          |          
+                          |           --1.82%--0xffffffffa48c1920
+                          |                     |          
+                          |                      --1.65%--0xffffffffa48bf807
+                          |                                |          
+                          |                                 --1.47%--0xffffffffa48cb7b6
+                          |                                           0xffffffffa48c22bf
+                          |                                           |          
+                          |                                           |--0.76%--0xffffffffa48c2262
+                          |                                           |          0xffffffffa472f1eb
+                          |                                           |          0xffffffffa53e7da5
+                          |                                           |          
+                          |                                            --0.65%--0xffffffffa48c1fbc
+                          |                                                      0xffffffffa53e2606
+                          |                                                      0xffffffffa53e24e9
+                          |                                                      0xffffffffa53e2146
+                          |                                                      0xffffffffa47041c5
+                          |          
+                           --13.93%--0xffffffffa4a767f4
+                                     |          
+                                      --13.87%--0xffffffffa4ad3c4f
+                                                |          
+                                                |--10.70%--0xffffffffa4ae407e
+                                                |          0xffffffffa4ae3678
+                                                |          0xffffffffa472f003
+                                                |          0xffffffffa472efba
+                                                |          0xffffffffa53e7da5
+                                                |          
+                                                 --3.12%--0xffffffffa4ae4044
+                                                           |          
+                                                            --2.59%--0xffffffffa4ae1850
+                                                                      0xffffffffa472f3b5
+                                                                      0xffffffffa53e7da5
+
+    58.50%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a7656b
+            |
+            ---0xffffffffa4a7656b
+               |          
+               |--56.67%--0xffffffffa48c18fd
+               |          0xffffffffa48bfc89
+               |          0xffffffffa48cecd4
+               |          |          
+               |          |--53.62%--0xffffffffa4a8919e
+               |          |          0xffffffffa4bfbaed
+               |          |          0xffffffffa4bfba8d
+               |          |          0xffffffffa4c088d3
+               |          |          |          
+               |          |           --53.26%--0xffffffffa4c0e9e9
+               |          |                     |          
+               |          |                      --53.20%--0xffffffffa4c05ca7
+               |          |                                0xffffffffa4c05ae2
+               |          |                                0xffffffffa4c054d4
+               |          |                                0xffffffffa4c0e689
+               |          |                                0xffffffffa4c0e525
+               |          |                                0xffffffffa4c0e1d0
+               |          |                                |          
+               |          |                                 --53.09%--0xffffffffa4c0defa
+               |          |                                           |          
+               |          |                                            --53.03%--0xffffffffa4c07fcc
+               |          |                                                      |          
+               |          |                                                       --52.67%--0xffffffffa4f21ac4
+               |          |                                                                 0xffffffffa4f1f7d3
+               |          |                                                                 0xffffffffc0383291
+               |          |                                                                 |          
+               |          |                                                                  --52.56%--0xffffffffc035fc9d
+               |          |                                                                            |          
+               |          |                                                                             --52.50%--0xffffffffc0152a73
+               |          |          
+               |           --2.00%--0xffffffffa4a890f0
+               |                     |          
+               |                      --1.59%--0xffffffffa4a88653
+               |                                |          
+               |                                 --1.41%--0xffffffffa4a84c54
+               |                                           |          
+               |                                           |--0.65%--0xffffffffa4a6e7bb
+               |                                           |          0xffffffffa4a6b645
+               |                                           |          |          
+               |                                           |           --0.53%--0xffffffffa4a67c4a
+               |                                           |          
+               |                                            --0.53%--0xffffffffa4a6e976
+               |          
+                --1.82%--0xffffffffa48c1920
+                          |          
+                           --1.65%--0xffffffffa48bf807
+                                     |          
+                                      --1.47%--0xffffffffa48cb7b6
+                                                0xffffffffa48c22bf
+                                                |          
+                                                |--0.76%--0xffffffffa48c2262
+                                                |          0xffffffffa472f1eb
+                                                |          0xffffffffa53e7da5
+                                                |          
+                                                 --0.65%--0xffffffffa48c1fbc
+                                                           0xffffffffa53e2606
+                                                           0xffffffffa53e24e9
+                                                           0xffffffffa53e2146
+                                                           0xffffffffa47041c5
+
+    56.67%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa48c18fd
+            |
+            ---0xffffffffa48c18fd
+               0xffffffffa48bfc89
+               0xffffffffa48cecd4
+               |          
+               |--53.62%--0xffffffffa4a8919e
+               |          0xffffffffa4bfbaed
+               |          0xffffffffa4bfba8d
+               |          0xffffffffa4c088d3
+               |          |          
+               |           --53.26%--0xffffffffa4c0e9e9
+               |                     |          
+               |                      --53.20%--0xffffffffa4c05ca7
+               |                                0xffffffffa4c05ae2
+               |                                0xffffffffa4c054d4
+               |                                0xffffffffa4c0e689
+               |                                0xffffffffa4c0e525
+               |                                0xffffffffa4c0e1d0
+               |                                |          
+               |                                 --53.09%--0xffffffffa4c0defa
+               |                                           |          
+               |                                            --53.03%--0xffffffffa4c07fcc
+               |                                                      |          
+               |                                                       --52.67%--0xffffffffa4f21ac4
+               |                                                                 0xffffffffa4f1f7d3
+               |                                                                 0xffffffffc0383291
+               |                                                                 |          
+               |                                                                  --52.56%--0xffffffffc035fc9d
+               |                                                                            |          
+               |                                                                             --52.50%--0xffffffffc0152a73
+               |          
+                --2.00%--0xffffffffa4a890f0
+                          |          
+                           --1.59%--0xffffffffa4a88653
+                                     |          
+                                      --1.41%--0xffffffffa4a84c54
+                                                |          
+                                                |--0.65%--0xffffffffa4a6e7bb
+                                                |          0xffffffffa4a6b645
+                                                |          |          
+                                                |           --0.53%--0xffffffffa4a67c4a
+                                                |          
+                                                 --0.53%--0xffffffffa4a6e976
+
+    56.67%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa48bfc89
+            |
+            ---0xffffffffa48bfc89
+               0xffffffffa48cecd4
+               |          
+               |--53.62%--0xffffffffa4a8919e
+               |          0xffffffffa4bfbaed
+               |          0xffffffffa4bfba8d
+               |          0xffffffffa4c088d3
+               |          |          
+               |           --53.26%--0xffffffffa4c0e9e9
+               |                     |          
+               |                      --53.20%--0xffffffffa4c05ca7
+               |                                0xffffffffa4c05ae2
+               |                                0xffffffffa4c054d4
+               |                                0xffffffffa4c0e689
+               |                                0xffffffffa4c0e525
+               |                                0xffffffffa4c0e1d0
+               |                                |          
+               |                                 --53.09%--0xffffffffa4c0defa
+               |                                           |          
+               |                                            --53.03%--0xffffffffa4c07fcc
+               |                                                      |          
+               |                                                       --52.67%--0xffffffffa4f21ac4
+               |                                                                 0xffffffffa4f1f7d3
+               |                                                                 0xffffffffc0383291
+               |                                                                 |          
+               |                                                                  --52.56%--0xffffffffc035fc9d
+               |                                                                            |          
+               |                                                                             --52.50%--0xffffffffc0152a73
+               |          
+                --2.00%--0xffffffffa4a890f0
+                          |          
+                           --1.59%--0xffffffffa4a88653
+                                     |          
+                                      --1.41%--0xffffffffa4a84c54
+                                                |          
+                                                |--0.65%--0xffffffffa4a6e7bb
+                                                |          0xffffffffa4a6b645
+                                                |          |          
+                                                |           --0.53%--0xffffffffa4a67c4a
+                                                |          
+                                                 --0.53%--0xffffffffa4a6e976
+
+    56.67%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa48cecd4
+            |
+            ---0xffffffffa48cecd4
+               |          
+               |--53.62%--0xffffffffa4a8919e
+               |          0xffffffffa4bfbaed
+               |          0xffffffffa4bfba8d
+               |          0xffffffffa4c088d3
+               |          |          
+               |           --53.26%--0xffffffffa4c0e9e9
+               |                     |          
+               |                      --53.20%--0xffffffffa4c05ca7
+               |                                0xffffffffa4c05ae2
+               |                                0xffffffffa4c054d4
+               |                                0xffffffffa4c0e689
+               |                                0xffffffffa4c0e525
+               |                                0xffffffffa4c0e1d0
+               |                                |          
+               |                                 --53.09%--0xffffffffa4c0defa
+               |                                           |          
+               |                                            --53.03%--0xffffffffa4c07fcc
+               |                                                      |          
+               |                                                       --52.67%--0xffffffffa4f21ac4
+               |                                                                 0xffffffffa4f1f7d3
+               |                                                                 0xffffffffc0383291
+               |                                                                 |          
+               |                                                                  --52.56%--0xffffffffc035fc9d
+               |                                                                            |          
+               |                                                                             --52.50%--0xffffffffc0152a73
+               |          
+                --2.00%--0xffffffffa4a890f0
+                          |          
+                           --1.59%--0xffffffffa4a88653
+                                     |          
+                                      --1.41%--0xffffffffa4a84c54
+                                                |          
+                                                |--0.65%--0xffffffffa4a6e7bb
+                                                |          0xffffffffa4a6b645
+                                                |          |          
+                                                |           --0.53%--0xffffffffa4a67c4a
+                                                |          
+                                                 --0.53%--0xffffffffa4a6e976
+
+    53.62%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a8919e
+            |
+            ---0xffffffffa4a8919e
+               0xffffffffa4bfbaed
+               0xffffffffa4bfba8d
+               0xffffffffa4c088d3
+               |          
+                --53.26%--0xffffffffa4c0e9e9
+                          |          
+                           --53.20%--0xffffffffa4c05ca7
+                                     0xffffffffa4c05ae2
+                                     0xffffffffa4c054d4
+                                     0xffffffffa4c0e689
+                                     0xffffffffa4c0e525
+                                     0xffffffffa4c0e1d0
+                                     |          
+                                      --53.09%--0xffffffffa4c0defa
+                                                |          
+                                                 --53.03%--0xffffffffa4c07fcc
+                                                           |          
+                                                            --52.67%--0xffffffffa4f21ac4
+                                                                      0xffffffffa4f1f7d3
+                                                                      0xffffffffc0383291
+                                                                      |          
+                                                                       --52.56%--0xffffffffc035fc9d
+                                                                                 |          
+                                                                                  --52.50%--0xffffffffc0152a73
+
+    53.62%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4bfbaed
+            |
+            ---0xffffffffa4bfbaed
+               0xffffffffa4bfba8d
+               0xffffffffa4c088d3
+               |          
+                --53.26%--0xffffffffa4c0e9e9
+                          |          
+                           --53.20%--0xffffffffa4c05ca7
+                                     0xffffffffa4c05ae2
+                                     0xffffffffa4c054d4
+                                     0xffffffffa4c0e689
+                                     0xffffffffa4c0e525
+                                     0xffffffffa4c0e1d0
+                                     |          
+                                      --53.09%--0xffffffffa4c0defa
+                                                |          
+                                                 --53.03%--0xffffffffa4c07fcc
+                                                           |          
+                                                            --52.67%--0xffffffffa4f21ac4
+                                                                      0xffffffffa4f1f7d3
+                                                                      0xffffffffc0383291
+                                                                      |          
+                                                                       --52.56%--0xffffffffc035fc9d
+                                                                                 |          
+                                                                                  --52.50%--0xffffffffc0152a73
+
+    53.62%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4bfba8d
+            |
+            ---0xffffffffa4bfba8d
+               0xffffffffa4c088d3
+               |          
+                --53.26%--0xffffffffa4c0e9e9
+                          |          
+                           --53.20%--0xffffffffa4c05ca7
+                                     0xffffffffa4c05ae2
+                                     0xffffffffa4c054d4
+                                     0xffffffffa4c0e689
+                                     0xffffffffa4c0e525
+                                     0xffffffffa4c0e1d0
+                                     |          
+                                      --53.09%--0xffffffffa4c0defa
+                                                |          
+                                                 --53.03%--0xffffffffa4c07fcc
+                                                           |          
+                                                            --52.67%--0xffffffffa4f21ac4
+                                                                      0xffffffffa4f1f7d3
+                                                                      0xffffffffc0383291
+                                                                      |          
+                                                                       --52.56%--0xffffffffc035fc9d
+                                                                                 |          
+                                                                                  --52.50%--0xffffffffc0152a73
+
+    53.62%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4c088d3
+            |
+            ---0xffffffffa4c088d3
+               |          
+                --53.26%--0xffffffffa4c0e9e9
+                          |          
+                           --53.20%--0xffffffffa4c05ca7
+                                     0xffffffffa4c05ae2
+                                     0xffffffffa4c054d4
+                                     0xffffffffa4c0e689
+                                     0xffffffffa4c0e525
+                                     0xffffffffa4c0e1d0
+                                     |          
+                                      --53.09%--0xffffffffa4c0defa
+                                                |          
+                                                 --53.03%--0xffffffffa4c07fcc
+                                                           |          
+                                                            --52.67%--0xffffffffa4f21ac4
+                                                                      0xffffffffa4f1f7d3
+                                                                      0xffffffffc0383291
+                                                                      |          
+                                                                       --52.56%--0xffffffffc035fc9d
+                                                                                 |          
+                                                                                  --52.50%--0xffffffffc0152a73
+
+    53.26%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4c0e9e9
+            |
+            ---0xffffffffa4c0e9e9
+               |          
+                --53.20%--0xffffffffa4c05ca7
+                          0xffffffffa4c05ae2
+                          0xffffffffa4c054d4
+                          0xffffffffa4c0e689
+                          0xffffffffa4c0e525
+                          0xffffffffa4c0e1d0
+                          |          
+                           --53.09%--0xffffffffa4c0defa
+                                     |          
+                                      --53.03%--0xffffffffa4c07fcc
+                                                |          
+                                                 --52.67%--0xffffffffa4f21ac4
+                                                           0xffffffffa4f1f7d3
+                                                           0xffffffffc0383291
+                                                           |          
+                                                            --52.56%--0xffffffffc035fc9d
+                                                                      |          
+                                                                       --52.50%--0xffffffffc0152a73
+
+    53.20%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4c05ca7
+            |
+            ---0xffffffffa4c05ca7
+               0xffffffffa4c05ae2
+               0xffffffffa4c054d4
+               0xffffffffa4c0e689
+               0xffffffffa4c0e525
+               0xffffffffa4c0e1d0
+               |          
+                --53.09%--0xffffffffa4c0defa
+                          |          
+                           --53.03%--0xffffffffa4c07fcc
+                                     |          
+                                      --52.67%--0xffffffffa4f21ac4
+                                                0xffffffffa4f1f7d3
+                                                0xffffffffc0383291
+                                                |          
+                                                 --52.56%--0xffffffffc035fc9d
+                                                           |          
+                                                            --52.50%--0xffffffffc0152a73
+
+    53.20%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4c05ae2
+            |
+            ---0xffffffffa4c05ae2
+               0xffffffffa4c054d4
+               0xffffffffa4c0e689
+               0xffffffffa4c0e525
+               0xffffffffa4c0e1d0
+               |          
+                --53.09%--0xffffffffa4c0defa
+                          |          
+                           --53.03%--0xffffffffa4c07fcc
+                                     |          
+                                      --52.67%--0xffffffffa4f21ac4
+                                                0xffffffffa4f1f7d3
+                                                0xffffffffc0383291
+                                                |          
+                                                 --52.56%--0xffffffffc035fc9d
+                                                           |          
+                                                            --52.50%--0xffffffffc0152a73
+
+    53.20%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4c054d4
+            |
+            ---0xffffffffa4c054d4
+               0xffffffffa4c0e689
+               0xffffffffa4c0e525
+               0xffffffffa4c0e1d0
+               |          
+                --53.09%--0xffffffffa4c0defa
+                          |          
+                           --53.03%--0xffffffffa4c07fcc
+                                     |          
+                                      --52.67%--0xffffffffa4f21ac4
+                                                0xffffffffa4f1f7d3
+                                                0xffffffffc0383291
+                                                |          
+                                                 --52.56%--0xffffffffc035fc9d
+                                                           |          
+                                                            --52.50%--0xffffffffc0152a73
+
+    53.20%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4c0e689
+            |
+            ---0xffffffffa4c0e689
+               0xffffffffa4c0e525
+               0xffffffffa4c0e1d0
+               |          
+                --53.09%--0xffffffffa4c0defa
+                          |          
+                           --53.03%--0xffffffffa4c07fcc
+                                     |          
+                                      --52.67%--0xffffffffa4f21ac4
+                                                0xffffffffa4f1f7d3
+                                                0xffffffffc0383291
+                                                |          
+                                                 --52.56%--0xffffffffc035fc9d
+                                                           |          
+                                                            --52.50%--0xffffffffc0152a73
+
+    53.20%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4c0e525
+            |
+            ---0xffffffffa4c0e525
+               0xffffffffa4c0e1d0
+               |          
+                --53.09%--0xffffffffa4c0defa
+                          |          
+                           --53.03%--0xffffffffa4c07fcc
+                                     |          
+                                      --52.67%--0xffffffffa4f21ac4
+                                                0xffffffffa4f1f7d3
+                                                0xffffffffc0383291
+                                                |          
+                                                 --52.56%--0xffffffffc035fc9d
+                                                           |          
+                                                            --52.50%--0xffffffffc0152a73
+
+    53.20%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4c0e1d0
+            |
+            ---0xffffffffa4c0e1d0
+               |          
+                --53.09%--0xffffffffa4c0defa
+                          |          
+                           --53.03%--0xffffffffa4c07fcc
+                                     |          
+                                      --52.67%--0xffffffffa4f21ac4
+                                                0xffffffffa4f1f7d3
+                                                0xffffffffc0383291
+                                                |          
+                                                 --52.56%--0xffffffffc035fc9d
+                                                           |          
+                                                            --52.50%--0xffffffffc0152a73
+
+    53.09%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4c0defa
+            |
+            ---0xffffffffa4c0defa
+               |          
+                --53.03%--0xffffffffa4c07fcc
+                          |          
+                           --52.67%--0xffffffffa4f21ac4
+                                     0xffffffffa4f1f7d3
+                                     0xffffffffc0383291
+                                     |          
+                                      --52.56%--0xffffffffc035fc9d
+                                                |          
+                                                 --52.50%--0xffffffffc0152a73
+
+    53.03%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4c07fcc
+            |
+            ---0xffffffffa4c07fcc
+               |          
+                --52.67%--0xffffffffa4f21ac4
+                          0xffffffffa4f1f7d3
+                          0xffffffffc0383291
+                          |          
+                           --52.56%--0xffffffffc035fc9d
+                                     |          
+                                      --52.50%--0xffffffffc0152a73
+
+    52.67%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4f21ac4
+            |
+            ---0xffffffffa4f21ac4
+               0xffffffffa4f1f7d3
+               0xffffffffc0383291
+               |          
+                --52.56%--0xffffffffc035fc9d
+                          |          
+                           --52.50%--0xffffffffc0152a73
+
+    52.67%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4f1f7d3
+            |
+            ---0xffffffffa4f1f7d3
+               0xffffffffc0383291
+               |          
+                --52.56%--0xffffffffc035fc9d
+                          |          
+                           --52.50%--0xffffffffc0152a73
+
+    52.67%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffc0383291
+            |
+            ---0xffffffffc0383291
+               |          
+                --52.56%--0xffffffffc035fc9d
+                          |          
+                           --52.50%--0xffffffffc0152a73
+
+    52.56%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffc035fc9d
+            |
+            ---0xffffffffc035fc9d
+               |          
+                --52.50%--0xffffffffc0152a73
+
+    52.50%    52.20%  photobridge_ben  [unknown]             [k] 0xffffffffc0152a73
+            |          
+             --52.03%--0x200
+                       |          
+                        --51.68%--0x558c5ad743e0
+                                  fsync
+                                  0xffffffffa5400124
+                                  0xffffffffa53d4c26
+                                  0xffffffffa46045f2
+                                  0xffffffffa49e6378
+                                  0xffffffffa49e62b6
+                                  0xffffffffa4a7656b
+                                  0xffffffffa48c18fd
+                                  0xffffffffa48bfc89
+                                  0xffffffffa48cecd4
+                                  0xffffffffa4a8919e
+                                  0xffffffffa4bfbaed
+                                  0xffffffffa4bfba8d
+                                  0xffffffffa4c088d3
+                                  0xffffffffa4c0e9e9
+                                  0xffffffffa4c05ca7
+                                  0xffffffffa4c05ae2
+                                  0xffffffffa4c054d4
+                                  0xffffffffa4c0e689
+                                  0xffffffffa4c0e525
+                                  0xffffffffa4c0e1d0
+                                  0xffffffffa4c0defa
+                                  0xffffffffa4c07fcc
+                                  0xffffffffa4f21ac4
+                                  0xffffffffa4f1f7d3
+                                  0xffffffffc0383291
+                                  0xffffffffc035fc9d
+                                  0xffffffffc0152a73
+
+    29.28%    29.28%  photobridge_ben  [unknown]             [k] 0xffffffffa53e7da5
+            |          
+            |--14.46%--0x200
+            |          |          
+            |           --14.40%--0x558c5ad743e0
+            |                     fsync
+            |                     0xffffffffa5400124
+            |                     0xffffffffa53d4c26
+            |                     0xffffffffa46045f2
+            |                     0xffffffffa49e6378
+            |                     0xffffffffa49e62b6
+            |                     |          
+            |                     |--13.29%--0xffffffffa4a767f4
+            |                     |          0xffffffffa4ad3c4f
+            |                     |          |          
+            |                     |          |--10.70%--0xffffffffa4ae407e
+            |                     |          |          0xffffffffa4ae3678
+            |                     |          |          0xffffffffa472f003
+            |                     |          |          0xffffffffa472efba
+            |                     |          |          0xffffffffa53e7da5
+            |                     |          |          
+            |                     |           --2.59%--0xffffffffa4ae4044
+            |                     |                     0xffffffffa4ae1850
+            |                     |                     0xffffffffa472f3b5
+            |                     |                     0xffffffffa53e7da5
+            |                     |          
+            |                      --1.12%--0xffffffffa4a7656b
+            |                                |          
+            |                                 --0.82%--0xffffffffa48c1920
+            |                                           0xffffffffa48bf807
+            |                                           |          
+            |                                            --0.76%--0xffffffffa48cb7b6
+            |                                                      0xffffffffa48c22bf
+            |                                                      0xffffffffa48c2262
+            |                                                      0xffffffffa472f1eb
+            |                                                      0xffffffffa53e7da5
+            |          
+             --14.23%--syscall
+                       0xffffffffa5400124
+                       0xffffffffa53d4c26
+                       0xffffffffa46036a2
+                       0xffffffffa4798678
+                       0xffffffffa4797fd2
+                       0xffffffffa4795689
+                       0xffffffffa470b590
+                       0xffffffffa470b1a6
+                       0xffffffffa53e7da5
+
+    16.05%     0.06%  photobridge_ben  libc.so.6             [.] syscall
+            |          
+             --15.99%--syscall
+                       0xffffffffa5400124
+                       |          
+                        --15.87%--0xffffffffa53d4c26
+                                  |          
+                                   --15.81%--0xffffffffa46036a2
+                                             |          
+                                              --15.76%--0xffffffffa4798678
+                                                        |          
+                                                        |--14.46%--0xffffffffa4797fd2
+                                                        |          |          
+                                                        |           --14.23%--0xffffffffa4795689
+                                                        |                     0xffffffffa470b590
+                                                        |                     0xffffffffa470b1a6
+                                                        |                     0xffffffffa53e7da5
+                                                        |          
+                                                         --1.29%--0xffffffffa4797fb9
+                                                                   |          
+                                                                    --1.12%--0xffffffffa4794fe5
+                                                                              |          
+                                                                               --1.00%--0xffffffffa4794e77
+                                                                                         0xffffffffa53e24e9
+                                                                                         |          
+                                                                                          --0.94%--0xffffffffa53e2146
+                                                                                                    0xffffffffa47041c5
+
+    15.87%     0.06%  photobridge_ben  [unknown]             [.] 0xffffffffa46036a2
+            |          
+             --15.81%--0xffffffffa46036a2
+                       0xffffffffa4798678
+                       |          
+                       |--14.52%--0xffffffffa4797fd2
+                       |          |          
+                       |           --14.29%--0xffffffffa4795689
+                       |                     0xffffffffa470b590
+                       |                     0xffffffffa470b1a6
+                       |                     0xffffffffa53e7da5
+                       |          
+                        --1.29%--0xffffffffa4797fb9
+                                  |          
+                                   --1.12%--0xffffffffa4794fe5
+                                             |          
+                                              --1.00%--0xffffffffa4794e77
+                                                        0xffffffffa53e24e9
+                                                        |          
+                                                         --0.94%--0xffffffffa53e2146
+                                                                   0xffffffffa47041c5
+
+    15.81%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4798678
+            |
+            ---0xffffffffa4798678
+               |          
+               |--14.52%--0xffffffffa4797fd2
+               |          |          
+               |           --14.29%--0xffffffffa4795689
+               |                     0xffffffffa470b590
+               |                     0xffffffffa470b1a6
+               |                     0xffffffffa53e7da5
+               |          
+                --1.29%--0xffffffffa4797fb9
+                          |          
+                           --1.12%--0xffffffffa4794fe5
+                                     |          
+                                      --1.00%--0xffffffffa4794e77
+                                                0xffffffffa53e24e9
+                                                |          
+                                                 --0.94%--0xffffffffa53e2146
+                                                           0xffffffffa47041c5
+
+    14.52%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4797fd2
+            |
+            ---0xffffffffa4797fd2
+               |          
+                --14.29%--0xffffffffa4795689
+                          0xffffffffa470b590
+                          0xffffffffa470b1a6
+                          0xffffffffa53e7da5
+
+    14.40%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa470b1a6
+            |
+            ---0xffffffffa470b1a6
+               0xffffffffa53e7da5
+
+    14.29%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4795689
+            |
+            ---0xffffffffa4795689
+               0xffffffffa470b590
+               0xffffffffa470b1a6
+               0xffffffffa53e7da5
+
+    14.29%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa470b590
+            |
+            ---0xffffffffa470b590
+               0xffffffffa470b1a6
+               0xffffffffa53e7da5
+
+    13.99%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a767f4
+            |
+            ---0xffffffffa4a767f4
+               |          
+                --13.93%--0xffffffffa4ad3c4f
+                          |          
+                          |--10.76%--0xffffffffa4ae407e
+                          |          0xffffffffa4ae3678
+                          |          0xffffffffa472f003
+                          |          0xffffffffa472efba
+                          |          0xffffffffa53e7da5
+                          |          
+                           --3.12%--0xffffffffa4ae4044
+                                     |          
+                                      --2.59%--0xffffffffa4ae1850
+                                                0xffffffffa472f3b5
+                                                0xffffffffa53e7da5
+
+    13.93%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4ad3c4f
+            |
+            ---0xffffffffa4ad3c4f
+               |          
+               |--10.76%--0xffffffffa4ae407e
+               |          0xffffffffa4ae3678
+               |          0xffffffffa472f003
+               |          0xffffffffa472efba
+               |          0xffffffffa53e7da5
+               |          
+                --3.12%--0xffffffffa4ae4044
+                          |          
+                           --2.59%--0xffffffffa4ae1850
+                                     0xffffffffa472f3b5
+                                     0xffffffffa53e7da5
+
+    10.76%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4ae407e
+            |
+            ---0xffffffffa4ae407e
+               0xffffffffa4ae3678
+               0xffffffffa472f003
+               0xffffffffa472efba
+               0xffffffffa53e7da5
+
+    10.76%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4ae3678
+            |
+            ---0xffffffffa4ae3678
+               0xffffffffa472f003
+               0xffffffffa472efba
+               0xffffffffa53e7da5
+
+    10.76%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa472f003
+            |
+            ---0xffffffffa472f003
+               0xffffffffa472efba
+               0xffffffffa53e7da5
+
+    10.76%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa472efba
+            |
+            ---0xffffffffa472efba
+               0xffffffffa53e7da5
+
+     3.94%     0.18%  photobridge_ben  libc.so.6             [.] __libc_pwrite
+            |
+            ---__libc_pwrite
+               |          
+                --3.76%--0xffffffffa5400124
+                          0xffffffffa53d4c26
+                          0xffffffffa46029e7
+                          0xffffffffa499f846
+                          0xffffffffa499f718
+                          0xffffffffa499eb21
+                          0xffffffffa4a74c03
+                          |          
+                           --3.47%--0xffffffffa4a746a4
+                                     |          
+                                      --2.65%--0xffffffffa48bf643
+                                                |          
+                                                |--1.94%--0xffffffffa4a8ac3c
+                                                |          0xffffffffa48c3c51
+                                                |          |          
+                                                |          |--1.18%--0xffffffffa48c3362
+                                                |          |          0xffffffffa48bf4fe
+                                                |          |          0xffffffffa4954a5e
+                                                |          |          0xffffffffa49325be
+                                                |          |          |          
+                                                |          |           --0.94%--0xffffffffa4931216
+                                                |          |                     0xffffffffa4cbd897
+                                                |          |          
+                                                |           --0.71%--0xffffffffa48c33a2
+                                                |                     0xffffffffa48c2b0d
+                                                |          
+                                                 --0.71%--0xffffffffa4a8ac65
+
+     3.88%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa499f718
+            |
+            ---0xffffffffa499f718
+               0xffffffffa499eb21
+               |          
+                --3.76%--0xffffffffa4a74c03
+                          |          
+                           --3.47%--0xffffffffa4a746a4
+                                     |          
+                                      --2.65%--0xffffffffa48bf643
+                                                |          
+                                                |--1.94%--0xffffffffa4a8ac3c
+                                                |          0xffffffffa48c3c51
+                                                |          |          
+                                                |          |--1.18%--0xffffffffa48c3362
+                                                |          |          0xffffffffa48bf4fe
+                                                |          |          0xffffffffa4954a5e
+                                                |          |          0xffffffffa49325be
+                                                |          |          |          
+                                                |          |           --0.94%--0xffffffffa4931216
+                                                |          |                     0xffffffffa4cbd897
+                                                |          |          
+                                                |           --0.71%--0xffffffffa48c33a2
+                                                |                     0xffffffffa48c2b0d
+                                                |          
+                                                 --0.71%--0xffffffffa4a8ac65
+
+     3.88%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa499eb21
+            |
+            ---0xffffffffa499eb21
+               |          
+                --3.76%--0xffffffffa4a74c03
+                          |          
+                           --3.47%--0xffffffffa4a746a4
+                                     |          
+                                      --2.65%--0xffffffffa48bf643
+                                                |          
+                                                |--1.94%--0xffffffffa4a8ac3c
+                                                |          0xffffffffa48c3c51
+                                                |          |          
+                                                |          |--1.18%--0xffffffffa48c3362
+                                                |          |          0xffffffffa48bf4fe
+                                                |          |          0xffffffffa4954a5e
+                                                |          |          0xffffffffa49325be
+                                                |          |          |          
+                                                |          |           --0.94%--0xffffffffa4931216
+                                                |          |                     0xffffffffa4cbd897
+                                                |          |          
+                                                |           --0.71%--0xffffffffa48c33a2
+                                                |                     0xffffffffa48c2b0d
+                                                |          
+                                                 --0.71%--0xffffffffa4a8ac65
+
+     3.76%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa46029e7
+            |
+            ---0xffffffffa46029e7
+               0xffffffffa499f846
+               0xffffffffa499f718
+               0xffffffffa499eb21
+               0xffffffffa4a74c03
+               |          
+                --3.47%--0xffffffffa4a746a4
+                          |          
+                           --2.65%--0xffffffffa48bf643
+                                     |          
+                                     |--1.94%--0xffffffffa4a8ac3c
+                                     |          0xffffffffa48c3c51
+                                     |          |          
+                                     |          |--1.18%--0xffffffffa48c3362
+                                     |          |          0xffffffffa48bf4fe
+                                     |          |          0xffffffffa4954a5e
+                                     |          |          0xffffffffa49325be
+                                     |          |          |          
+                                     |          |           --0.94%--0xffffffffa4931216
+                                     |          |                     0xffffffffa4cbd897
+                                     |          |          
+                                     |           --0.71%--0xffffffffa48c33a2
+                                     |                     0xffffffffa48c2b0d
+                                     |          
+                                      --0.71%--0xffffffffa4a8ac65
+
+     3.76%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa499f846
+            |
+            ---0xffffffffa499f846
+               0xffffffffa499f718
+               0xffffffffa499eb21
+               0xffffffffa4a74c03
+               |          
+                --3.47%--0xffffffffa4a746a4
+                          |          
+                           --2.65%--0xffffffffa48bf643
+                                     |          
+                                     |--1.94%--0xffffffffa4a8ac3c
+                                     |          0xffffffffa48c3c51
+                                     |          |          
+                                     |          |--1.18%--0xffffffffa48c3362
+                                     |          |          0xffffffffa48bf4fe
+                                     |          |          0xffffffffa4954a5e
+                                     |          |          0xffffffffa49325be
+                                     |          |          |          
+                                     |          |           --0.94%--0xffffffffa4931216
+                                     |          |                     0xffffffffa4cbd897
+                                     |          |          
+                                     |           --0.71%--0xffffffffa48c33a2
+                                     |                     0xffffffffa48c2b0d
+                                     |          
+                                      --0.71%--0xffffffffa4a8ac65
+
+     3.76%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a74c03
+            |
+            ---0xffffffffa4a74c03
+               |          
+                --3.47%--0xffffffffa4a746a4
+                          |          
+                           --2.65%--0xffffffffa48bf643
+                                     |          
+                                     |--1.94%--0xffffffffa4a8ac3c
+                                     |          0xffffffffa48c3c51
+                                     |          |          
+                                     |          |--1.18%--0xffffffffa48c3362
+                                     |          |          0xffffffffa48bf4fe
+                                     |          |          0xffffffffa4954a5e
+                                     |          |          0xffffffffa49325be
+                                     |          |          |          
+                                     |          |           --0.94%--0xffffffffa4931216
+                                     |          |                     0xffffffffa4cbd897
+                                     |          |          
+                                     |           --0.71%--0xffffffffa48c33a2
+                                     |                     0xffffffffa48c2b0d
+                                     |          
+                                      --0.71%--0xffffffffa4a8ac65
+
+     3.47%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a746a4
+            |
+            ---0xffffffffa4a746a4
+               |          
+                --2.65%--0xffffffffa48bf643
+                          |          
+                          |--1.94%--0xffffffffa4a8ac3c
+                          |          0xffffffffa48c3c51
+                          |          |          
+                          |          |--1.18%--0xffffffffa48c3362
+                          |          |          0xffffffffa48bf4fe
+                          |          |          0xffffffffa4954a5e
+                          |          |          0xffffffffa49325be
+                          |          |          |          
+                          |          |           --0.94%--0xffffffffa4931216
+                          |          |                     0xffffffffa4cbd897
+                          |          |          
+                          |           --0.71%--0xffffffffa48c33a2
+                          |                     0xffffffffa48c2b0d
+                          |          
+                           --0.71%--0xffffffffa4a8ac65
+
+     3.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4ae4044
+            |
+            ---0xffffffffa4ae4044
+               |          
+                --2.59%--0xffffffffa4ae1850
+                          0xffffffffa472f3b5
+                          0xffffffffa53e7da5
+
+     2.65%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa48bf643
+            |
+            ---0xffffffffa48bf643
+               |          
+               |--1.94%--0xffffffffa4a8ac3c
+               |          0xffffffffa48c3c51
+               |          |          
+               |          |--1.18%--0xffffffffa48c3362
+               |          |          0xffffffffa48bf4fe
+               |          |          0xffffffffa4954a5e
+               |          |          0xffffffffa49325be
+               |          |          |          
+               |          |           --0.94%--0xffffffffa4931216
+               |          |                     0xffffffffa4cbd897
+               |          |          
+               |           --0.71%--0xffffffffa48c33a2
+               |                     0xffffffffa48c2b0d
+               |          
+                --0.71%--0xffffffffa4a8ac65
+
+     2.59%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4ae1850
+            |
+            ---0xffffffffa4ae1850
+               0xffffffffa472f3b5
+               0xffffffffa53e7da5
+
+     2.59%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa472f3b5
+            |
+            ---0xffffffffa472f3b5
+               0xffffffffa53e7da5
+
+     2.00%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a890f0
+            |
+            ---0xffffffffa4a890f0
+               |          
+                --1.59%--0xffffffffa4a88653
+                          |          
+                           --1.41%--0xffffffffa4a84c54
+                                     |          
+                                     |--0.65%--0xffffffffa4a6e7bb
+                                     |          0xffffffffa4a6b645
+                                     |          |          
+                                     |           --0.53%--0xffffffffa4a67c4a
+                                     |          
+                                      --0.53%--0xffffffffa4a6e976
+
+     1.94%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a8ac3c
+            |
+            ---0xffffffffa4a8ac3c
+               0xffffffffa48c3c51
+               |          
+               |--1.18%--0xffffffffa48c3362
+               |          0xffffffffa48bf4fe
+               |          0xffffffffa4954a5e
+               |          0xffffffffa49325be
+               |          |          
+               |           --0.94%--0xffffffffa4931216
+               |                     0xffffffffa4cbd897
+               |          
+                --0.71%--0xffffffffa48c33a2
+                          0xffffffffa48c2b0d
+
+     1.94%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa48c3c51
+            |
+            ---0xffffffffa48c3c51
+               |          
+               |--1.18%--0xffffffffa48c3362
+               |          0xffffffffa48bf4fe
+               |          0xffffffffa4954a5e
+               |          0xffffffffa49325be
+               |          |          
+               |           --0.94%--0xffffffffa4931216
+               |                     0xffffffffa4cbd897
+               |          
+                --0.71%--0xffffffffa48c33a2
+                          0xffffffffa48c2b0d
+
+     1.94%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa53e24e9
+            |
+            ---0xffffffffa53e24e9
+               |          
+                --1.88%--0xffffffffa53e2146
+                          |          
+                           --1.82%--0xffffffffa47041c5
+
+     1.88%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa53e2146
+            |
+            ---0xffffffffa53e2146
+               |          
+                --1.82%--0xffffffffa47041c5
+
+     1.82%     1.82%  photobridge_ben  [unknown]             [k] 0xffffffffa47041c5
+            |          
+            |--0.94%--0x900000000000841f
+            |          std::_Sp_counted_ptr_inplace<std::__future_base::_State_baseV2, std::allocator<std::__future_base::_State_baseV2>, (__gnu_cxx::_Lock_policy)2>::~_Sp_counted_ptr_inplace
+            |          0x100000001
+            |          syscall
+            |          0xffffffffa5400124
+            |          0xffffffffa53d4c26
+            |          0xffffffffa46036a2
+            |          0xffffffffa4798678
+            |          0xffffffffa4797fb9
+            |          0xffffffffa4794fe5
+            |          0xffffffffa4794e77
+            |          0xffffffffa53e24e9
+            |          0xffffffffa53e2146
+            |          0xffffffffa47041c5
+            |          
+             --0.88%--0x200
+                       0x558c5ad743e0
+                       fsync
+                       0xffffffffa5400124
+                       0xffffffffa53d4c26
+                       0xffffffffa46045f2
+                       0xffffffffa49e6378
+                       0xffffffffa49e62b6
+                       |          
+                        --0.65%--0xffffffffa4a7656b
+                                  0xffffffffa48c1920
+                                  0xffffffffa48bf807
+                                  0xffffffffa48cb7b6
+                                  0xffffffffa48c22bf
+                                  0xffffffffa48c1fbc
+                                  0xffffffffa53e2606
+                                  0xffffffffa53e24e9
+                                  0xffffffffa53e2146
+                                  0xffffffffa47041c5
+
+     1.82%     0.00%  photobridge_ben  [unknown]             [.] 0x900000000000841f
+            |
+            ---0x900000000000841f
+               std::_Sp_counted_ptr_inplace<std::__future_base::_State_baseV2, std::allocator<std::__future_base::_State_baseV2>, (__gnu_cxx::_Lock_policy)2>::~_Sp_counted_ptr_inplace
+               |          
+                --1.29%--0x100000001
+                          |          
+                           --1.23%--syscall
+                                     0xffffffffa5400124
+                                     |          
+                                      --1.18%--0xffffffffa53d4c26
+                                                |          
+                                                 --1.12%--0xffffffffa46036a2
+                                                           |          
+                                                            --1.06%--0xffffffffa4798678
+                                                                      0xffffffffa4797fb9
+                                                                      |          
+                                                                       --1.00%--0xffffffffa4794fe5
+                                                                                 |          
+                                                                                  --0.94%--0xffffffffa4794e77
+                                                                                            0xffffffffa53e24e9
+                                                                                            0xffffffffa53e2146
+                                                                                            0xffffffffa47041c5
+
+     1.82%     0.00%  photobridge_ben  photobridge_bench     [.] std::_Sp_counted_ptr_inplace<std::__future_base::_State_baseV2, std::allocator<std::__future_base::_State_baseV2>, (__gnu_cxx::_Lock_policy)2>::~_Sp_counted_ptr_inplace
+            |
+            ---std::_Sp_counted_ptr_inplace<std::__future_base::_State_baseV2, std::allocator<std::__future_base::_State_baseV2>, (__gnu_cxx::_Lock_policy)2>::~_Sp_counted_ptr_inplace
+               |          
+                --1.29%--0x100000001
+                          |          
+                           --1.23%--syscall
+                                     0xffffffffa5400124
+                                     |          
+                                      --1.18%--0xffffffffa53d4c26
+                                                |          
+                                                 --1.12%--0xffffffffa46036a2
+                                                           |          
+                                                            --1.06%--0xffffffffa4798678
+                                                                      0xffffffffa4797fb9
+                                                                      |          
+                                                                       --1.00%--0xffffffffa4794fe5
+                                                                                 |          
+                                                                                  --0.94%--0xffffffffa4794e77
+                                                                                            0xffffffffa53e24e9
+                                                                                            0xffffffffa53e2146
+                                                                                            0xffffffffa47041c5
+
+     1.82%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa48c1920
+            |
+            ---0xffffffffa48c1920
+               |          
+                --1.65%--0xffffffffa48bf807
+                          |          
+                           --1.47%--0xffffffffa48cb7b6
+                                     0xffffffffa48c22bf
+                                     |          
+                                     |--0.76%--0xffffffffa48c2262
+                                     |          0xffffffffa472f1eb
+                                     |          0xffffffffa53e7da5
+                                     |          
+                                      --0.65%--0xffffffffa48c1fbc
+                                                0xffffffffa53e2606
+                                                0xffffffffa53e24e9
+                                                0xffffffffa53e2146
+                                                0xffffffffa47041c5
+
+     1.65%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa48bf807
+            |
+            ---0xffffffffa48bf807
+               |          
+                --1.47%--0xffffffffa48cb7b6
+                          0xffffffffa48c22bf
+                          |          
+                          |--0.76%--0xffffffffa48c2262
+                          |          0xffffffffa472f1eb
+                          |          0xffffffffa53e7da5
+                          |          
+                           --0.65%--0xffffffffa48c1fbc
+                                     0xffffffffa53e2606
+                                     0xffffffffa53e24e9
+                                     0xffffffffa53e2146
+                                     0xffffffffa47041c5
+
+     1.59%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a88653
+            |
+            ---0xffffffffa4a88653
+               |          
+                --1.41%--0xffffffffa4a84c54
+                          |          
+                          |--0.65%--0xffffffffa4a6e7bb
+                          |          0xffffffffa4a6b645
+                          |          |          
+                          |           --0.53%--0xffffffffa4a67c4a
+                          |          
+                           --0.53%--0xffffffffa4a6e976
+
+     1.47%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa48cb7b6
+            |
+            ---0xffffffffa48cb7b6
+               0xffffffffa48c22bf
+               |          
+               |--0.76%--0xffffffffa48c2262
+               |          0xffffffffa472f1eb
+               |          0xffffffffa53e7da5
+               |          
+                --0.65%--0xffffffffa48c1fbc
+                          0xffffffffa53e2606
+                          0xffffffffa53e24e9
+                          0xffffffffa53e2146
+                          0xffffffffa47041c5
+
+     1.47%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa48c22bf
+            |
+            ---0xffffffffa48c22bf
+               |          
+               |--0.76%--0xffffffffa48c2262
+               |          0xffffffffa472f1eb
+               |          0xffffffffa53e7da5
+               |          
+                --0.65%--0xffffffffa48c1fbc
+                          0xffffffffa53e2606
+                          0xffffffffa53e24e9
+                          0xffffffffa53e2146
+                          0xffffffffa47041c5
+
+     1.41%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a84c54
+            |
+            ---0xffffffffa4a84c54
+               |          
+               |--0.65%--0xffffffffa4a6e7bb
+               |          0xffffffffa4a6b645
+               |          |          
+               |           --0.53%--0xffffffffa4a67c4a
+               |          
+                --0.53%--0xffffffffa4a6e976
+
+     1.29%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4797fb9
+            |
+            ---0xffffffffa4797fb9
+               |          
+                --1.12%--0xffffffffa4794fe5
+                          |          
+                           --1.00%--0xffffffffa4794e77
+                                     0xffffffffa53e24e9
+                                     |          
+                                      --0.94%--0xffffffffa53e2146
+                                                0xffffffffa47041c5
+
+     1.29%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa49325be
+            |
+            ---0xffffffffa49325be
+               |          
+                --1.06%--0xffffffffa4931216
+                          0xffffffffa4cbd897
+
+     1.29%     0.00%  photobridge_ben  [unknown]             [.] 0x0000000100000001
+            |
+            ---0x100000001
+               |          
+                --1.23%--syscall
+                          0xffffffffa5400124
+                          |          
+                           --1.18%--0xffffffffa53d4c26
+                                     |          
+                                      --1.12%--0xffffffffa46036a2
+                                                |          
+                                                 --1.06%--0xffffffffa4798678
+                                                           0xffffffffa4797fb9
+                                                           |          
+                                                            --1.00%--0xffffffffa4794fe5
+                                                                      |          
+                                                                       --0.94%--0xffffffffa4794e77
+                                                                                 0xffffffffa53e24e9
+                                                                                 0xffffffffa53e2146
+                                                                                 0xffffffffa47041c5
+
+     1.23%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4954a5e
+            |
+            ---0xffffffffa4954a5e
+               0xffffffffa49325be
+               |          
+                --1.00%--0xffffffffa4931216
+                          0xffffffffa4cbd897
+
+     1.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa48c3362
+            |
+            ---0xffffffffa48c3362
+               0xffffffffa48bf4fe
+               0xffffffffa4954a5e
+               0xffffffffa49325be
+               |          
+                --0.94%--0xffffffffa4931216
+                          0xffffffffa4cbd897
+
+     1.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa48bf4fe
+            |
+            ---0xffffffffa48bf4fe
+               0xffffffffa4954a5e
+               0xffffffffa49325be
+               |          
+                --0.94%--0xffffffffa4931216
+                          0xffffffffa4cbd897
+
+     1.18%     0.00%  photobridge_ben  [unknown]             [.] 0000000000000000
+            |
+            ---0
+
+     1.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4794fe5
+            |
+            ---0xffffffffa4794fe5
+               |          
+                --1.00%--0xffffffffa4794e77
+                          0xffffffffa53e24e9
+                          |          
+                           --0.94%--0xffffffffa53e2146
+                                     0xffffffffa47041c5
+
+     1.06%     1.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4cbd897
+            |          
+             --0.94%--__libc_pwrite
+                       0xffffffffa5400124
+                       0xffffffffa53d4c26
+                       0xffffffffa46029e7
+                       0xffffffffa499f846
+                       0xffffffffa499f718
+                       0xffffffffa499eb21
+                       0xffffffffa4a74c03
+                       0xffffffffa4a746a4
+                       0xffffffffa48bf643
+                       0xffffffffa4a8ac3c
+                       0xffffffffa48c3c51
+                       0xffffffffa48c3362
+                       0xffffffffa48bf4fe
+                       0xffffffffa4954a5e
+                       0xffffffffa49325be
+                       0xffffffffa4931216
+                       0xffffffffa4cbd897
+
+     1.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4931216
+            |
+            ---0xffffffffa4931216
+               0xffffffffa4cbd897
+
+     1.00%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4794e77
+            |
+            ---0xffffffffa4794e77
+               0xffffffffa53e24e9
+               |          
+                --0.94%--0xffffffffa53e2146
+                          0xffffffffa47041c5
+
+     0.76%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa48c2262
+            |
+            ---0xffffffffa48c2262
+               0xffffffffa472f1eb
+               0xffffffffa53e7da5
+
+     0.76%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa472f1eb
+            |
+            ---0xffffffffa472f1eb
+               0xffffffffa53e7da5
+
+     0.71%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa48c33a2
+            |
+            ---0xffffffffa48c33a2
+               0xffffffffa48c2b0d
+
+     0.71%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa48c2b0d
+            |
+            ---0xffffffffa48c2b0d
+
+     0.71%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a8ac65
+            |
+            ---0xffffffffa4a8ac65
+
+     0.65%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a6e7bb
+            |
+            ---0xffffffffa4a6e7bb
+               0xffffffffa4a6b645
+               |          
+                --0.53%--0xffffffffa4a67c4a
+
+     0.65%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f561aa64ab4
+            |
+            ---0x7f561aa64ab4
+               0xffffffffa5400124
+               |          
+                --0.59%--0xffffffffa53d4c26
+                          0xffffffffa46045dc
+                          0xffffffffa49b9629
+
+     0.65%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a6b645
+            |
+            ---0xffffffffa4a6b645
+               |          
+                --0.53%--0xffffffffa4a67c4a
+
+     0.65%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa48c1fbc
+            |
+            ---0xffffffffa48c1fbc
+               0xffffffffa53e2606
+               0xffffffffa53e24e9
+               0xffffffffa53e2146
+               0xffffffffa47041c5
+
+     0.65%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa53e2606
+            |
+            ---0xffffffffa53e2606
+               0xffffffffa53e24e9
+               0xffffffffa53e2146
+               0xffffffffa47041c5
+
+     0.59%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa46045dc
+            |
+            ---0xffffffffa46045dc
+               0xffffffffa49b9629
+
+     0.59%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa46cd476
+            |
+            ---0xffffffffa46cd476
+               |          
+                --0.53%--0xffffffffa46ccfea
+
+     0.59%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa49e00bb
+            |
+            ---0xffffffffa49e00bb
+
+     0.59%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa49b9629
+            |
+            ---0xffffffffa49b9629
+
+     0.53%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa46ccfea
+            |
+            ---0xffffffffa46ccfea
+
+     0.53%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a67c4a
+            |
+            ---0xffffffffa4a67c4a
+
+     0.53%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a6e976
+            |
+            ---0xffffffffa4a6e976
+
+     0.53%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a8179c
+            |
+            ---0xffffffffa4a8179c
+
+     0.53%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a9a183
+            |
+            ---0xffffffffa4a9a183
+
+     0.53%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4aa74bc
+            |
+            ---0xffffffffa4aa74bc
+               0xffffffffa4bfa7ca
+               0xffffffffa4bfa720
+
+     0.53%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4bfa7ca
+            |
+            ---0xffffffffa4bfa7ca
+               0xffffffffa4bfa720
+
+     0.53%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4bfa720
+            |
+            ---0xffffffffa4bfa720
+
+     0.47%     0.00%  photobridge_ben  [unknown]             [k] 0x0000558c5ad486f0
+     0.47%     0.47%  photobridge_ben  photobridge_bench     [.] sqlite3RunParser
+     0.47%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa48bf690
+     0.47%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a8b919
+     0.47%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a8ca7c
+     0.47%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a62ed6
+     0.47%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa49b8f83
+     0.47%     0.00%  photobridge_ben  [unknown]             [.] 0x0000000100000002
+     0.41%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a88ca2
+     0.41%     0.00%  photobridge_ben  [unknown]             [.] 0x0000558c5adb4d08
+     0.41%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4bd700b
+     0.35%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a82755
+     0.35%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a81dc9
+     0.35%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a8311e
+     0.35%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa5400f0b
+     0.35%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4bfa42e
+     0.29%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a74657
+     0.29%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa49c5207
+     0.29%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa49c51c7
+     0.29%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa49c477c
+     0.29%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa49f073e
+     0.29%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa49ef648
+     0.29%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a883f7
+     0.29%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa49ee62f
+     0.29%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4ae183f
+     0.29%     0.29%  photobridge_ben  photobridge_bench     [.] sqlite3VdbeExec
+     0.29%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa53d4c33
+     0.29%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa53d942d
+     0.29%     0.29%  photobridge_ben  [unknown]             [k] 0xffffffffa48c28c9
+     0.29%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a88ff0
+     0.24%     0.24%  photobridge_ben  [unknown]             [k] 0xffffffffa4cc12c9
+     0.24%     0.24%  photobridge_ben  [unknown]             [k] 0xffffffffa47421b1
+     0.24%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4775f67
+     0.24%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa46ee82a
+     0.24%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa49a31be
+     0.24%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f561aa718cd
+     0.24%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4603e8e
+     0.24%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa46c4e86
+     0.24%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa46c4e38
+     0.24%     0.24%  photobridge_ben  photobridge_bench     [.] sqlite3BtreeInsert
+     0.24%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa5400fab
+     0.24%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa53d8520
+     0.24%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa49f01c9
+     0.24%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a88699
+     0.24%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a8217e
+     0.24%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a88420
+     0.24%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a88cbb
+     0.24%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a880c6
+     0.24%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a8433f
+     0.24%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa48c6a01
+     0.24%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a83ca0
+     0.24%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a96c88
+     0.24%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa48c6937
+     0.24%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a63f56
+     0.24%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4ae17ce
+     0.24%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa53e7f73
+     0.18%     0.18%  photobridge_ben  [unknown]             [k] 0xffffffffa4966044
+     0.18%     0.18%  photobridge_ben  [unknown]             [k] 0xffffffffa46e942f
+     0.18%     0.18%  photobridge_ben  [unknown]             [k] 0xffffffffa47189fe
+     0.18%     0.18%  photobridge_ben  [unknown]             [k] 0xffffffffa49635c0
+     0.18%     0.18%  photobridge_ben  [unknown]             [k] 0xffffffffa4904126
+     0.18%     0.12%  photobridge_ben  libc.so.6             [.] pthread_cond_signal
+     0.18%     0.12%  photobridge_ben  photobridge_bench     [.] releaseMemArray.part.0
+     0.18%     0.12%  photobridge_ben  photobridge_bench     [.] walChecksumBytes
+     0.18%     0.18%  photobridge_ben  photobridge_bench     [.] unixWrite
+     0.18%     0.06%  photobridge_ben  photobridge_bench     [.] std::__detail::__variant::__gen_vtable_impl<std::__detail::__variant::_Multi_array<std::__detail::__variant::__deduce_visit_result<void> (*)(photobridge::RuntimeDbWriter::Execute(std::variant<photobridge::RuntimeDbWriter::Claim, photobridge::RuntimeDbWriter::CommitIntent, photobridge::RuntimeDbWriter::TempWritten, photobridge::RuntimeDbWriter::Receipt, photobridge::RuntimeDbWriter::Retryable>&)::{lambda(auto:1&)#1}&&, std::variant<photobridge::RuntimeDbWriter::Claim, photobridge::RuntimeDbWriter::CommitIntent, photobridge::RuntimeDbWriter::TempWritten, photobridge::RuntimeDbWriter::Receipt, photobridge::RuntimeDbWriter::Retryable>&)>, std::integer_sequence<unsigned long, 1ul> >::__visit_invoke
+     0.18%     0.18%  photobridge_ben  photobridge_bench     [.] walIndexAppend
+     0.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa53d8573
+     0.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa477caca
+     0.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa477ca09
+     0.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa477b559
+     0.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a9a2a7
+     0.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa46c48e0
+     0.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa470c7f9
+     0.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4f21cd8
+     0.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4c0465d
+     0.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4f21740
+     0.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4c045d8
+     0.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4f2f8f0
+     0.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa53d85b0
+     0.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4f20cca
+     0.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4f2f032
+     0.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4f17377
+     0.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4f2130c
+     0.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a82f2f
+     0.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4aa7750
+     0.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4f2031c
+     0.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa49f0129
+     0.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a86545
+     0.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a88170
+     0.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4aa77a9
+     0.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4bf9faf
+     0.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa47949bc
+     0.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa49ef191
+     0.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4bf4583
+     0.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa48c2a28
+     0.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa49043c4
+     0.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa49f2797
+     0.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4aa72b6
+     0.18%     0.00%  photobridge_ben  [unknown]             [.] 0x0a02000100010500
+     0.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4723683
+     0.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa49041cc
+     0.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4aa7148
+     0.18%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4caef5d
+     0.12%     0.12%  photobridge_ben  [unknown]             [k] 0xffffffffa49f2600
+     0.12%     0.12%  photobridge_ben  [unknown]             [k] 0xffffffffa4caee5f
+     0.12%     0.12%  photobridge_ben  [unknown]             [k] 0xffffffffa53e8080
+     0.12%     0.12%  photobridge_ben  [unknown]             [k] 0xffffffffa492ec88
+     0.12%     0.12%  photobridge_ben  [unknown]             [k] 0xffffffffa49634e6
+     0.12%     0.12%  photobridge_ben  [unknown]             [k] 0xffffffffa4c0e9d9
+     0.12%     0.12%  photobridge_ben  [unknown]             [k] 0xffffffffa48c27df
+     0.12%     0.12%  photobridge_ben  libc.so.6             [.] clock_gettime
+     0.12%     0.12%  photobridge_ben  libstdc++.so.6.0.30   [.] std::__atomic_futex_unsigned_base::_M_futex_wait_until
+     0.12%     0.12%  photobridge_ben  [unknown]             [k] 0xffffffffa53d936e
+     0.12%     0.06%  photobridge_ben  photobridge_bench     [.] photobridge::TaskRuntimeRepository::MarkCommitIntent
+     0.12%     0.00%  photobridge_ben  libc.so.6             [.] __close
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa49a2fe6
+     0.12%     0.00%  photobridge_ben  libc.so.6             [.] write
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4602afc
+     0.12%     0.06%  photobridge_ben  photobridge_bench     [.] sqlite3HaltConstraint
+     0.12%     0.00%  photobridge_ben  libc.so.6             [.] __close_nocancel
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa477ae82
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa470b535
+     0.12%     0.12%  photobridge_ben  libc.so.6             [.] 0x00000000001a0891
+     0.12%     0.12%  photobridge_ben  photobridge_bench     [.] keywordCode.constprop.0
+     0.12%     0.12%  photobridge_ben  photobridge_bench     [.] sqlite3Insert
+     0.12%     0.12%  photobridge_ben  photobridge_bench     [.] sqlite3_str_vappendf
+     0.12%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f561aaeb891
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4794fc8
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa48cb79f
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4f20558
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a6eb9e
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4ca1ba7
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa48bf6c5
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a84a1e
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a84cb2
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a96b0d
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4795598
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a6389c
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4bf4eb9
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4c0e9db
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4963752
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a63567
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a6e345
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a881c2
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a8ca5a
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a9731b
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4bf4bbe
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4c20a64
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4c305aa
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa48bf609
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa48bf86b
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4963314
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa49ee43d
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a23611
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a65ebb
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a661ef
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a719a1
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a9a346
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4c20797
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0x0000558c5ada6660
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0x0000558c5adb7298
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0x00007f561a8573d8
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa479566d
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa48bf669
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa48cf0b4
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa48d4620
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa49c1a75
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa49c17f2
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa49c0cab
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa49c0775
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0x00007f561ab65ce0
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa49a1fd9
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa49c64be
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0x0000558c5ad524a8
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa49a1f37
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa49c59f5
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0x0000558c5ad47ae0
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a8afd2
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa48d526a
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4930fa2
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4962b20
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa496366b
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa49b8f68
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a6466d
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a90252
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4bfa37c
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4c0e00f
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4e18c91
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4e18c53
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4e18a7d
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4e1e7cd
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4e1c357
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4e25b48
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4e22aa1
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4f2182e
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa53d4c07
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0x0000558c5ad46b48
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0x0000558c5ad51ff8
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0x0000558c5ad47868
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0x0000558c5ada6658
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0x0000558c5adb5678
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0x02bc02b802b402b0
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0x0fdd00017f000001
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0x4e20544f00000000
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0x6b736174204f544e
+     0.12%     0.00%  photobridge_ben  [unknown]             [.] 0x7028207400000000
+     0.06%     0.06%  photobridge_ben  ld-linux-x86-64.so.2  [.] __tls_get_addr
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4ae16fb
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa48c5cb7
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4a91a74
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4c0e6f8
+     0.06%     0.00%  photobridge_ben  [unknown]             [k] 0x5f65746174735f65
+     0.06%     0.00%  photobridge_ben  [unknown]             [k] 0x656c655220656764
+     0.06%     0.00%  photobridge_ben  [unknown]             [k] 0x0000000000000040
+     0.06%     0.00%  photobridge_ben  ld-linux-x86-64.so.2  [.] 0x00007f561ade983c
+     0.06%     0.00%  photobridge_ben  ld-linux-x86-64.so.2  [.] 0x00007f561adeda63
+     0.06%     0.00%  photobridge_ben  ld-linux-x86-64.so.2  [.] 0x00007f561adf5100
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa5400c07
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa46c487d
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa53d8ea7
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa46a6059
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa46c3489
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa49a2f96
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa46c23b0
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa48d4cc0
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa490ea88
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa46c0b3c
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa48d4825
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa490e6c5
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa490c69a
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4929814
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a8297b
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4908202
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4929594
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa49efd51
+     0.06%     0.06%  photobridge_ben  libc.so.6             [.] 0x000000000019d240
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] sqlite3FkCheck
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] sqlite3MPrintf
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa48bf460
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa495457d
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0x000000000000006b
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa49a2f8e
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a828e6
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a97118
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0x0000558c5ad6b7b8
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0x0000558c5ad70658
+     0.06%     0.06%  photobridge_ben  ld-linux-x86-64.so.2  [.] 0x000000000000b791
+     0.06%     0.06%  photobridge_ben  libc.so.6             [.] pthread_mutex_unlock
+     0.06%     0.06%  photobridge_ben  libc.so.6             [.] malloc
+     0.06%     0.06%  photobridge_ben  libc.so.6             [.] 0x000000000019d8a0
+     0.06%     0.06%  photobridge_ben  libc.so.6             [.] 0x00000000001a110a
+     0.06%     0.06%  photobridge_ben  libc.so.6             [.] 0x0000000000199e41
+     0.06%     0.06%  photobridge_ben  libc.so.6             [.] pthread_once
+     0.06%     0.06%  photobridge_ben  libc.so.6             [.] 0x00000000000909b0
+     0.06%     0.06%  photobridge_ben  libc.so.6             [.] 0x0000000000119a90
+     0.06%     0.06%  photobridge_ben  libc.so.6             [.] 0x0000000000199e35
+     0.06%     0.06%  photobridge_ben  libc.so.6             [.] 0x00000000001a0880
+     0.06%     0.06%  photobridge_ben  libc.so.6             [.] 0x00000000001a08a1
+     0.06%     0.06%  photobridge_ben  libc.so.6             [.] 0x00000000001a08e6
+     0.06%     0.06%  photobridge_ben  libc.so.6             [.] 0x000000000019d259
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char*>
+     0.06%     0.06%  photobridge_ben  libc.so.6             [.] 0x00000000001a08d9
+     0.06%     0.06%  photobridge_ben  libc.so.6             [.] 0x00000000001a1048
+     0.06%     0.06%  photobridge_ben  libstdc++.so.6.0.30   [.] operator delete
+     0.06%     0.06%  photobridge_ben  libstdc++.so.6.0.30   [.] std::__future_base::_Result_base::~_Result_base
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] allocateCursor
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] exprAnalyze
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] findElementWithHash.constprop.0
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] (anonymous namespace)::RunRuntimeStateWrites
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] applyAffinity
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] photobridge::(anonymous namespace)::BindText
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] getAndInitPage
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] photobridge::(anonymous namespace)::AdvanceAttempt
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] pcache1Fetch
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4794d38
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4794df2
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] photobridge::RuntimeDbWriter::MarkCommitIntent
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] sqlite3VdbeRecordCompareWithSkip
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] sqlite3ExprCodeRunJustOnce
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] sqlite3GetToken
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] sqlite3_column_text
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] sqlite3BtreeCommitPhaseOne.part.0
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] sqlite3VdbeHalt
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char const*>
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] std::__detail::__variant::__gen_vtable_impl<std::__detail::__variant::_Multi_array<void (*)(std::__detail::__variant::_Variant_storage<false, photobridge::RuntimeDbWriter::Claim, photobridge::RuntimeDbWriter::CommitIntent, photobridge::RuntimeDbWriter::TempWritten, photobridge::RuntimeDbWriter::Receipt, photobridge::RuntimeDbWriter::Retryable>::_M_reset()::{lambda(auto:1&&)#1}&&, std::variant<photobridge::RuntimeDbWriter::Claim, photobridge::RuntimeDbWriter::CommitIntent, photobridge::RuntimeDbWriter::TempWritten, photobridge::RuntimeDbWriter::Receipt, photobridge::RuntimeDbWriter::Retryable>&)>, std::integer_sequence<unsigned long, 1ul> >::__visit_invoke
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] sqlite3_reset
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] sqlite3BtreeCursor
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] sqlite3VdbeIntValue
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] sqlite3_exec
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] std::once_flag::_Prepare_execution::_Prepare_execution<std::call_once<void (std::__future_base::_State_baseV2::*)(std::function<std::unique_ptr<std::__future_base::_Result_base, std::__future_base::_Result_base::_Deleter> ()>*, bool*), std::__future_base::_State_baseV2*, std::function<std::unique_ptr<std::__future_base::_Result_base, std::__future_base::_Result_base::_Deleter> ()>*, bool*>(std::once_flag&, void (std::__future_base::_State_baseV2::*&&)(std::function<std::unique_ptr<std::__future_base::_Result_base, std::__future_base::_Result_base::_Deleter> ()>*, bool*), std::__future_base::_State_baseV2*&&, std::function<std::unique_ptr<std::__future_base::_Result_base, std::__future_base::_Result_base::_Deleter> ()>*&&, bool*&&)::{lambda()#1}>(void (std::__future_base::_State_baseV2::*&)(std::function<std::unique_ptr<std::__future_base::_Result_base, std::__future_base::_Result_base::_Deleter> ()>*, bool*))::{lambda()#1}::_FUN
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] sqlite3BtreeIndexMoveto
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] sqlite3DbMallocRawNN
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] sqlite3FinishCoding
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] sqlite3VdbeMakeReady
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] sqlite3VdbeMemGrow
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4775f1d
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa48bd16d
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa48bcdea
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] std::thread::_State_impl<std::thread::_Invoker<std::tuple<(anonymous namespace)::RunRuntimeStateWrites((anonymous namespace)::Options const&, unsigned long)::{lambda()#1}::operator()() const::{lambda()#1}> > >::_M_run
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa495fd05
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4770ddc
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4c011cf
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffc0152a74
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4f208c8
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4f208cf
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4f21a89
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa46b3eb3
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4c08268
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4ca5064
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4f1f2c4
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa46b42eb
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4a913ec
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4a93cde
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa48d2e00
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4a86a34
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa46b3ec8
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa46b3ee6
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa46b48f9
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa46b4c4b
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa46b4f9d
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa48f3a90
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4963596
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4a86a0c
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4bf65ad
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4c024ec
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa46b3ea5
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa495f39f
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa49e00be
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4a645eb
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4a9a331
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4c00de4
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa495fb81
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4a70f20
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4a83483
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4ad8fe0
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4ae565b
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4c0e152
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4c2ea10
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4c34df5
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa46f0530
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4780222
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa48ce29e
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4963c54
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4965f33
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4a645e0
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4a8ca25
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4c02ef6
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4c11430
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4ca4344
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4cc1272
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa48cd5aa
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa492e6c0
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa497faaf
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4986509
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4aa7692
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4aa78bf
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4c08d90
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4c0e9cd
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4c0e9f5
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa53e7f5e
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa46ccf83
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa496368c
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4988802
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4c92244
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa470427a
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa48c27ae
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4a88130
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4cbbbb1
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4741069
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa48c1f82
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa497f7f0
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4a82096
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa53e2646
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa48c3464
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa48d27f4
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa48d2817
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4a65ee0
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4aa70a9
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4caeebd
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa48bfbe7
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa48cb7ba
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4a82ef7
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4a83093
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4cbe96e
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa48bf81a
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4ae4084
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4c5b7fa
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4c5bc86
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4cbde86
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4ae3fe0
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4965f01
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4bacc40
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa472ed20
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4793fa0
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4794600
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa48f3a9c
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4a1f100
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa49634c0
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4a1dfc0
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4a21e85
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4c64f39
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4cbdf03
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] unixShmBarrier
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] unixSync
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] walFrames
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] vdbeMemClear
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] vdbeRecordCompareString
+     0.06%     0.06%  photobridge_ben  photobridge_bench     [.] walIndexReadHdr
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4794ea6
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4794fe9
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa4cbe94f
+     0.06%     0.06%  photobridge_ben  [unknown]             [k] 0xffffffffa53e1f50
+     0.06%     0.00%  photobridge_ben  ld-linux-x86-64.so.2  [.] 0x00007f561add5791
+     0.06%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f561a9db9b0
+     0.06%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f561aa64a90
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa48d4c46
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa49d3811
+     0.06%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f561aae4e35
+     0.06%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f561aae4e41
+     0.06%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f561aae8240
+     0.06%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f561aae8259
+     0.06%     0.00%  photobridge_ben  [unknown]             [k] 0xd40e1f0f6a0fb50f
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a889d3
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4c59aed
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa48cd288
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a7291b
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a96c96
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4ca1ac1
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa48cc5ba
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a67e0c
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a7208a
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a72863
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a84eb1
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a8645b
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a86a51
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4ac60d7
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4bf4cdd
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4c090ba
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffc035fd1d
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0x0000558c5ad482d0
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa48cd0fc
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa498838d
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a235bf
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a6aaf9
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a71655
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a73562
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a816d5
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a83446
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a834a2
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a83708
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a8619d
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a885d0
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a9453a
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a94666
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a96c0f
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a96d27
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4aa7578
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4ac00c3
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4c02fa6
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4c08e19
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4c3037c
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4f2057a
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffc035f68e
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffc035face
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0x0000000000000006
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0x0000558c5adb3a48
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xe80e2e0f740fba0f
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa48cdfe6
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4930ffd
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4965fce
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa49803cb
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa49887fc
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa498880d
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa49f2610
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a222fe
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a234d3
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a23643
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a62e97
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a665d6
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a66960
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a6aa88
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a72cc8
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a81774
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a830f2
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a835a9
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a91b1f
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a93db7
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a9a062
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a9a0a4
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4aa6e1e
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4ad7f55
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4ad7fc3
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4ad939e
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4ad93ae
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4b4dfcc
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4c01276
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4c0195e
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4c02c04
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4c08ecd
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4c08efe
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4c0e14c
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4c59a55
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4c5b7f2
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4f2272d
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffc01529ea
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0x0000558c5ad74628
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0x2d6b736174312d6e
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0x3030372d6b736174
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0x600f880fb00fd80f
+     0.06%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f561aae88a0
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4a93f76
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4ad8d40
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4c08e64
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4d35aad
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0x0000000000001121
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0x00007fff48ae7500
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0x00007fff48ae7db0
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0x342d6b736174312d
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0x4145504143534544
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0x695f6e616c70006b
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0x6e616c70204f544e
+     0.06%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f561aaeb880
+     0.06%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f561aaeb8a1
+     0.06%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f561aaeb8d9
+     0.06%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f561aaeb8e6
+     0.06%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f561aaec048
+     0.06%     0.00%  photobridge_ben  libc.so.6             [.] 0x00007f561aaec10a
+     0.06%     0.00%  photobridge_ben  photobridge_bench     [.] std::__future_base::_Result<photobridge::Status>::~_Result
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0xffffffffa4794d26
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0x48fffffd41158d48
+     0.06%     0.00%  photobridge_ben  [unknown]             [.] 0x0000000100000000
+
+
+#
+# (Cannot load tips.txt file, please install perf!)
+#
