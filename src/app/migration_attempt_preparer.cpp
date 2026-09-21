@@ -20,7 +20,7 @@ Status Invalid(const char* message)
 
 StatusOr<VerifiedReceipt> MigrationAttemptPreparer::Prepare(
     FileOps& file_ops,
-    TaskRuntimeRepository& repository,
+    MigrationRuntimeStore& repository,
     MutationGuard& source_guard,
     int target_root_fd,
     const MinimalPlanAsset& plan_asset,

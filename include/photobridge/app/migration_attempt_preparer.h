@@ -3,8 +3,7 @@
 #include <string>
 #include <span>
 
-#include "photobridge/app/sqlite_connection.h"
-#include "photobridge/app/task_runtime_repository.h"
+#include "photobridge/app/migration_runtime_store.h"
 #include "photobridge/common/status_or.h"
 #include "photobridge/filesystem/mutation_guard.h"
 #include "photobridge/model/canonical_plan.h"
@@ -15,7 +14,7 @@ class MigrationAttemptPreparer final {
 public:
     static StatusOr<VerifiedReceipt> Prepare(
         FileOps& file_ops,
-        TaskRuntimeRepository& repository,
+        MigrationRuntimeStore& repository,
         MutationGuard& source_guard,
         int target_root_fd,
         const MinimalPlanAsset& plan_asset,

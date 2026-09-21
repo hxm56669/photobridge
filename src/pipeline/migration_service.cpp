@@ -1,4 +1,5 @@
 #include "photobridge/pipeline/pipeline_support.h"
+#include "photobridge/app/runtime_db_writer.h"
 
 #include <condition_variable>
 #include <deque>
@@ -17,7 +18,7 @@ struct QueuedTask {
 };
 
 StatusOr<std::string> ExecuteClaimedTask(
-    TaskRuntimeRepository& repository,
+    MigrationRuntimeStore& repository,
     const FrozenPlanFile& artifact,
     const MinimalPlanAsset& plan_asset,
     const ClaimedTask& claimed,
@@ -154,15 +155,8 @@ public:
             connection.value(), artifact.value().plan.source_manifest_id());
         if (!source_root.ok()) return source_root.status();
 
-        // Opening connections before starting the producer keeps connection
-        // configuration outside concurrent SQLite write transactions.
-        std::vector<SqliteConnection> worker_connections;
-        worker_connections.reserve(workers);
-        for (std::size_t index = 0; index < workers; ++index) {
-            auto opened = SqliteConnection::Open(layout.value().database);
-            if (!opened.ok()) return opened.status();
-            worker_connections.push_back(std::move(opened.value()));
-        }
+        auto writer = RuntimeDbWriter::Start(layout.value().database);
+        if (!writer.ok()) return writer.status();
 
         constexpr std::size_t queue_capacity = 8;
         std::deque<QueuedTask> queue;
@@ -174,8 +168,7 @@ public:
         std::vector<std::thread> pool;
         pool.reserve(workers);
         for (std::size_t index = 0; index < workers; ++index) {
-            pool.emplace_back([&, index] {
-                TaskRuntimeRepository worker_repository(worker_connections[index]);
+            pool.emplace_back([&] {
                 while (true) {
                     QueuedTask item;
                     {
@@ -189,7 +182,7 @@ public:
                         queue_changed.notify_all();
                     }
                     auto result = ExecuteClaimedTask(
-                        worker_repository, artifact.value(),
+                        *writer.value(), artifact.value(),
                         artifact.value().plan.assets()[item.asset_index],
                         item.claim, epoch, source_root.value(), task_count);
                     std::lock_guard lock(mutex);
@@ -213,7 +206,7 @@ public:
                 });
                 if (!first_error.ok()) break;
             }
-            auto claim = repository.ClaimNextReady(
+            auto claim = writer.value()->ClaimNextReady(
                 artifact.value().plan_id, epoch);
             if (!claim.ok()) {
                 if (claim.status().code() != StatusCode::kNotFound) {
@@ -240,6 +233,7 @@ public:
         }
         queue_changed.notify_all();
         for (auto& thread : pool) thread.join();
+        writer.value()->Stop();
         for (const auto& message : messages) context.out << message;
         if (!producer_error.ok()) return producer_error;
         if (!first_error.ok()) return first_error;

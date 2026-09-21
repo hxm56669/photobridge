@@ -4,6 +4,7 @@
 
 #include "photobridge/app/sqlite_connection.h"
 #include "photobridge/app/sqlite_statement.h"
+#include "photobridge/app/migration_runtime_store.h"
 #include "photobridge/common/status.h"
 #include "photobridge/common/status_or.h"
 #include "photobridge/filesystem/reconciler.h"
@@ -11,12 +12,7 @@
 
 namespace photobridge {
 
-struct ClaimedTask {
-    TaskId id;
-    TaskRuntime runtime;
-};
-
-class TaskRuntimeRepository final {
+class TaskRuntimeRepository final : public MigrationRuntimeStore {
 public:
     explicit TaskRuntimeRepository(SqliteConnection& connection) noexcept;
 
@@ -34,7 +30,7 @@ public:
 
     StatusOr<ClaimedTask> ClaimNextReady(
         const std::string& plan_id,
-        ExecutionEpoch epoch);
+        ExecutionEpoch epoch) override;
     StatusOr<ClaimedTask> ClaimNextReady(
         const std::string& plan_id,
         ExecutionEpoch epoch,
@@ -44,12 +40,12 @@ public:
         const std::string& plan_id,
         const TaskId& task_id,
         ExecutionEpoch epoch,
-        const std::string& attempt_id);
+        const std::string& attempt_id) override;
     Status MarkTempWritten(
         const std::string& plan_id,
         const TaskId& task_id,
         ExecutionEpoch epoch,
-        const std::string& attempt_id);
+        const std::string& attempt_id) override;
 
     Status MarkSucceeded(
         const std::string& plan_id,
@@ -61,7 +57,7 @@ public:
         const TaskId& task_id,
         ExecutionEpoch epoch,
         const std::string& attempt_id,
-        const Status& error);
+        const Status& error) override;
 
     Status RecoverSucceeded(
         const std::string& plan_id,
@@ -87,7 +83,7 @@ public:
 
     Status PersistVerifiedReceipt(
         const std::string& plan_id,
-        const VerifiedReceipt& receipt);
+        const VerifiedReceipt& receipt) override;
 
     StatusOr<VerifiedReceipt> ReadVerifiedReceipt(
         const std::string& plan_id,

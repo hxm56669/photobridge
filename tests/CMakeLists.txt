@@ -48,6 +48,7 @@ add_executable(photobridge_tests
     integration/pipeline/raw_jpeg_test.cpp
     integration/pipeline/takeout_parser_test.cpp
     integration/sqlite/manifest_builder_test.cpp
+    integration/sqlite/runtime_db_writer_test.cpp
     integration/sqlite/sqlite_connection_test.cpp
     integration/sqlite/sqlite_schema_test.cpp
     integration/sqlite/task_runtime_repository_test.cpp
